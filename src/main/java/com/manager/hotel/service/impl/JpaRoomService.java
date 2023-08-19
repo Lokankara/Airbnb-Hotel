@@ -23,7 +23,7 @@ public class JpaRoomService implements RoomService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<RoomDto> getAllRooms() {
+    public List<RoomDto> findRooms() {
         return mapper.toListDto(roomRepository.findAll());
     }
 

@@ -1,11 +1,13 @@
-package com.manager.hotel.service;
+package com.manager.hotel.service.facade;
 
-import com.manager.hotel.model.dto.CheckOutDto;
+import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.dto.GuestDto;
 import com.manager.hotel.model.dto.RoomDto;
 import com.manager.hotel.model.entity.Guest;
 import com.manager.hotel.model.entity.Room;
-import com.manager.hotel.service.impl.JpaCheckOutService;
+import com.manager.hotel.service.BookingService;
+import com.manager.hotel.service.GuestService;
+import com.manager.hotel.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,35 +18,20 @@ import java.util.List;
 public class HotelFacade {
     private final RoomService roomService;
     private final GuestService guestService;
-    private final JpaCheckOutService checkOutService;
+    private final BookingService bookingService;
 
     public List<GuestDto> getAllGuests() {
         return guestService.getAllGuests();
     }
 
-    public List<GuestDto> searchGuestsByPassportData(
+    public List<GuestDto> searchByPassportData(
             final String passportData) {
         return guestService
                 .searchGuestsByPassportData(passportData);
     }
 
-    public GuestDto checkInGuest(
-            final Long guestId,
-            final Long roomId) {
-        Guest guest = guestService.findGuestById(guestId);
-        Room room = roomService.findRoomById(roomId);
-        return guestService.checkInGuest(guest, room);
-    }
-
-    public CheckOutDto checkOutGuest(
-            final Long guestId,
-            final boolean earlyDeparture) {
-        return checkOutService
-                .checkOutGuest(guestId, earlyDeparture);
-    }
-
     public List<RoomDto> getAllRooms() {
-        return roomService.getAllRooms();
+        return roomService.findRooms();
     }
 
     public List<GuestDto> findGuests(String characteristic) {
@@ -53,5 +40,17 @@ public class HotelFacade {
 
     public List<GuestDto> findDepartingToday() {
         return guestService.findGuestsDepartingToday();
+    }
+
+    public BookingDto checkInGuest(Long guestId, Long roomId) {
+        Guest guest = guestService.findGuestById(guestId);
+        Room room = roomService.findRoomById(roomId);
+        return bookingService.checkInGuest(guest, room);
+    }
+
+    public BookingDto checkOutGuest(
+            Long guestId, boolean earlyDeparture) {
+        return bookingService.checkOutGuest(
+                guestId, earlyDeparture);
     }
 }

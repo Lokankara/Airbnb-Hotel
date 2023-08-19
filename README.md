@@ -9,6 +9,7 @@ List of guests: passport data, arrival and departure dates, room.
   Possibility of early departure with recalculation.
 - Search for a guest by an arbitrary characteristic.
 
+[![Java CI with Maven](https://github.com/Lokankara/Hotel/actions/workflows/maven.yml/badge.svg)](https://github.com/Lokankara/Hotel/actions/workflows/maven.yml)
 
 ### Commands
 

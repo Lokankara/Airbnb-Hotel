@@ -7,7 +7,7 @@ import com.manager.hotel.model.entity.RoomType;
 import java.util.List;
 
 public interface RoomService {
-    List<RoomDto> getAllRooms();
+    List<RoomDto> findRooms();
 
     RoomDto findAvailableRoom(
             RoomType roomType,

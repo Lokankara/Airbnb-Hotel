@@ -1,6 +1,7 @@
 package com.manager.hotel.model.dto;
 
 import com.manager.hotel.model.entity.Guest;
+import com.manager.hotel.model.entity.Room;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +15,13 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckOutDto {
-    private Guest guest;
-    private double finalBill;
+public class BookingDto {
+    private Long finalBill;
     private boolean earlyDeparture;
+    private LocalDateTime arrival;
+    private LocalDateTime departure;
+    private LocalDateTime checkInDate;
     private LocalDateTime checkOutDate;
+    private Room room;
+    private Guest guest;
 }

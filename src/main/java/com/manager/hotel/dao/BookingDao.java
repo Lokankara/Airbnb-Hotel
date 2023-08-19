@@ -1,6 +1,6 @@
 package com.manager.hotel.dao;
 
-import com.manager.hotel.model.entity.CheckOut;
+import com.manager.hotel.model.entity.Booking;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class CheckOutDao {
+public class BookingDao {
 
     @PersistenceUnit
     private final EntityManagerFactory factory;
 
-    public CheckOut save(CheckOut checkOut) {
+    public Booking save(Booking checkOut) {
         try (EntityManager entityManager = factory.createEntityManager()) {
             EntityTransaction transaction = entityManager.getTransaction();
             try {

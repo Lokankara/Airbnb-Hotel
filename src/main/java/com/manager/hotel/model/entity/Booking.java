@@ -10,22 +10,42 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
 @Entity
+@Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckOut {
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long finalBill;
     private boolean earlyDeparture;
+    private LocalDateTime arrival;
+    private LocalDateTime departure;
+    private LocalDateTime checkInDate;
     private LocalDateTime checkOutDate;
     @OneToOne
+    private Room room;
+    @OneToOne
     private Guest guest;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Booking booking = (Booking) o;
+        return id.equals(booking.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

@@ -21,10 +21,10 @@
     <button type="submit">Find Available Room</button>
 </form>
 
-<div th:if="${availableRoom}">
+<div th:if="${available}">
     <h2>Available Room:</h2>
-    <p>Room Type: <span th:text="${availableRoom.roomType}"></span></p>
-    <p>Capacity: <span th:text="${availableRoom.capacity}"></span></p>
+    <p>Room Type: <span th:text="${available.roomType}"></span></p>
+    <p>Capacity: <span th:text="${available.capacity}"></span></p>
 </div>
 </body>
 </html>

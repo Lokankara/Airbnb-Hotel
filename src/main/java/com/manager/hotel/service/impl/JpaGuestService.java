@@ -36,17 +36,6 @@ public class JpaGuestService implements GuestService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public GuestDto checkInGuest(
-            final Guest guest,
-            final Room room) {
-        guest.setArrivalDate(now());
-        guest.setRoom(room);
-        guestRepository.save(guest);
-        return mapper.toDto(guest);
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public List<GuestDto> findGuestsByCharacteristic(
             final String characteristic) {

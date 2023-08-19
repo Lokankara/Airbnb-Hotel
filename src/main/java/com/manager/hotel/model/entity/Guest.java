@@ -1,11 +1,25 @@
 package com.manager.hotel.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cache;
 
 import java.time.LocalDateTime;
 
@@ -13,18 +27,32 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedEntityGraph(name = "guestWithRoom", attributeNodes = @NamedAttributeNode("room"))
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@NamedEntityGraph(
+        name = "guest-entity-graph",
+        attributeNodes = {
+                @NamedAttributeNode("room"),
+                @NamedAttributeNode("passport")
+        }
+)
 public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "passport_data")
+    @NotNull
+    @Size(min = 1, max = 128)
+    @Column(name = "passport_data", length = 128, nullable = false)
     private String passportData;
-    @Column(name = "arrival_date")
+    @NotNull
+    @Size(min = 1, max = 128)
+    @Column(name = "arrival_date", length = 128, nullable = false)
     private LocalDateTime arrivalDate;
-    @Column(name = "departure_date")
+    @NotNull
+    @Size(min = 1, max = 128)
+    @Column(name = "departure_date", length = 128, nullable = false)
     private LocalDateTime departureDate;
     @ManyToOne(fetch = FetchType.LAZY)
     private Room room;
@@ -33,5 +61,18 @@ public class Guest {
 
     public int getRate() {
         return room.getRoomType().getRate();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Guest guest = (Guest) o;
+        return id.equals(guest.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

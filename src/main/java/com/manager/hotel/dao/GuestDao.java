@@ -2,7 +2,13 @@ package com.manager.hotel.dao;
 
 import com.manager.hotel.model.entity.Guest;
 import com.manager.hotel.exception.GuestNotFoundException;
-import jakarta.persistence.*;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.PersistenceUnit;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -14,6 +20,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.manager.hotel.dao.Constant.FETCH_GRAPH;
+import static com.manager.hotel.dao.Constant.SELECT_ALL_GUESTS;
+
 @Slf4j
 @Repository
 @RequiredArgsConstructor
@@ -24,9 +33,9 @@ public class GuestDao {
 
     public List<Guest> findAll() {
         try (EntityManager entityManager = factory.createEntityManager()) {
-            EntityGraph<?> entityGraph = entityManager.getEntityGraph("guestWithRoom");
-            TypedQuery<Guest> query = entityManager.createQuery("SELECT g FROM Guest g", Guest.class);
-            query.setHint("jakarta.persistence.fetchgraph", entityGraph);
+            EntityGraph<?> entityGraph = entityManager.getEntityGraph("guest-entity-graph");
+            TypedQuery<Guest> query = entityManager.createQuery(SELECT_ALL_GUESTS, Guest.class);
+            query.setHint(FETCH_GRAPH, entityGraph);
             return query.getResultList();
         }
     }
