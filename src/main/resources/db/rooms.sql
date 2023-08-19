@@ -1,0 +1,42 @@
+create table if not exists room (
+    id        bigserial primary key,
+    capacity  integer not null,
+    room_type varchar(255),
+    constraint room_room_type_check check (room_type in
+                                           ('SINGLE', 'DOUBLE', 'TRIPLE',
+                                            'QUAD', 'QUEEN', 'KING', 'TWIN',
+                                            'HOLLYWOOD', 'STUDIO', 'CABANA',
+                                            'VILLA', 'PENTHOUSES', 'STANDARD',
+                                            'DELUXE', 'JOINT', 'CONNECTING',
+                                            'SUIT', 'APARTMENT', 'JUNIOR',
+                                            'BRIDAL', 'HONEYMOON',
+                                            'PRESIDENTIAL', 'ACCESSIBLE'))
+);
+
+INSERT INTO room (capacity, room_type)
+VALUES (2, 'SINGLE'),
+       (2, 'DOUBLE'),
+       (3, 'TRIPLE'),
+       (4, 'QUAD'),
+       (2, 'QUEEN'),
+       (2, 'KING'),
+       (2, 'TWIN'),
+       (2, 'HOLLYWOOD'),
+       (2, 'STUDIO'),
+       (2, 'CABANA'),
+       (4, 'VILLA'),
+       (2, 'PENTHOUSES'),
+       (2, 'STANDARD'),
+       (2, 'DELUXE'),
+       (4, 'JOINT'),
+       (4, 'CONNECTING'),
+       (2, 'SUIT'),
+       (2, 'APARTMENT'),
+       (2, 'JUNIOR'),
+       (2, 'BRIDAL'),
+       (2, 'HONEYMOON'),
+       (2, 'PRESIDENTIAL'),
+       (2, 'ACCESSIBLE'),
+       (2, 'SINGLE'),
+       (2, 'DOUBLE'),
+       (3, 'TRIPLE');

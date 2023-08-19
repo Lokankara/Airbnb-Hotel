@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hotel Management System</title>
+</head>
+<body>
+<h1>Welcome to the Hotel Management System</h1>
+
+<h2>Rooms</h2>
+<ul>
+    <li th:each="room : ${rooms}">
+        Room: <span th:text="${room.roomType}"></span>
+        | Capacity: <span th:text="${room.capacity}"></span>
+    </li>
+</ul>
+
+<h2>Guests</h2>
+<ul>
+    <li th:each="guest : ${guests}">
+        Passport: <span th:text="${guest.passportData}"></span>
+        | Arrival Date: <span th:text="${guest.arrivalDate}"></span>
+        | Departure Date: <span th:text="${guest.departureDate}"></span>
+    </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Guest Details</title>
+</head>
+<body>
+<h1>Guest Details</h1>
+<div>
+    <h2>Guest Information</h2>
+    <p><strong>Passport Data:</strong> <span th:text="${guest.passportData}"></span></p>
+    <p><strong>Arrival Date:</strong> <span th:text="${guest.arrivalDate}"></span></p>
+    <p><strong>Departure Date:</strong> <span th:text="${guest.departureDate}"></span></p>
+    <p><strong>Room:</strong> <span th:text="${guest.getRoom()}"></span></p>
+</div>
+</body>
+</html>

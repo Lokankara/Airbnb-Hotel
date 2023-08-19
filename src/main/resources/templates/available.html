@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Room</title>
+</head>
+<body>
+<h1>Find Available Room</h1>
+
+<form action="/available-room" method="get">
+    <label for="roomType">Room Type:</label>
+    <select id="roomType" name="roomType">
+        <option th:each="type : ${T(com.manager.hotel.model.entity.RoomType).values()}"
+                th:value="${type}" th:text="${type}"></option>
+    </select>
+    <br>
+    <label for="capacity">Capacity:</label>
+    <input type="number" id="capacity" name="capacity">
+    <br>
+    <button type="submit">Find Available Room</button>
+</form>
+
+<div th:if="${availableRoom}">
+    <h2>Available Room:</h2>
+    <p>Room Type: <span th:text="${availableRoom.roomType}"></span></p>
+    <p>Capacity: <span th:text="${availableRoom.capacity}"></span></p>
+</div>
+</body>
+</html>
