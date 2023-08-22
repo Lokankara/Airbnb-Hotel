@@ -22,47 +22,25 @@ public class HotelController {
     private final HotelFacade facade;
 
     @GetMapping
+    public String index() {
+        return "index";
+    }
+
+    @GetMapping("/home")
     public String home(Model model) {
-        model.addAttribute(ROOMS, facade
-                .getAllRooms());
-        model.addAttribute(GUESTS, facade
-                .getAllGuests());
+        model.addAttribute(ROOMS,
+                facade.getAllRooms());
+        model.addAttribute(GUESTS,
+                facade.getAllGuests());
         return "home";
     }
 
-    @GetMapping("/guests")
-    public String getAllGuests(
+    @PostMapping("/booking")
+    public String getAllBooking(
             final Model model) {
-        model.addAttribute(GUESTS, facade
-                .getAllGuests());
-        return GUESTS;
-    }
-
-    @GetMapping("/search")
-    public String searchGuestsByPassportData(
-            final Model model,
-            final @RequestParam String data) {
-        model.addAttribute(GUESTS, facade
-                .searchByPassportData(data));
-        return GUESTS;
-    }
-
-    @GetMapping("/find")
-    public String findGuestsByCharacteristic(
-            final Model model,
-            final @RequestParam("characteristic")
-            String characteristic) {
-        model.addAttribute(GUESTS, facade
-                .findGuests(characteristic));
-        return GUESTS;
-    }
-
-    @GetMapping("/departing")
-    public String findGuestsDepartingToday(
-            final Model model) {
-        model.addAttribute(GUESTS, facade
-                .findDepartingToday());
-        return GUESTS;
+        model.addAttribute(BOOKING,
+                facade.getAllBooking());
+        return BOOKING;
     }
 
     @PostMapping("/guests/{guestId}/rooms/{roomId}")
@@ -70,18 +48,18 @@ public class HotelController {
             final Model model,
             final @PathVariable Long guestId,
             final @PathVariable Long roomId) {
-        model.addAttribute(BOOKING, facade
-                .checkInGuest(guestId, roomId));
+        model.addAttribute(BOOKING,
+                facade.checkInGuest(guestId, roomId));
         return BOOKING;
     }
 
     @DeleteMapping("/guests/{guestId}")
-    public String checkOutGuest(
+    public String earlyDeparture(
             final Model model,
             final @PathVariable Long guestId,
-            final @RequestParam boolean earlyDeparture) {
-        model.addAttribute(BOOKING, facade
-                .checkOutGuest(guestId, earlyDeparture));
+            final @RequestParam boolean early) {
+        model.addAttribute(BOOKING,
+                facade.checkOutGuest(guestId, early));
         return BOOKING;
     }
 }

@@ -1,4 +1,4 @@
-package com.manager.hotel.model.entity;
+package com.manager.hotel.model.enums;
 
 public enum Gender {
     MALE,

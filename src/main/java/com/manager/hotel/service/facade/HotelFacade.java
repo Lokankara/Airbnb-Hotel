@@ -24,22 +24,8 @@ public class HotelFacade {
         return guestService.getAllGuests();
     }
 
-    public List<GuestDto> searchByPassportData(
-            final String passportData) {
-        return guestService
-                .searchGuestsByPassportData(passportData);
-    }
-
     public List<RoomDto> getAllRooms() {
         return roomService.findRooms();
-    }
-
-    public List<GuestDto> findGuests(String characteristic) {
-        return guestService.findGuestsByCharacteristic(characteristic);
-    }
-
-    public List<GuestDto> findDepartingToday() {
-        return guestService.findGuestsDepartingToday();
     }
 
     public BookingDto checkInGuest(Long guestId, Long roomId) {
@@ -52,5 +38,9 @@ public class HotelFacade {
             Long guestId, boolean earlyDeparture) {
         return bookingService.checkOutGuest(
                 guestId, earlyDeparture);
+    }
+
+    public List<BookingDto> getAllBooking() {
+        return bookingService.findAll();
     }
 }

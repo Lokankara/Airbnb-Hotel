@@ -1,8 +1,8 @@
 package com.manager.hotel.model.dto;
 
 import com.manager.hotel.model.entity.Guest;
-import com.manager.hotel.model.entity.RoomStatus;
-import com.manager.hotel.model.entity.RoomType;
+import com.manager.hotel.model.enums.RoomStatus;
+import com.manager.hotel.model.enums.RoomType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
@@ -25,5 +25,6 @@ public class RoomDto {
     private RoomType roomType;
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus;
+    private String path;
     private Set<Guest> guests;
 }

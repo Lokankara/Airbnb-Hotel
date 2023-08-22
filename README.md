@@ -24,3 +24,11 @@ List of guests: passport data, arrival and departure dates, room.
 
 #### Build jar
 `mvn clean install -e`
+
+### endpoints
+
+#### Home
+https://hotel-california.onrender.com/
+
+#### H2
+https://hotel-california.onrender.com/h2-console/

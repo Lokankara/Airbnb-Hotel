@@ -1,10 +1,10 @@
 package com.manager.hotel.service.impl;
 
-import com.manager.hotel.dao.RoomDao;
-import com.manager.hotel.model.dto.RoomDto;
-import com.manager.hotel.model.entity.Room;
-import com.manager.hotel.model.entity.RoomType;
+import com.manager.hotel.dao.jpa.JpaRoomDao;
 import com.manager.hotel.exception.NoAvailableRoomsException;
+import com.manager.hotel.model.dto.RoomDto;
+import com.manager.hotel.model.entity.Criteria;
+import com.manager.hotel.model.entity.Room;
 import com.manager.hotel.service.RoomService;
 import com.manager.hotel.service.mapper.RoomMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.List;
 public class JpaRoomService implements RoomService {
 
     private final RoomMapper mapper;
-    private final RoomDao roomRepository;
+    private final JpaRoomDao roomRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -30,15 +30,14 @@ public class JpaRoomService implements RoomService {
     @Override
     @Transactional(readOnly = true)
     public RoomDto findAvailableRoom(
-            RoomType roomType,
-            int capacity) {
+            Criteria criteria) {
         List<Room> availableRooms = roomRepository
-                .findByRoomTypeAndCapacity(roomType, capacity);
+                .findByRoomTypeAndCapacity(criteria);
         return mapper.toDto(availableRooms.stream()
                 .findFirst()
                 .orElseThrow(() -> new NoAvailableRoomsException(
-                        "No available rooms found with type %s and capacity %d"
-                                .formatted(roomType, capacity))));
+                        "No available rooms found by criteria: "
+                                + criteria)));
     }
 
     @Override

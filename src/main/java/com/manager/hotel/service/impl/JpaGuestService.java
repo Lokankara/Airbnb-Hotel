@@ -1,9 +1,9 @@
 package com.manager.hotel.service.impl;
 
-import com.manager.hotel.dao.GuestDao;
+import com.manager.hotel.dao.jpa.JpaGuestDao;
 import com.manager.hotel.model.dto.GuestDto;
+import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Guest;
-import com.manager.hotel.model.entity.Room;
 import com.manager.hotel.service.GuestService;
 import com.manager.hotel.service.mapper.GuestMapper;
 import lombok.RequiredArgsConstructor;
@@ -20,32 +20,25 @@ import static java.time.LocalDateTime.now;
 public class JpaGuestService implements GuestService {
 
     private final GuestMapper mapper;
-    private final GuestDao guestRepository;
+    private final JpaGuestDao guestRepository;
 
     @Override
     public List<GuestDto> getAllGuests() {
-        return mapper.toListDto(guestRepository.findAll());
+        return mapper.toListDto(
+                guestRepository.findAll());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<GuestDto> searchGuestsByPassportData(
-            final String passportData) {
+    public List<GuestDto> findByCriteria(
+            final Criteria criteria) {
         return mapper.toListDto(guestRepository
-                .findByPassportData(passportData));
+                .findByCriteria(criteria));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<GuestDto> findGuestsByCharacteristic(
-            final String characteristic) {
-        return mapper.toListDto(guestRepository
-                .findByPassportData(characteristic));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<GuestDto> findGuestsDepartingToday() {
+    public List<GuestDto> findDepartingToday() {
         return mapper.toListDto(guestRepository
                 .findByDepartureDate(now()));
     }

@@ -1,7 +1,7 @@
 package com.manager.hotel.service.impl;
 
-import com.manager.hotel.dao.BookingDao;
-import com.manager.hotel.dao.GuestDao;
+import com.manager.hotel.dao.jpa.JpaBookingDao;
+import com.manager.hotel.dao.jpa.JpaGuestDao;
 import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.entity.Booking;
 import com.manager.hotel.model.entity.Guest;
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
 
@@ -22,8 +23,8 @@ import static java.time.LocalDateTime.now;
 @Transactional
 @RequiredArgsConstructor
 public class JpaBookingService implements BookingService {
-    private final GuestDao guestDao;
-    private final BookingDao bookingDao;
+    private final JpaGuestDao jpaGuestDao;
+    private final JpaBookingDao jpaBookingDao;
     private final BookingMapper mapper;
 
     @Override
@@ -33,7 +34,7 @@ public class JpaBookingService implements BookingService {
             final Room room) {
         guest.setArrivalDate(now());
         guest.setRoom(room);
-        Guest saved = guestDao.save(guest);
+        Guest saved = jpaGuestDao.save(guest);
         Booking booking = Booking
                 .builder()
                 .guest(guest)
@@ -47,15 +48,20 @@ public class JpaBookingService implements BookingService {
     public BookingDto checkOutGuest(
             final Long guestId,
             final boolean earlyDeparture) {
-        Guest guest = guestDao.findById(guestId)
+        Guest guest = jpaGuestDao.findById(guestId)
                 .orElseThrow(() -> new GuestNotFoundException(
                         "Guest not found with ID " + guestId));
 
         Booking checkOut = getCheckOut(earlyDeparture, guest);
-        Booking saved = bookingDao.save(checkOut);
+        Booking saved = jpaBookingDao.save(checkOut);
         guest.setRoom(null);
-        guestDao.save(guest);
+        jpaGuestDao.save(guest);
         return mapper.toDto(saved);
+    }
+
+    @Override
+    public List<BookingDto> findAll() {
+        return mapper.toListDto(jpaBookingDao.findAll());
     }
 
     private static Booking getCheckOut(

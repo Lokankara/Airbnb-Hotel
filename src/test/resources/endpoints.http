@@ -1,0 +1,84 @@
+###
+GET http://localhost:8080/api/contacts
+
+###
+PUT http://localhost:8080/api/contacts
+
+###
+POST http://localhost:8080/api/contacts
+
+###
+< {%
+    request.variables.set("name", "John")
+%}
+GET http://localhost:8080/api/contacts/{{name}}
+
+###
+< {%
+    request.variables.set("name", "Jack")
+%}
+DELETE http://localhost:8080/api/contacts/{{name}}
+
+###
+POST http://localhost:8080/api/auth
+
+###
+POST http://localhost:8080/api/login
+
+###
+< {%
+    request.variables.set("name", "Bob")
+%}
+GET http://localhost:8080/api/export/{{name}}
+
+###
+POST http://localhost:8080/api/import
+
+###
+< {%
+    request.variables.set("name", "Amy")
+%}
+POST http://localhost:8080/api/{{name}}/image
+
+###
+GET http://localhost:8080/
+
+###
+GET http://localhost:8080/departing
+
+###
+< {%
+    request.variables.set("guestId", "1")
+%}
+GET http://localhost:8080/guests/{{guestId}}
+
+###
+< {%
+    request.variables.set("guestId", "1")
+    request.variables.set("roomId", "1")
+%}
+POST http://localhost:8080/guests/{{guestId}}/rooms/{{roomId}}
+
+###
+GET http://localhost:8080/main
+
+###
+GET http://localhost:8080/rooms
+
+###
+GET http://localhost:8080/rooms/available
+
+###
+< {%
+    request.variables.set("roomId", "1")
+%}
+GET http://localhost:8080/rooms/{{roomId}}
+
+###
+GET http://localhost:8080/guests
+
+###
+GET http://localhost:8080/guests/find
+
+###
+GET http://localhost:8080/guests/search

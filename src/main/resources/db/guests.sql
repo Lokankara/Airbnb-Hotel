@@ -1,21 +1,79 @@
-create table if not exists guest(
-    id             bigserial
+create table if not exists guest
+(
+    guest_id             bigserial
         primary key,
     arrival_date   timestamp(6),
     departure_date timestamp(6),
     passport_data  varchar(255),
-    room_id        bigint
-        references room
+    guest_status   varchar(255),
+    constraint guest_guest_status_check check
+        (guest_status in ('EARLY_DEPARTURE',
+                          'CHECK_OUT',
+                          'CHECK_IN',
+                          'LOCK_OUT',
+                          'OCCUPIED',
+                          'RESERVED',
+                          'DEPARTED',
+                          'BOOKING',
+                          'ARRIVAL',
+                          'SKIPPER',
+                          'DND',
+                          'FIT',
+                          'VIP')),
+    room_id        bigint references room
 );
 
-INSERT INTO guest (passport_data, arrival_date, departure_date, room_id)
-VALUES ('John Doe', '2023-08-18 12:00:00', '2023-08-21 10:00:00', 1),
-       ('Jane Smith', '2023-08-19 14:00:00', '2023-08-22 11:00:00', 2),
-       ('Michael Johnson', '2023-08-20 15:30:00', '2023-08-23 09:30:00', 3),
-       ('Alice Brown', '2023-08-21 13:45:00', '2023-08-24 08:45:00', 4),
-       ('Bob Williams', '2023-08-22 11:15:00', '2023-08-25 10:15:00', 5),
-       ('Eva Davis', '2023-08-23 09:30:00', '2023-08-26 12:30:00', 6),
-       ('David Wilson', '2023-08-24 17:00:00', '2023-08-27 14:00:00', 7),
-       ('Sophia Martin', '2023-08-25 10:30:00', '2023-08-28 11:30:00', 8),
-       ('Liam Garcia', '2023-08-26 08:15:00', '2023-08-29 09:15:00', 9),
-       ('Olivia Rodriguez', '2023-08-27 14:30:00', '2023-08-30 16:30:00', 10);
+
+INSERT INTO guest (passport_data, arrival_date, departure_date, guest_status, room_id)
+VALUES
+    ('Michael Angel', '2023-08-20 15:30:00', '2023-08-23 09:30:00', 'CHECK_OUT', 3),
+    ('Christopher Micheal', '2023-08-21 14:00:00', '2023-08-25 11:00:00', 'CHECK_IN', 1),
+    ('Jessica Kristi', '2023-08-22 16:30:00', '2023-08-26 10:00:00', 'EARLY_DEPARTURE', 2),
+    ('Matthew Caroline', '2023-08-23 10:00:00', '2023-08-28 12:00:00', 'OCCUPIED', 4),
+    ('Ashley Colin', '2023-08-24 11:30:00', '2023-08-30 09:00:00', 'CHECK_IN', 5),
+    ('Jennifer Dawn', '2023-08-25 13:00:00', '2023-08-29 14:30:00', 'CHECK_OUT', 6),
+    ('Joshua Kari', '2023-08-26 15:30:00', '2023-08-31 10:30:00', 'DEPARTED', 7),
+    ('Amanda Clayton', '2023-08-27 16:00:00', '2023-09-01 11:00:00', 'VIP', 8),
+    ('Daniel Arthur', '2023-08-28 17:30:00', '2023-09-02 12:30:00', 'CHECK_IN', 9),
+    ('David Roger', '2023-08-29 14:00:00', '2023-09-03 13:00:00', 'DEPARTED', 10),
+    ('James Roberto', '2023-08-30 16:30:00', '2023-09-04 09:30:00', 'CHECK_OUT', 11),
+    ('Robert Priscilla', '2023-08-31 18:00:00', '2023-09-05 10:00:00', 'RESERVED', 12),
+    ('John Darren', '2023-09-01 12:30:00', '2023-09-06 11:30:00', 'SKIPPER', 13),
+    ('Joseph Kelsey', '2023-09-02 14:00:00', '2023-09-07 12:00:00', 'CHECK_OUT', 14),
+    ('Andrew Clinton', '2023-09-03 15:30:00', '2023-09-08 10:30:00', 'CHECK_IN', 15),
+    ('Ryan Walter', '2023-09-04 16:00:00', '2023-09-09 11:00:00', 'EARLY_DEPARTURE', 16),
+    ('Brandon Louis', '2023-09-05 17:30:00', '2023-09-10 12:30:00', 'CHECK_OUT', 17),
+    ('Jason Barbara', '2023-09-06 19:00:00', '2023-09-11 14:00:00', 'DEPARTED', 18),
+    ('Justin Isaac', '2023-09-07 14:30:00', '2023-09-12 13:30:00', 'CHECK_IN', 19),
+    ('Sarah Cassie', '2023-09-08 15:00:00', '2023-09-13 10:00:00', 'CHECK_OUT', 20),
+    ('William Grant', '2023-09-09 16:30:00', '2023-09-14 11:30:00', 'DND', 21),
+    ('Jonathan Cristina', '2023-09-10 18:00:00', '2023-09-15 12:00:00', 'DEPARTED', 22),
+    ('Stephanie Tonya', '2023-09-11 19:30:00', '2023-09-16 09:30:00', 'CHECK_OUT', 23),
+    ('Brian Rodney', '2023-09-12 20:00:00', '2023-09-17 10:00:00', 'LOCK_OUT', 24),
+    ('Nicole Bridget', '2023-09-13 21:30:00', '2023-09-18 12:30:00', 'CHECK_OUT', 25),
+    ('Nicholas Joe', '2023-08-20 15:30:00', '2023-08-23 09:30:00', 'CHECK_OUT', 3),
+    ('Anthony Cindy', '2023-08-21 14:00:00', '2023-08-25 11:00:00', 'CHECK_IN', 21),
+    ('Heather Oscar', '2023-08-22 16:30:00', '2023-08-26 10:00:00', 'EARLY_DEPARTURE', 22),
+    ('Eric Willie', '2023-08-23 10:00:00', '2023-08-28 12:00:00', 'OCCUPIED', 24),
+    ('Elizabeth Maurice', '2023-08-24 11:30:00', '2023-08-30 09:00:00', 'CHECK_IN', 25),
+    ('Adam Jaime', '2023-08-25 13:00:00', '2023-08-29 14:30:00', 'DEPARTED', 26),
+    ('Megan Angelica', '2023-08-26 15:30:00', '2023-08-31 10:30:00', 'CHECK_OUT', 27),
+    ('Melissa Sharon', '2023-08-27 16:00:00', '2023-09-01 11:00:00', 'CHECK_IN', 28),
+    ('Michael Anderson', '2023-08-28 17:30:00', '2023-09-02 12:30:00', 'ARRIVAL', 29),
+    ('Sophia Martinez', '2023-08-29 14:00:00', '2023-09-03 13:00:00', 'CHECK_OUT', 10),
+    ('James Taylor', '2023-08-30 16:30:00', '2023-09-04 09:30:00', 'BOOKING', 31),
+    ('Emma Jackson', '2023-08-31 18:00:00', '2023-09-05 10:00:00', 'CHECK_IN', 32),
+    ('Alexander Davis', '2023-09-01 12:30:00', '2023-09-06 11:30:00', 'VIP', 33),
+    ('Ava Martinez', '2023-09-02 14:00:00', '2023-09-07 12:00:00', 'CHECK_OUT', 34),
+    ('William Johnson', '2023-09-03 15:30:00', '2023-09-08 10:30:00', 'CHECK_IN', 35),
+    ('Isabella Anderson', '2023-09-04 16:00:00', '2023-09-09 11:00:00', 'LOCK_OUT', 36),
+    ('Michael Brown', '2023-09-05 17:30:00', '2023-09-10 12:30:00', 'CHECK_OUT', 37),
+    ('Olivia Davis', '2023-09-06 19:00:00', '2023-09-11 14:00:00', 'SKIPPER', 38),
+    ('Ethan Taylor', '2023-09-07 14:30:00', '2023-09-12 13:30:00', 'CHECK_IN', 19),
+    ('Sophia Wilson', '2023-09-08 15:00:00', '2023-09-13 10:00:00', 'DEPARTED', 20),
+    ('Noah Jackson', '2023-09-09 16:30:00', '2023-09-14 11:30:00', 'CHECK_IN', 21),
+    ('Emma Harris', '2023-09-10 18:00:00', '2023-09-15 12:00:00', 'CHECK_OUT', 22),
+    ('Liam Martin', '2023-09-11 19:30:00', '2023-09-16 09:30:00', 'FIT', 23),
+    ('Ava Smith', '2023-09-12 20:00:00', '2023-09-17 10:00:00', 'CHECK_IN', 24),
+    ('James Johnson', '2023-09-13 21:30:00', '2023-09-18 12:30:00', 'RESERVED', 25);
+

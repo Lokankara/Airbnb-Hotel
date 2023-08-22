@@ -1,18 +1,159 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <title>Hotel Management System</title>
+    <meta charset="UTF-8">
+    <title>Booking with Filter and Actions</title>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons'>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vuetify@1.5.0/dist/vuetify.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css'>
+    <link rel="stylesheet" href="/css/home.css">
+<style>
+    .v-card__text pa-3 {
+        padding: 0;
+    }
+</style>
 </head>
 <body>
-<h1>Welcome to the Hotel Management System</h1>
+<div id="app">
+    <section class="navigation">
+        <a href="/" class="logo-link">Grand Budapest</a>
+        <div class="navigation-links">
+            <a href="/home" class="nav-link">Home</a>
+            <a href="/rooms" class="nav-link">Rooms</a>
+            <a href="/guests" class="nav-link active">Guests</a>
+            <a href="/search" class="nav-link">Search</a>
+            <a href="/booking" class="nav-link">Booking</a>
+            <a href="/departing" class="nav-link">Departing</a>
+            <a href="/rooms/free" class="nav-link">Available</a>
+        </div>
+        <div class="nav-right-side">
+            <button class="mode-switch">
+                <svg class="sun feather feather-sun" fill="none" stroke="#fbb046" stroke-linecap="round"
+                     stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24">
+                    <defs/>
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                <svg class="moon feather feather-moon" fill="none" stroke="#ffffff" stroke-linecap="round"
+                     stroke-linejoin="round" stroke-width="2"
+                     viewBox="0 0 24 24">
+                    <defs/>
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                </svg>
+            </button>
+            <button class="profile-btn">
+                <span>Pasha</span>
+                <img src="https://avatars.githubusercontent.com/u/78595276?v=4" alt="cat">
+            </button>
+        </div>
+    </section>
+    <v-app id="inspire">
+        <v-card-text class="pa-3">
+            <v-toolbar flat color="white">
+                <v-toolbar-title class="title font-weight-light mr-5">Today Reservations</v-toolbar-title>
+                <template v-if="reservationSelected.length >= 1">
+                    <v-btn color="success" dark class="mb-2">Confirm Selected</v-btn>
+                    <v-btn color="error" dark class="mb-2">Cancel Selected</v-btn>
 
-<h2>Guests</h2>
-<ul>
-    <li th:each="guest : ${guests}">
-        Passport Data: <span th:text="${guest.passportData}"></span>
-        | Arrival Date: <span th:text="${guest.arrivalDate}"></span>
-        | Departure Date: <span th:text="${guest.departureDate}"></span>
-    </li>
-</ul>
+                </template>
+                <v-spacer></v-spacer>
+                <v-select label="Status" :items="['', 'RESERVED', 'OCCUPIED', 'VACANT', 'MAINTENANCE']"
+                          v-model="status"></v-select>
+            </v-toolbar>
+
+            <v-data-table v-model="reservationSelected" :pagination.sync="pagination"
+                          :headers="reservationSelectedHeaders" item-key="reservation_id" :items="filteredItems"
+                          select-all class="">
+                <template slot="items" slot-scope="props">
+                    <td>
+                        <v-checkbox color="secondary" v-model="props.selected" primary hide-details></v-checkbox>
+                    </td>
+                    <td>{{ props.item.passportData }}</td>
+                    <td class="">
+                        <v-chip small v-if="props.item.guestStatus === 'EARLY_DEPARTURE'" label color="grey lighten-1" text-color="white">EARLY</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'CHECK_OUT'" label color="lime lighten-1" text-color="white">CHECK_OUT</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'CHECK_IN'" label color="green lighten-1" text-color="white">CHECK_IN</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'LOCK_OUT'" label color="yellow lighten-1" text-color="white">LOCK_OUT</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'OCCUPIED'" label color="orange lighten-1" text-color="white">OCCUPIED</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'RESERVED'" label color="purple lighten-1" text-color="white">RESERVED</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'DEPARTED'" label color="indigo lighten-1" text-color="white">DEPARTED</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'BOOKING'" label color="brown lighten-1" text-color="white">BOOKING</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'ARRIVAL'" label color="teal lighten-1" text-color="white">ARRIVAL</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'SKIPPER'" label color="black lighten-1" text-color="white">SKIPPER</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'DND'" label color="blue lighten-1" text-color="white">DND</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'FIT'" label color="cyan lighten-1" text-color="white">FIT</v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'VIP'" label color="red lighten-1" text-color="white">VIP</v-chip>
+                    <td class="">{{ props.item.room.capacity }}</td>
+                    <td class="">{{ props.item.arrivalDate }}</td>
+                    <td class="">{{ props.item.departureDate }}</td>
+                    <td class="">{{ props.item.room.roomType }}</td>
+                    <td class="">
+                        <v-chip small v-if="props.item.room.roomStatus === 'RESERVED'" label color="grey lighten-4" text-color="grey darken-2">RESERVED</v-chip>
+                        <v-chip small v-if="props.item.room.roomStatus === 'OCCUPIED'" label color="amber lighten-4" text-color="amber darken-2">OCCUPIED</v-chip>
+                        <v-chip small v-if="props.item.room.roomStatus === 'VACANT'" label color="light-green lighten-4" text-color="light-green darken-2">VACANT</v-chip>
+                        <v-chip small v-if="props.item.room.roomStatus === 'MAINTENANCE'" label color="red lighten-4" text-color="red darken-2">MAINTENANCE</v-chip>
+                    </td>
+                    <td class="">
+                        <v-icon class="mr-2" color="success" @click=""> check_circle</v-icon>
+                        <v-icon class="mr-2" color="error" @click=""> cancel</v-icon>
+                    </td>
+                </template>
+            </v-data-table>
+        </v-card-text>
+    </v-app>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/babel-polyfill/dist/polyfill.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/vuetify@1.5.0/dist/vuetify.min.js'></script>
+<script th:inline="javascript">const guests = [[${guests}]];</script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                reservationSelected: [],
+                pagination: {
+                    rowsPerPage: 10
+                },
+
+                status: null,
+                reservationSelectedHeaders: [
+                    {text: 'Name', value: 'passportData'},
+                     {text: 'GuestStatus', value: 'guestStatus'},
+                    {text: 'Rooms', value: 'room.capacity'},
+                    {text: 'Departure', value: 'departureDate'},
+                    {text: 'Arrive', value: 'arrivalDate'},
+                    {text: 'Type', value: 'room.roomType'},
+                    {text: 'RoomStatus', value: 'room.roomStatus'},
+                    {text: 'Actions', align: 'left', value: 'title', sortable: false}],
+                reservations: guests
+            };
+
+        },
+        computed: {
+            filteredItems() {
+                console.log('filteredItems computed property called');
+                return this.reservations.filter(i => {
+                    return !this.status || i.room.roomStatus === this.status;
+                });
+            }
+        }
+    });
+
+
+    window.onload = () => {
+        const radioInputs = document.querySelectorAll('input[type="radio"]');
+
+        radioInputs.forEach(radio => {
+            radio.addEventListener('mouseover', () => {
+                radio.checked = true;
+            });
+        });
+    };
+</script>
+<script src="/js/home.js"></script>
 </body>
 </html>

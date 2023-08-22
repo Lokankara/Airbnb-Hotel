@@ -1,6 +1,16 @@
 package com.manager.hotel.model.entity;
 
-import jakarta.persistence.*;
+import com.manager.hotel.model.enums.Gender;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -25,6 +35,7 @@ import java.time.LocalDate;
 public class Passport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "passport_id")
     private Long id;
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -63,7 +74,7 @@ public class Passport {
     @Size(min = 1, max = 128)
     @Column(name = "passport_number", length = 128, nullable = false)
     private String passportNumber;
-    @OneToOne
+    @OneToOne(mappedBy = "passport", fetch = FetchType.LAZY)
     private Guest guest;
 
     @Override

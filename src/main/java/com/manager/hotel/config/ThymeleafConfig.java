@@ -14,8 +14,10 @@ public class ThymeleafConfig
 
     @Bean
     public SpringTemplateEngine templateEngine() {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.addTemplateResolver(templateResolver());
+        SpringTemplateEngine templateEngine =
+                new SpringTemplateEngine();
+        templateEngine.addTemplateResolver(
+                templateResolver());
         return templateEngine;
     }
 
@@ -30,8 +32,10 @@ public class ThymeleafConfig
 
     @Bean
     public ViewResolver thymeleafViewResolver() {
-        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-        viewResolver.setTemplateEngine(templateEngine());
+        ThymeleafViewResolver viewResolver =
+                new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(
+                templateEngine());
         return viewResolver;
     }
 }

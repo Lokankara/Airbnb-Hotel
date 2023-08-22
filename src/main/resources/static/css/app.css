@@ -1,0 +1,91 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.app-actions-line {
+    display: flex;
+    align-items: center;
+    margin: 30px 0;
+    justify-content: center;
+}
+
+.app-main-left {
+    flex: 4;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.app-main-right {
+    flex: 2;
+    margin-left: 24px;
+    max-width: 400px;
+}
+
+.app-main-right .card-image-wrapper {
+    max-height: 100%;
+    padding: 0;
+    height: 100%;
+}
+
+.app-main-right .card {
+    height: 160px;
+}
+
+.app-main-right .card-image-wrapper img {
+    margin: 0;
+}
+
+.app-main {
+    flex: 1;
+    overflow: hidden;
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.app-main-right-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    color: var(--main-font-color);
+    background-color: var(--cards-area-bg);
+}
+
+.app-main-right-header span {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 600;
+}
+
+.app-main-right-header a {
+    font-size: 14px;
+    color: var(--buttons-color-primary);
+    font-weight: 600;
+}
+
+.app-main-right .card-wrapper {
+    width: 100%;
+    padding: 8px 0;
+}
+
+.app-main-right .card {
+    display: flex;
+}
+
+.app-main-right .card-image-wrapper {
+    flex-basis: 40%;
+    display: flex;
+    flex-shrink: 0;
+}
+
+.app-main-right .card-image-wrapper img {
+    height: 100%;
+}
+
+section.app-actions {
+    padding: 0;
+}
