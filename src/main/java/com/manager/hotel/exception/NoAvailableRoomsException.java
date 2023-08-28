@@ -2,7 +2,8 @@ package com.manager.hotel.exception;
 
 public class NoAvailableRoomsException
         extends RuntimeException {
-    public NoAvailableRoomsException(String message) {
+    public NoAvailableRoomsException(
+            final String message) {
         super(message);
     }
 }

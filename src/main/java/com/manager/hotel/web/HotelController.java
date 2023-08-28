@@ -1,11 +1,12 @@
 package com.manager.hotel.web;
 
+import com.manager.hotel.model.dto.PostBookingDto;
 import com.manager.hotel.service.facade.HotelFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,11 +37,11 @@ public class HotelController {
     }
 
     @PostMapping("/booking")
-    public String getAllBooking(
-            final Model model) {
-        model.addAttribute(BOOKING,
-                facade.getAllBooking());
-        return BOOKING;
+    public String saveBooking(
+            @ModelAttribute("booking")
+            final PostBookingDto dto) {
+        facade.saveBooking(dto);
+        return "redirect:/checkin";
     }
 
     @PostMapping("/guests/{guestId}/rooms/{roomId}")
@@ -53,7 +54,7 @@ public class HotelController {
         return BOOKING;
     }
 
-    @DeleteMapping("/guests/{guestId}")
+    @PostMapping("/guests/{guestId}")
     public String earlyDeparture(
             final Model model,
             final @PathVariable Long guestId,

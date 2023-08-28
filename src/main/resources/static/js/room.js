@@ -24,7 +24,6 @@ const onloadAnimation = controls => {
             ".slide-info-box",
             {"clip-path": "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)"},
             "in+=0.64").to(".slide-info-box a", {opacity: 1}, "in+=0.82").to(".slide-info-box h4", {opacity: 1}, "in+=0.82")
-        // controls -
         .to(controls, {opacity: 1, duration: 0.32}, "in+=0.64");
 };
 
@@ -34,38 +33,13 @@ const animateSlide = (
     setSlidingState,
     wrapTransform) => {
     const tl = gsap.timeline();
-    // hide title clip
-    tl.to(
-        ".slide-title",
-        {"clip-path": "polygon(0% 0%, 0% 100%, 0% 100%, 0% 0%)", duration: 0.32},
-        "in").to(
-        titleWrap,
-        {y: wrapTransform, duration: 0.44, ease: "power2"},
-        "in+=0.32")
-
-        // animate the number container
-        .to(
-            numberWrap,
-            {y: wrapTransform, duration: 0.4, ease: "power2"},
-            "in+=0.32")
-
-        // animate the number
+    tl.to(".slide-title", {"clip-path": "polygon(0% 0%, 0% 100%, 0% 100%, 0% 0%)", duration: 0.32}, "in")
+        .to(titleWrap, {y: wrapTransform, duration: 0.44, ease: "power2"}, "in+=0.32")
+        .to(numberWrap, {y: wrapTransform, duration: 0.4, ease: "power2"}, "in+=0.32")
         .to(".slide-number", {opacity: 0, duration: 0.32}, "in")
-        // reset the number animation
         .set(".slide-number", {opacity: 1}, "in+=0.32")
-        // show title clip
-        .to(".slide-title", {
-            "clip-path": "polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%)",
-            duration: 0.64
-        })
-
-        // animate slide info text container
-        .to(
-            ".slide-info",
-            {y: wrapTransform, duration: 0.32, ease: "power2"},
-            "in+=0.32")
-
-        // animate info text
+        .to(".slide-title", {"clip-path": "polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%)", duration: 0.64})
+        .to(".slide-info", {y: wrapTransform, duration: 0.32, ease: "power2"}, "in+=0.32")
         .to(".slide-info", {opacity: 0, duration: 0.32}, "in").to(".slide-info", {
         opacity: 1,
         duration: 0.32
@@ -100,25 +74,20 @@ const animateSliderOut = () => {
             "clip-path": "polygon(0% 100%, 0% 100%, 100% 100%, 100% 100%)",
             duration: 0.08
         },
-
         "out").to(
         ".slide-info-box",
         {
             opacity: 0
         },
-
         "out");
-
 };
 
-// ANIMATE OVERLAY WHEN EXPAND BUTTON IS CLICKED
 const animateOverlayIn = (overlay, navbar, setExpandingState) => {
     const tl = gsap.timeline({
         delay: 0.4, onComplete: () => {
         }
     });
     tl
-        // navbar
         .to(
             navbar,
             {
@@ -127,7 +96,6 @@ const animateOverlayIn = (overlay, navbar, setExpandingState) => {
 
             "in")
 
-        // overlay
         .to(
             overlay,
             {
@@ -160,7 +128,6 @@ const animateOverlayIn = (overlay, navbar, setExpandingState) => {
 
         "in")
 
-        // slides
         .fromTo(
             ".overlay-slide-preview",
             {
@@ -202,7 +169,6 @@ const animateOverlayIn = (overlay, navbar, setExpandingState) => {
         "in+=0.48").add(setExpandingState, 1);
 };
 
-// ANIMATE THE OVERLAY WHEN CLOSE BUTTON IS CLICKED
 const animateOverlayOut = (overlay, navbar, callback) => {
     const tl = gsap.timeline({
         onComplete: () => {
@@ -226,7 +192,6 @@ const animateOverlayOut = (overlay, navbar, callback) => {
 
         "in+=0.32").to(overlay, {opacity: 0}, "in").to(navbar, {y: 0, duration: 0.64}, "in").add(callback, 0.96);
 };
-// ANIMATE THE OVERLAY AND THE SLIDER WHEN OVERLAY IMAGE IS CLICKED
 const animateImg = (overlay, callback, navbar) => {
     const tl = gsap.timeline({
         defaults: {duration: 0.4},
@@ -247,7 +212,6 @@ const animateImg = (overlay, callback, navbar) => {
     });
 
     tl
-        // Overlay components
         .set(".overlay-slide-container", {width: "100%"}, "animate").to(
         ".overlay-slide-container",
         {height: "100%", overflow: "hidden", width: "100%"},
@@ -256,7 +220,6 @@ const animateImg = (overlay, callback, navbar) => {
         {margin: "0", width: "100vw", height: "100vh"},
         "animate")
 
-        // hide overlay image text
         .to(
             ".overlay-preview-title-text",
             {
@@ -277,7 +240,6 @@ const animateImg = (overlay, callback, navbar) => {
         },
 
         "animate+=0.32").add(callback, 0.72)
-        // Animating the slider components
         .fromTo(
             ".slide-title",
             {"clip-path": "polygon(0% 0%, 0% 100%, 0% 100%, 0% 0%)"},
@@ -289,21 +251,15 @@ const animateImg = (overlay, callback, navbar) => {
             "clip-path": "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
             y: "-=100%"
         },
-
         0.48)
-
-        // show slider info box
         .to(".slide-info-box", {opacity: 1}, 0.48)
-        // animating the navbar
         .to(navbar, {y: 0}, 0.4);
 };
 
 const animatePreview = (x, slideCount, numberTransform) => {
     const tl = gsap.timeline({defaults: {duration: 0.4}});
     tl
-        // overlay
         .to(".overlay-preview-wrap", {"padding-left": "0px", x: x, width: "400%"})
-        // slider
         .set(".slider-container", {
             background: `url('/img/room${slideCount}.jpg') center center / cover`
         }).set(".number-wrap", {y: numberTransform}).set(".title-wrap", {y: numberTransform}).set(".slide-info", {y: numberTransform});
@@ -391,7 +347,6 @@ const Overlay = forwardRef((props, ref) => {
     const slideRef = useRef([]);
 
     useEffect(() => {
-        // Enable dragging
         new Draggable(".overlay-preview-wrap", {
             type: "x",
             bounds: ".overlay-slide-container",
@@ -434,12 +389,9 @@ const Overlay = forwardRef((props, ref) => {
                     React.createElement("div", {className: "overlay-nav-heading"},
                         React.createElement("h3", {className: "overlay-title"}, "Select your purpose"),
                         React.createElement("h4", {className: "overlay-sub"}, "")),
-
                     React.createElement("nav", {className: "overlay-nav-buttons"},
                         React.createElement(Toggle, null),
                         React.createElement("button", {className: "overlay-close", onClick: props.close}, "Close"))),
-
-
                 React.createElement("div", {className: "overlay-slide-container"},
                     React.createElement("div", {className: "overlay-preview-wrap"}, slides)))));
 
@@ -474,9 +426,7 @@ const Preloader = forwardRef((props, ref) => {
             {
                 "clip-path": "polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)",
                 duration: 0.4
-            },
-
-            "m");
+            }, "m");
 
     }, []);
     return (
@@ -485,8 +435,6 @@ const Preloader = forwardRef((props, ref) => {
                 React.createElement("p", {ref: textRef}, "Loading..."),
                 React.createElement("div", {className: "box-clip", ref: boxRef}),
                 React.createElement("div", {className: "box-clip2", ref: box2Ref}))));
-
-
 });
 
 const Navbar = forwardRef((props, ref) => {
@@ -501,8 +449,11 @@ const Navbar = forwardRef((props, ref) => {
         }
     });
     const toggleNav = () => {
-        ref.current.dataset.expanded === "false" ? ref.current.dataset.expanded = 'true' : ref.current.dataset.expanded = 'false';
-        ref.current.dataset.expanded === "true" ? gsap.fromTo(ref.current, {height: "40px"}, {
+        ref.current.dataset.expanded === "false"
+            ? ref.current.dataset.expanded = 'true'
+            : ref.current.dataset.expanded = 'false';
+        ref.current.dataset.expanded === "true"
+            ? gsap.fromTo(ref.current, {height: "40px"}, {
             height: "100%",
             duration: 0.40
         }) : gsap.to(ref.current, {height: "40px", duration: 0.40});
@@ -526,10 +477,8 @@ const Navbar = forwardRef((props, ref) => {
                     React.createElement("span", {className: "toggle-bar"}),
                     React.createElement("span", {className: "toggle-bar"}),
                     React.createElement("span", {className: "toggle-bar"})),
-
                 React.createElement("div", {className: "brand"},
-                    React.createElement("a", {href: "/"}, "Grand Budapest")),
-
+                    React.createElement("a", {className: "link-to-portfolio hover-target", href: "/home"}, "")),
                 React.createElement("div", {className: "nav-center"},
                     React.createElement("ul", null,
                         React.createElement("li", null, React.createElement("a", {
@@ -561,7 +510,6 @@ const Navbar = forwardRef((props, ref) => {
                             href: "/available"
                         }, "Available")))))));
 });
-
 
 const SliderControls = forwardRef((props, ref) => {
     return (
@@ -622,7 +570,6 @@ class App extends Component {
             });
         _defineProperty(this, "titleWrapRef",
 
-
             createRef());
         _defineProperty(this, "numberWrapRef",
             createRef());
@@ -650,7 +597,6 @@ class App extends Component {
                         y: "-100%",
                         duration: 1,
                         onStart: () => {
-                            // Animate the different elements in
                             onloadAnimation(this.controlsRef.current);
                         },
                         onComplete: () => {
@@ -663,7 +609,6 @@ class App extends Component {
             });
         _defineProperty(this, "expand",
             () => {
-                // Expand Overlay
                 if (
                     !this.state.isExpanded &&
                     !this.state.isExpanding &&
@@ -675,7 +620,6 @@ class App extends Component {
                         });
                     });
                 }
-                // Hide Overlay
                 if (
                     this.state.isExpanded &&
                     !this.state.isExpanding &&
@@ -749,8 +693,6 @@ class App extends Component {
 
                             this.navbar.current));
 
-
-                    // Updating the sliders position based on what image was clicked in the overlay
                     if (e.currentTarget.id === "preview-1") {
                         this.setState({slideCount: 1}, () => animatePreview(0, 1, "0%"));
                     }
@@ -821,7 +763,6 @@ class App extends Component {
                         }
                     },
 
-
                     React.createElement("div", {className: "slider-text-container"},
                         React.createElement("div", {className: "slide-number-container"},
                             React.createElement("div", {className: "number-wrap", ref: this.numberWrapRef},
@@ -832,7 +773,6 @@ class App extends Component {
                         React.createElement("div", {className: "slide-title-container"},
                             React.createElement("div", {className: "title-wrap", ref: this.titleWrapRef},
                                 slideTitles)),
-
 
                         React.createElement(SliderControls, {
                             prev: this.prevSlide,
@@ -854,10 +794,7 @@ class App extends Component {
                     ref: this.overlay,
                     imgClick: e => this.animateImgClick(e)
                 })));
-
-
     }
 }
-
 
 ReactDOM.render(React.createElement(App, null), document.getElementById("app"));

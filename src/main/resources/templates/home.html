@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Hotel Manager</title>
     <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/nav.css">
     <link rel="stylesheet" href="/css/card.css">
     <link rel="stylesheet" href="/css/media.css">
     <link rel="stylesheet" href="/css/app.css">
@@ -13,7 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Borel&family=Roboto:wght@400;500;600;700;900&display=swap"
           rel="stylesheet">
 </head>
-
 <body>
 <div class="app-container">
     <section class="navigation">
@@ -45,7 +45,7 @@
             </button>
             <button class="profile-btn">
                 <span>Pasha</span>
-                <img src="https://avatars.githubusercontent.com/u/78595276?v=4" alt="cat">
+                <img src="/img/ava.jpg" alt="avatar">
             </button>
         </div>
     </section>
@@ -128,7 +128,7 @@
                     </div>
                     <div class="card-info">
                         <div class="card-text small type" th:class="'room-status-' + ${room.roomStatus}">
-                            <span th:text="${room.roomStatus}"></span>
+                            <span class="card-status" th:text="${room.roomStatus}"></span>
                         </div>
                         <div class="card-text big cardText-js" th:text="${room.roomType}"></div>
                         <div class="card-text small">
@@ -146,7 +146,7 @@
         <div class="app-main-right cards-area">
             <div class="app-main-right-header">
                 <span>Latest Deals</span>
-                <a href="#">See More</a>
+                <a href="/rooms">See More</a>
             </div>
             <div class="card-wrapper main-card">
                 <a class="card cardItem" onclick="openModal()">
@@ -245,16 +245,16 @@
     <div class="main-modal">
         <div class="modal-left">
             <div class="modal-image-wrapper">
-                <img src="https://source.unsplash.com/featured/1200x900/?design,hotel" alt="">
+                <img src="" alt="Room">
             </div>
             <div class="modal-info-header">
                 <div class="left-side">
                     <h1 class="modalHeader-js"></h1>
-                    <p>Stockton Street</p>
+                    <p class="modalText"></p>
                 </div>
                 <div class="right-side">
                     Starts from:
-                    <span class="amount">$1000</span>
+                    <span class="amount"></span>
                 </div>
             </div>
             <div class="info-bar">
@@ -268,7 +268,7 @@
                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                         </svg>
                     </div>
-                    <span>2 Bedrooms</span>
+                    <span class="modal-capacity"></span>
                 </div>
                 <div class="info-wrapper">
                     <div class="info-icon">
@@ -280,7 +280,7 @@
                                     d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
                         </svg>
                     </div>
-                    <span>2 Bathrooms</span>
+                    <span class="modal-bath"></span>
                 </div>
                 <div class="info-wrapper">
                     <div class="info-icon">
@@ -291,7 +291,7 @@
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                         </svg>
                     </div>
-                    <span>1250m2</span>
+                    <span class="modal-square"></span>
                 </div>
                 <div class="info-wrapper">
                     <div class="info-icon">
@@ -339,101 +339,21 @@
                 <span>Reviews</span>
                 <a href="#">See All</a>
             </div>
-            <div class="card-wrapper">
-                <div class="card">
-                    <div class="profile-info-wrapper">
-                        <div class="profile-img-wrapper">
-                            <img src="https://source.unsplash.com/featured/1200x900/?woman,cool" alt="Review">
+            <div th:each="guest: ${guests}" th:if="${not #strings.isEmpty(guest.feedback)}"
+                 class="modal-profile-wrapper">
+                <div class="card-wrapper">
+                    <div class="card">
+                        <div class="profile-info-wrapper">
+                            <div class="profile-img-wrapper">
+                                <img th:src="@{'https://source.unsplash.com/random/600x400/?' + ${guest.gender} + ',face,' + ${guest.id}}"
+                                     alt="Review">
+                            </div>
+                            <p th:text="${guest.passportData}"></p>
                         </div>
-                        <p>Jessica Ramirez</p>
+                        <p th:text="${guest.feedback}"></p>
                     </div>
-                    <p>It’s a very comfortable twin room containing a double bed with two single beds joined by a
-                        similar headboard. It’s appropriate for small children, as it caters to their high risk of
-                        falling off the bed.</p>
                 </div>
             </div>
-            <div class="card-wrapper">
-                <div class="card">
-                    <div class="profile-info-wrapper">
-                        <div class="profile-img-wrapper">
-                            <img src="https://source.unsplash.com/featured/1200x900/?woman,latina" alt="Review">
-                        </div>
-                        <p>Gloria Ramirez</p>
-                    </div>
-                    <p>a twin room typically has only two single beds, while a double room has just one double bed
-                        designed for two people, also referred to as a marital bed. Two people can sleep in a twin hotel
-                        room but in different beds</p>
-                </div>
-            </div>
-            <div class="card-wrapper">
-                <div class="card">
-                    <div class="profile-info-wrapper">
-                        <div class="profile-img-wrapper">
-                            <img src="https://source.unsplash.com/featured/1200x900/?man,art" alt="Review">
-                        </div>
-                        <p>Luck Jackson</p>
-                    </div>
-                    <p>Hotel suites are different in size. In most hotels, a suite contains a room separate from the
-                        offered bedroom. One room generally has a living area with a beautiful couch to convert to a
-                        bed, a kitchenette, and a separate TV.</p>
-                </div>
-            </div>
-            <div class="card-wrapper">
-                <div class="card">
-                    <div class="profile-info-wrapper">
-                        <div class="profile-img-wrapper">
-                            <img src="https://source.unsplash.com/featured/1200x900/?woman,adventure" alt="Review">
-                        </div>
-                        <p>Luna Rosa</p>
-                    </div>
-                    <p>These hotel rooms usually contain two double beds. They can also have two queen beds. And, they
-                        are designed to accommodate two or more people. Double-double rooms are suitable for people
-                        traveling with young kids. </p>
-                </div>
-            </div>
-            <div class="card-wrapper">
-                <div class="card">
-                    <div class="profile-info-wrapper">
-                        <div class="profile-img-wrapper">
-                            <img src="https://source.unsplash.com/featured/1200x900/?man,modern" alt="Review">
-                        </div>
-                        <p>John mayer</p>
-                    </div>
-                    <p>This hotel room type contains a studio bed. A studio bed is a bed that can be converted into
-                        other pieces of furniture such as a couch or a sofa. This type of room can function like a fully
-                        furnished apartment. </p>
-                </div>
-            </div>
-            <div class="card-wrapper">
-                <div class="card">
-                    <div class="profile-info-wrapper">
-                        <div class="profile-img-wrapper">
-                            <img src="https://source.unsplash.com/featured/1200x900/?woman" alt="Review">
-                        </div>
-                        <p>Tina Jackson</p>
-                    </div>
-                    <p>It’s advisable to understand hotel room options before booking. This ensures that you book the
-                        right room to help you enjoy your stay at your chosen hotel. It’s also good to know what you are
-                        paying for in any hotel room type.</p>
-                </div>
-            </div>
-            <div class="card-wrapper">
-                <div class="card">
-                    <div class="profile-info-wrapper">
-                        <div class="profile-img-wrapper">
-                            <img src="https://source.unsplash.com/featured/1200x900/?woman,modern" alt="Review">
-                        </div>
-                        <p>July Johnson</p>
-                    </div>
-                    <p>As a law requirement, hotels are supposed to offer a specific number of rooms that handicapped
-                        people can access with ease. These rooms usually have enough space for wheelchairs to move
-                        without much trouble. Their bathrooms are also designed in such a manner that allows a disabled
-                        person to use them efficiently.
-
-                    </p>
-                </div>
-            </div>
-
         </div>
         <button class="btn btn-close" onclick="closeModal()">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
@@ -448,6 +368,7 @@
 <script>
     let ini = document.querySelector('#modal-window');
     ini.classList.add("hideModal");
+
 </script>
 <script src="/js/home.js"></script>
 </body>

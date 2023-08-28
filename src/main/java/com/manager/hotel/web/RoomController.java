@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static com.manager.hotel.web.ConstantPath.AVAILABLE;
+import static com.manager.hotel.web.ConstantPath.ROOM;
 import static com.manager.hotel.web.ConstantPath.ROOMS;
 
 @Controller
@@ -32,18 +32,17 @@ public class RoomController {
     public String checkIn(
             final Model model,
             final @PathVariable Long roomId) {
-        model.addAttribute("room", roomService
+        model.addAttribute(ROOM, roomService
                 .findRoomById(roomId));
-        return "room";
+        return ROOM;
     }
 
     @GetMapping("/free")
     public String showAvailableRooms(
             final Model model,
-            @RequestParam Criteria criteria) {
-        model.addAttribute(AVAILABLE, roomService
+            @RequestParam final Criteria criteria) {
+        model.addAttribute(ROOMS, roomService
                 .findAvailableRoom(criteria));
-        return "room";
-//        return AVAILABLE;
+        return ROOMS;
     }
 }

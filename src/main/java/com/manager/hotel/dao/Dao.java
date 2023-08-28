@@ -32,7 +32,8 @@ public abstract class Dao<T> {
         }
     }
 
-    public Optional<T> findById(Long id) {
+    public Optional<T> findById(
+            final Long id) {
         try (EntityManager entityManager =
                      factory.createEntityManager()) {
             return Optional.ofNullable(

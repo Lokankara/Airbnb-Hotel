@@ -9,7 +9,7 @@ import java.util.List;
 public interface RoomService {
     List<RoomDto> findRooms();
 
-    RoomDto findAvailableRoom(Criteria criteria);
+    Room findAvailableRoom(Criteria criteria);
 
     Room findRoomById(Long id);
 }

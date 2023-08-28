@@ -9,7 +9,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -21,8 +20,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -45,12 +42,12 @@ public class Passport {
     private String address;
     @NotNull
     @Size(min = 1, max = 128)
-    @Column(name = "country", length = 128, nullable = false)
-    private String country;
+    @Column(name = "email", length = 128, nullable = false)
+    private String email;
     @NotNull
     @Size(min = 3, max = 128)
-    @Column(name = "contacts", length = 128, nullable = false)
-    private String contacts;
+    @Column(name = "phone", length = 128, nullable = false)
+    private String phone;
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "last_name", length = 128, nullable = false)
@@ -60,27 +57,22 @@ public class Passport {
     @Column(name = "first_name", length = 128, nullable = false)
     @NotNull
     private String firstName;
-    @Column(name = "birth_date", length = 128)
-    private LocalDate birthDate;
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "credit_card", length = 128, nullable = false)
     private String creditCard;
     @NotNull
-    @Size(min = 1, max = 128)
-    @Column(name = "nationality", length = 128, nullable = false)
-    private String nationality;
-    @NotNull
-    @Size(min = 1, max = 128)
-    @Column(name = "passport_number", length = 128, nullable = false)
-    private String passportNumber;
-    @OneToOne(mappedBy = "passport", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "passport", fetch = FetchType.EAGER)
     private Guest guest;
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Passport passport = (Passport) o;
         return id.equals(passport.id);
     }

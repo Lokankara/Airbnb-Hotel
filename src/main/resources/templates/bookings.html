@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>check</title>
+</head>
+<body>
+<div th:each="booking: ${bookings}" class="card-wrapper main-card">
+    <h2>Booking Details</h2>
+    <p>Final Bill: <span th:text="${booking.finalBill}"></span></p>
+    <p>Early Departure: <span th:text="${booking.earlyDeparture}"></span></p>
+    <p>Arrival: <span th:text="${booking.arrival}"></span></p>
+    <p>Check-in Date: <span th:text="${booking.checkInDate}"></span></p>
+    <p>Check-out Date: <span th:text="${booking.checkOutDate}"></span></p>
+    <p>Room: <span th:text="${booking.guest.rooms}"></span></p>
+    <p>Passport: <span th:text="${booking.guest.passport}"></span></p>
+</div>
+</body>
+</html>

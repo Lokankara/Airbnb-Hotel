@@ -1,14 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Booking</title>
+    <title>Hotel booking</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.1.1/dist/css/bootstrap.css}">
+    <link rel="stylesheet" href="/css/booking.css">
 </head>
 <body>
-<h2>Booking Information</h2>
-<p><strong>Guest:</strong> <span th:text="${booking.getGuest()}"></span></p>
-<p><strong>Check-Out Date:</strong> <span th:text="${booking.checkOutDate}"></span></p>
-<p><strong>Final Bill:</strong> <span th:text="${booking.finalBill}"></span></p>
-<p><strong>Early Departure:</strong> <span th:text="${booking.earlyDeparture ? 'Yes' : 'No'}"></span></p>
+<div id="booking" class="section">
+    <div class="section-center">
+        <div class="container">
+            <div class="row">
+                <div class="booking-form">
+                    <div class="form-header">
+                        <h1>Make your reservation</h1>
+                    </div>
+                    <form action="/booking" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        <input class="form-control" type="text" name="firstname"
+                                               placeholder="Enter your Firstname" required>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="lastname"
+                                           placeholder="Enter you Lastname" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="address"
+                                   placeholder="Country, ZIP, city..." required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" name="checkin" type="date" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" name="checkout" type="date" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="creditCard" placeholder="Credit Card">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" type="email" name="email"
+                                           placeholder="Enter your Email">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" type="tel" name="phone"
+                                           placeholder="Enter you Phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" name="capacity" required>
+                                        <option value="" selected hidden>no of rooms</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select>
+                                    <span class="select-arrow"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" name="adults" required>
+                                        <option value="" selected hidden># of adults</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                    <span class="select-arrow"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" name="children" required>
+                                        <option value="" selected hidden># of children</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                    <span class="select-arrow"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" name="roomType"  required>
+                                        <option value="" selected hidden>Type of room</option>
+                                        <option th:each="type : ${T(com.manager.hotel.model.enums.RoomType).values()}"
+                                                th:value="${type}"
+                                                th:text="${type.name().toLowerCase()}"></option>
+                                    </select>
+                                    <span class="select-arrow"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" name="guestStatus" required>
+                                        <option value="" selected hidden>Guest Status</option>
+                                        <option th:each="type : ${T(com.manager.hotel.model.enums.GuestStatus).values()}"
+                                                th:value="${type}"
+                                                th:text="${type.name().toLowerCase()}"></option>
+                                    </select>
+                                    <span class="select-arrow"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" name="gender" required>
+                                        <option value="" selected hidden>Gender</option>
+                                        <option th:each="type : ${T(com.manager.hotel.model.enums.Gender).values()}"
+                                                th:value="${type}"
+                                                th:text="${type.name().toLowerCase()}"></option>
+                                    </select>
+                                    <span class="select-arrow"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-btn">
+                                <button type="submit" class="submit-btn">Book Now</button>
+                            </div>
+                            <div class="autofill"
+                                 onclick="autofill()">Autofill
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{webjars/jquery/3.7.0/dist/jquery.js}"></script>
+<script>
+    function autofill() {
+        const inputs = document.getElementsByTagName("input");
+        const selects = document.getElementsByTagName("select");
+        const guests = [
+            {
+                firstname: "Jack",
+                lastname: "Sparrow",
+                address: "Caribbean",
+                creditCard: "1234-5678-9012-3456",
+                checkin: "2023-08-20",
+                checkout: "2023-08-25",
+                capacity: "2",
+                adults: "2",
+                children: "2",
+                guestStatus: "FIT",
+                gender: "MAN",
+                roomType: "DELUXE",
+                email: "jack.sparrow@gmail.com",
+                phone: "+1 234-567-8901",
+            },
+            {
+                firstname: "Hector",
+                lastname: "Barbossa",
+                address: "Tortuga",
+                creditCard: "9876-5432-1098-7654",
+                checkin: "2023-08-21",
+                checkout: "2023-08-26",
+                capacity: "1",
+                adults: "1",
+                children: "1",
+                guestStatus: "RESERVED",
+                gender: "MAN",
+                roomType: "KING",
+                email: "hector.barbossa@gmail.com",
+                phone: "+1 987-654-3210",
+            },
+            {
+                firstname: "Will",
+                lastname: "Turner",
+                address: "Port Royal",
+                creditCard: "5678-1234-9012-3456",
+                checkin: "2023-08-22",
+                checkout: "2023-08-27",
+                capacity: "1",
+                adults: "1",
+                children: "1",
+                guestStatus: "ARRIVAL",
+                gender: "MAN",
+                roomType: "VILLA",
+                email: "will.turner@gmail.com",
+                phone: "+1 567-890-1234",
+            },
+            {
+                firstname: "Elizabeth",
+                lastname: "Swann",
+                address: "Port Royal",
+                creditCard: "7890-1234-9012-3456",
+                checkin: "2023-08-22",
+                checkout: "2023-08-27",
+                capacity: "1",
+                adults: "1",
+                children: "1",
+                guestStatus: "ARRIVAL",
+                gender: "WOMAN",
+                roomType: "QUEEN",
+                email: "elizabeth.turner@gmail.com",
+                phone: "+1 567-890-1234",
+            },
+            {
+                firstname: "Davy",
+                lastname: "Jones",
+                address: "The Flying Dutchman",
+                creditCard: "9012-3456-7890-1234",
+                checkin: "2023-08-23",
+                checkout: "2023-08-28",
+                capacity: "1",
+                adults: "1",
+                children: "1",
+                guestStatus: "CHECK_IN",
+                gender: "MAN",
+                roomType: "CABANA",
+                email: "davy.jones@gmail.com",
+                phone: "+1 901-234-5678",
+            }
+        ];
+        const randomGuestIndex = Math.floor(Math.random() * guests.length);
+        const guest = guests[randomGuestIndex];
+
+        for (let i = 0; i < inputs.length; i++) {
+            const inputName = inputs[i].getAttribute("name");
+            if (guest[inputName]) {
+                inputs[i].value = guest[inputName];
+            }
+        }
+
+        for (let i = 0; i < selects.length; i++) {
+            const selectName = selects[i].getAttribute("name");
+            if (guest[selectName]) {
+                selects[i].value = guest[selectName];
+            }
+        }
+    }
+</script>
 </body>
 </html>

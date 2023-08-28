@@ -5,7 +5,9 @@ import com.manager.hotel.service.GuestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,9 +42,9 @@ public class GuestController {
     @GetMapping("/departing")
     public String findGuestsDepartingToday(
             final Model model) {
-        model.addAttribute(BOOKING, guestService
+        model.addAttribute(GUESTS, guestService
                 .findDepartingToday());
-        return BOOKING;
+        return GUESTS;
     }
 
     @GetMapping("/search")
@@ -52,5 +54,23 @@ public class GuestController {
         model.addAttribute(GUESTS, guestService
                 .findByCriteria(criteria));
         return GUESTS;
+    }
+
+    @DeleteMapping("/guests/{guestId}")
+    public String deleteGuest(
+            final Model model,
+            final @PathVariable String guestId) {
+        model.addAttribute(BOOKING,
+                guestService.delete(guestId));
+        return BOOKING;
+    }
+
+    @PatchMapping("/guests/{guestId}")
+    public String updateData(
+            final Model model,
+            final @PathVariable String guestId) {
+        model.addAttribute(BOOKING,
+                guestService.updateStatus(guestId));
+        return BOOKING;
     }
 }

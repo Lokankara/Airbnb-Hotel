@@ -29,20 +29,22 @@ public class JpaRoomService implements RoomService {
 
     @Override
     @Transactional(readOnly = true)
-    public RoomDto findAvailableRoom(
-            Criteria criteria) {
+    public Room findAvailableRoom(
+            final Criteria criteria) {
         List<Room> availableRooms = roomRepository
                 .findByRoomTypeAndCapacity(criteria);
-        return mapper.toDto(availableRooms.stream()
+        return availableRooms.stream()
                 .findFirst()
                 .orElseThrow(() -> new NoAvailableRoomsException(
                         "No available rooms found by criteria: "
-                                + criteria)));
+                                + criteria));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Room findRoomById(Long id) {
-        return roomRepository.getById(id);
+    public Room findRoomById(
+            final Long id) {
+        return roomRepository
+                .getById(id);
     }
 }

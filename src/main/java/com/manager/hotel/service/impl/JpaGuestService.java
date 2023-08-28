@@ -37,6 +37,21 @@ public class JpaGuestService implements GuestService {
     }
 
     @Override
+    public GuestDto delete(String id) {
+        return null; //TODO
+    }
+
+    @Override
+    public GuestDto updateStatus(final String id) {
+        return null; //TODO
+    }
+
+    @Override
+    public Guest save(final Guest guest) {
+        return guestRepository.save(guest);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<GuestDto> findDepartingToday() {
         return mapper.toListDto(guestRepository
@@ -45,7 +60,9 @@ public class JpaGuestService implements GuestService {
 
     @Override
     @Transactional(readOnly = true)
-    public Guest findGuestById(Long id) {
-        return guestRepository.getById(id);
+    public Guest findGuestById(
+            final Long id) {
+        return guestRepository
+                .getById(id);
     }
 }

@@ -9,8 +9,8 @@ import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
-import jakarta.persistence.Query;
 import jakarta.persistence.Subgraph;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -40,15 +40,15 @@ public class JpaRoomDao extends RoomDao {
             Root<Room> root = query.from(Room.class);
             query.select(root).where(builder
                     .and(builder.equal(root.get("roomType"),
-                                    criteria.getType()),
+                                    criteria.getRoom().getRoomType()),
                             builder.greaterThanOrEqualTo(
                                     root.get("capacity"),
-                                    criteria.getCapacity())));
+                                    criteria.getRoom().getCapacity())));
             return entityManager.createQuery(query).getResultList();
         }
     }
 
-    public Room getById(Long id) {
+    public Room getById(final Long id) {
         return findById(id).orElseThrow(() ->
                 new RoomNotFoundException(
                         "Room not found with ID " + id));
@@ -61,15 +61,16 @@ public class JpaRoomDao extends RoomDao {
             EntityGraph<Room> entityGraph =
                     entityManager.createEntityGraph(Room.class);
             Subgraph<Guest> guestSubgraph =
-                    entityGraph.addSubgraph("guests");
+                    entityGraph.addSubgraph("guest");
             guestSubgraph.addSubgraph("passport");
+            guestSubgraph.addSubgraph("bookings");
             CriteriaQuery<Room> query = entityManager
                     .getCriteriaBuilder()
                     .createQuery(Room.class);
             query.select(query.from(Room.class));
             return entityManager.createQuery(query)
-                    .setHint(FETCH_GRAPH, entityGraph)
-                    .getResultList();
+                                .setHint(FETCH_GRAPH, entityGraph)
+                                .getResultList();
         }
     }
 }

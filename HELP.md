@@ -1,6 +1,6 @@
+input update select vue
+Valid
+@PathVariable Long id, 
+@RequestBody String passportNumber
 
-N+1 entity
-Entity graph
-Cache
-Validator
-@PathVariable Long id, @RequestBody String passportNumber 
+mvn query, bootstrap

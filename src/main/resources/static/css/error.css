@@ -1,0 +1,56 @@
+body {
+    background-color: #222222;
+    text-align: center;
+    position: relative;
+}
+
+#text {
+    font-family: Futura, Futura-Medium, "Roboto", "Raleway", sans-serif;
+    padding-top: 15%;
+    font-weight: bold;
+    color: #222222;
+    font-size: 300px;
+    letter-spacing: 10px;
+    text-align: center;
+    text-shadow: 0 0 64px #252323, 0 0 13px #808080, 4px 1px 3px #D0D0D0, 4px -4px #fff, 4px 4px #fff, -4px -4px #fff;
+    cursor: pointer;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+body {
+    background: #200;
+}
+
+.name {
+    color: white;
+    font-family: "Nixie One", sans-serif;
+    font-size: 20vh;
+    text-align: center;
+    text-shadow: 0 0 10px #fff, 0 0 20px #6f22b9, 0 0 30px #6f22b9, 0 0 40px #6f22b9, 0 0 70px #6f22b9, 0 0 80px #6f22b9, 0 0 100px #6f22b9, 0 0 150px #6f22b9;
+}
+
+.letter-0 {
+    animation: flicker 2s infinite;
+}
+
+.letter-1 {
+    animation: flicker 5s infinite;
+}
+
+.letter-2 {
+    animation: flicker 10s infinite;
+}
+
+@keyframes flicker {
+    0%, 25%, 27%, 30%, 71%, 73%, 75%, 77%, 100% {
+        opacity: 1;
+        text-shadow: 0 0 10px #fff, 0 0 20px hotpink, 0 0 30px hotpink, 0 0 40px hotpink, 0 0 70px hotpink, 0 0 80px hotpink, 0 0 100px hotpink, 0 0 150px hotpink;
+    }
+    26%, 28%, 72%, 74%, 76% {
+        text-shadow: 0 0 10px #fff, 0 0 20px #ff69b480, 0 0 30px #ff69b480, 0 0 40px #ff69b480, 0 0 70px #ff69b480, 0 0 80px #ff69b480, 0 0 100px hotpink, 0 0 150px hotpink;
+    }
+}

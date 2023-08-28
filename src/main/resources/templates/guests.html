@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Booking with Filter and Actions</title>
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons'>
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vuetify@1.5.0/dist/vuetify.min.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css'>
-    <link rel="stylesheet" href="/css/home.css">
-<style>
-    .v-card__text pa-3 {
-        padding: 0;
-    }
-</style>
+    <link rel="stylesheet" href="/css/nav.css">
+    <style>
+        .v-card__text pa-3 {
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
@@ -63,7 +63,7 @@
             </v-toolbar>
 
             <v-data-table v-model="reservationSelected" :pagination.sync="pagination"
-                          :headers="reservationSelectedHeaders" item-key="reservation_id" :items="filteredItems"
+                          :headers="reservationSelectedHeaders" item-key="reservation_id" :items="combinedItems"
                           select-all class="">
                 <template slot="items" slot-scope="props">
                     <td>
@@ -71,32 +71,67 @@
                     </td>
                     <td>{{ props.item.passportData }}</td>
                     <td class="">
-                        <v-chip small v-if="props.item.guestStatus === 'EARLY_DEPARTURE'" label color="grey lighten-1" text-color="white">EARLY</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'CHECK_OUT'" label color="lime lighten-1" text-color="white">CHECK_OUT</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'CHECK_IN'" label color="green lighten-1" text-color="white">CHECK_IN</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'LOCK_OUT'" label color="yellow lighten-1" text-color="white">LOCK_OUT</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'OCCUPIED'" label color="orange lighten-1" text-color="white">OCCUPIED</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'RESERVED'" label color="purple lighten-1" text-color="white">RESERVED</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'DEPARTED'" label color="indigo lighten-1" text-color="white">DEPARTED</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'BOOKING'" label color="brown lighten-1" text-color="white">BOOKING</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'ARRIVAL'" label color="teal lighten-1" text-color="white">ARRIVAL</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'SKIPPER'" label color="black lighten-1" text-color="white">SKIPPER</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'DND'" label color="blue lighten-1" text-color="white">DND</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'FIT'" label color="cyan lighten-1" text-color="white">FIT</v-chip>
-                        <v-chip small v-if="props.item.guestStatus === 'VIP'" label color="red lighten-1" text-color="white">VIP</v-chip>
-                    <td class="">{{ props.item.room.capacity }}</td>
+                        <v-chip small v-if="props.item.guestStatus === 'EARLY_DEPARTURE'" label color="grey lighten-1"
+                                text-color="white">EARLY
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'CHECK_OUT'" label color="lime lighten-1"
+                                text-color="white">CHECK_OUT
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'CHECK_IN'" label color="green lighten-1"
+                                text-color="white">CHECK_IN
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'LOCK_OUT'" label color="yellow lighten-1"
+                                text-color="white">LOCK_OUT
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'OCCUPIED'" label color="orange lighten-1"
+                                text-color="white">OCCUPIED
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'RESERVED'" label color="purple lighten-1"
+                                text-color="white">RESERVED
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'DEPARTED'" label color="indigo lighten-1"
+                                text-color="white">DEPARTED
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'BOOKING'" label color="brown lighten-1"
+                                text-color="white">BOOKING
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'ARRIVAL'" label color="teal lighten-1"
+                                text-color="white">ARRIVAL
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'SKIPPER'" label color="black lighten-1"
+                                text-color="white">SKIPPER
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'DND'" label color="blue lighten-1"
+                                text-color="white">DND
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'FIT'" label color="cyan lighten-1"
+                                text-color="white">FIT
+                        </v-chip>
+                        <v-chip small v-if="props.item.guestStatus === 'VIP'" label color="red lighten-1"
+                                text-color="white">VIP
+                        </v-chip>
+                    <td class="">{{ props.item.roomsNumber }}</td>
                     <td class="">{{ props.item.arrivalDate }}</td>
                     <td class="">{{ props.item.departureDate }}</td>
-                    <td class="">{{ props.item.room.roomType }}</td>
+                    <td class="">{{ props.item.roomTypes }}</td>
+
                     <td class="">
-                        <v-chip small v-if="props.item.room.roomStatus === 'RESERVED'" label color="grey lighten-4" text-color="grey darken-2">RESERVED</v-chip>
-                        <v-chip small v-if="props.item.room.roomStatus === 'OCCUPIED'" label color="amber lighten-4" text-color="amber darken-2">OCCUPIED</v-chip>
-                        <v-chip small v-if="props.item.room.roomStatus === 'VACANT'" label color="light-green lighten-4" text-color="light-green darken-2">VACANT</v-chip>
-                        <v-chip small v-if="props.item.room.roomStatus === 'MAINTENANCE'" label color="red lighten-4" text-color="red darken-2">MAINTENANCE</v-chip>
+                        <v-chip small v-if="props.item.roomStatuses === 'RESERVED'" label color="grey lighten-4"
+                                text-color="grey darken-2">RESERVED
+                        </v-chip>
+                        <v-chip small v-if="props.item.roomStatuses === 'OCCUPIED'" label color="amber lighten-4"
+                                text-color="amber darken-2">OCCUPIED
+                        </v-chip>
+                        <v-chip small v-if="props.item.roomStatuses === 'VACANT'" label color="light-green lighten-4"
+                                text-color="light-green darken-2">VACANT
+                        </v-chip>
+                        <v-chip small v-if="props.item.roomStatuses === 'MAINTENANCE'" label color="red lighten-4"
+                                text-color="red darken-2">MAINTENANCE
+                        </v-chip>
                     </td>
                     <td class="">
-                        <v-icon class="mr-2" color="success" @click=""> check_circle</v-icon>
-                        <v-icon class="mr-2" color="error" @click=""> cancel</v-icon>
+                        <v-icon class="mr-2" color="success" @click="updateData(props.item.id)"> check_circle</v-icon>
+                        <v-icon class="mr-2" color="error" @click="cancelData(props.item.id)"> cancel</v-icon>
                     </td>
                 </template>
             </v-data-table>
@@ -121,24 +156,74 @@
 
                 status: null,
                 reservationSelectedHeaders: [
-                    {text: 'Name', value: 'passportData'},
-                     {text: 'GuestStatus', value: 'guestStatus'},
-                    {text: 'Rooms', value: 'room.capacity'},
-                    {text: 'Departure', value: 'departureDate'},
-                    {text: 'Arrive', value: 'arrivalDate'},
-                    {text: 'Type', value: 'room.roomType'},
-                    {text: 'RoomStatus', value: 'room.roomStatus'},
-                    {text: 'Actions', align: 'left', value: 'title', sortable: false}],
+                    { text: 'Name', value: 'passportData' },
+                    { text: 'GuestStatus', value: 'guestStatus' },
+                    { text: 'Rooms', value: 'roomsNumber' },
+                    { text: 'Departure', value: 'departureDate' },
+                    { text: 'Arrive', value: 'arrivalDate' },
+                    { text: 'Type', value: 'roomTypes' },
+                    { text: 'RoomStatus', value: 'roomStatuses' },
+                    { text: 'Actions', align: 'left', value: 'title', sortable: false }
+                ],
                 reservations: guests
             };
 
         },
         computed: {
+
+            combinedItems() {
+                if (this.status) {
+                    return this.filteredItems;
+                } else {
+                    return this.preparedItems;
+                }
+            },
+
+            preparedItems() {
+                return this.reservations.map(reservation => {
+                    const roomsNumber = reservation.rooms.map(room => room.capacity).join(', ');
+                    const roomTypes = reservation.rooms.map(room => room.roomType).join(', ');
+                    const roomStatuses = reservation.rooms.map(room => room.roomStatus).join(', ');
+
+                    return {
+                        ...reservation,
+                        roomsNumber,
+                        roomTypes,
+                        roomStatuses
+                    };
+                });
+            },
             filteredItems() {
                 console.log('filteredItems computed property called');
-                return this.reservations.filter(i => {
-                    return !this.status || i.room.roomStatus === this.status;
+                return this.preparedItems.filter(i => {
+                    return !this.status || i.roomStatuses === this.status;
                 });
+            }
+        },
+        methods: {
+            updateData(id) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('PATCH', `/guests/${id}`);
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        console.log(`Item with id ${id} updated successfully!`);
+                    } else {
+                        console.error(`An error occurred while updating item with id ${id}: ${xhr.status}`);
+                    }
+                };
+                xhr.send();
+            },
+            cancelData(id) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('DELETE', `/guests/${id}`);
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        console.log(`Item with id ${id} deleted successfully!`);
+                    } else {
+                        console.error(`An error occurred while deleting item with id ${id}: ${xhr.status}`);
+                    }
+                };
+                xhr.send();
             }
         }
     });
@@ -146,13 +231,44 @@
 
     window.onload = () => {
         const radioInputs = document.querySelectorAll('input[type="radio"]');
-
         radioInputs.forEach(radio => {
             radio.addEventListener('mouseover', () => {
                 radio.checked = true;
             });
         });
     };
+</script>
+
+
+<script type="module">
+    export default {
+        methods: {
+            updateData(id) {
+                let xhr = new XMLHttpRequest();
+                xhr.open('PATCH', `/guests/${id}`);
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        console.log(`guest with id ${id} updated successfully!`);
+                    } else {
+                        console.error(`An error occurred while updating item with id ${id}: ${xhr.status}`);
+                    }
+                };
+                xhr.send();
+            },
+            cancelData(id) {
+                let xhr = new XMLHttpRequest();
+                xhr.open('DELETE', `/guests/${id}`);
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        console.log(`guest with id ${id} deleted successfully!`);
+                    } else {
+                        console.error(`An error occurred while deleting item with id ${id}: ${xhr.status}`);
+                    }
+                };
+                xhr.send();
+            }
+        }
+    }
 </script>
 <script src="/js/home.js"></script>
 </body>

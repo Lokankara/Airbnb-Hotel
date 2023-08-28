@@ -1,7 +1,6 @@
 package com.manager.hotel.model.entity;
 
-import com.manager.hotel.model.enums.RoomStatus;
-import com.manager.hotel.model.enums.RoomType;
+import com.manager.hotel.model.dto.PostBookingDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,11 +17,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Criteria {
-
-    private int capacity;
-    private String duration;
+    private Room room;
+    private Guest guest;
+    private PostBookingDto booking;
     private Passport passport;
-    private boolean isArrived;
-    private RoomStatus status;
-    private RoomType type;
 }

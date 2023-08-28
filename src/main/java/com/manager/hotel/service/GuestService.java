@@ -3,8 +3,6 @@ package com.manager.hotel.service;
 import com.manager.hotel.model.dto.GuestDto;
 import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Guest;
-import com.manager.hotel.model.entity.Passport;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,4 +14,10 @@ public interface GuestService {
     Guest findGuestById(Long id);
 
     List<GuestDto> findByCriteria(Criteria criteria);
+
+    GuestDto delete(String id);
+
+    GuestDto updateStatus(String id);
+
+    Guest save(Guest guest);
 }

@@ -1,5 +1,7 @@
 package com.manager.hotel.model.dto;
 
+import com.manager.hotel.model.entity.Room;
+import com.manager.hotel.model.enums.Gender;
 import com.manager.hotel.model.enums.GuestStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,7 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,10 +21,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class GuestDto {
 
+    private Long id;
     private String passportData;
-    private LocalDateTime arrivalDate;
-    private LocalDateTime departureDate;
+    private Timestamp checkIn;
+    private Timestamp arrivalDate;
+    private Timestamp departureDate;
     @Enumerated(EnumType.STRING)
     private GuestStatus guestStatus;
-    private RoomDto room;
+    private Set<Room> rooms;
+    private String feedback;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 }

@@ -13,13 +13,16 @@ public class WebErrorController implements ErrorController {
 
     @RequestMapping("/error")
     public String handleError(
-            Model model,
-            HttpServletRequest request) {
+            final Model model,
+            final HttpServletRequest request) {
         Object status = request.getAttribute(ERROR_STATUS_CODE);
         log.error(status.toString());
-        if (status != null) {
+        try {
             int statusCode = Integer.parseInt(status.toString());
             model.addAttribute("status", statusCode);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            model.addAttribute("status", 500);
         }
         return "error";
     }

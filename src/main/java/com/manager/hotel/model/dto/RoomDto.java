@@ -11,8 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @Builder
@@ -26,5 +24,5 @@ public class RoomDto {
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus;
     private String path;
-    private Set<Guest> guests;
+    private Guest guest;
 }
