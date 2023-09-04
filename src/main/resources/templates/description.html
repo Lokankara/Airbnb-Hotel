@@ -1,0 +1,46 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Property Retrieval</title>-->
+<!--    <script type="text/javascript" src="https://static.myvr.com/public/myvrjs/v1/myvr.js"></script>-->
+<!--    <script type="text/javascript">myvr.init("LIVE_d7a2353d09626754ef8a4068d89fee41");</script>-->
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>-->
+<!--    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+
+<!--    <script id="properties-template" type="text/x-handlebars-template">-->
+<!--        {{#each properties}}-->
+<!--        <h4>{{ name }}</h4>-->
+<!--        <p>{{ trim description }}</p>-->
+<!--        <img class="img-responsive img-thumbnail" src="https:{{ photo.mediumUrl }}" alt="{{ photo.altText }}"/>-->
+<!--        {{/each}}-->
+<!--    </script>-->
+
+<!--    <div id="properties"></div>-->
+
+<!--</div>-->
+
+<!--<script>-->
+<!--    $(function () {-->
+<!--        var propertiesTemplate = Handlebars.compile($("#properties-template").html());-->
+
+<!--        myvr.properties().then(function (data) {-->
+<!--            if (data && data.count) {-->
+<!--                var rendered = propertiesTemplate({-->
+<!--                    properties: data.results-->
+<!--                });-->
+<!--                $('#properties').html(rendered);-->
+<!--            }-->
+<!--        });-->
+
+<!--        Handlebars.registerHelper('trim', function (str) {-->
+<!--            return new Handlebars.SafeString(str.substring(0, 500) + "...");-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->

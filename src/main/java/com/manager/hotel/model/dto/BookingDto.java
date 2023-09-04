@@ -1,17 +1,18 @@
 package com.manager.hotel.model.dto;
 
-import com.manager.hotel.model.entity.Guest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.Timestamp;
 
 @Getter
 @Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingDto {
@@ -21,5 +22,5 @@ public class BookingDto {
     private Timestamp arrival;
     private Timestamp checkInDate;
     private Timestamp checkOutDate;
-    private Guest guest;
+    private GuestDto guest;
 }

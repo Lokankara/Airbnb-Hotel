@@ -8,15 +8,18 @@ import com.manager.hotel.model.entity.Room;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceException;
 import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.Subgraph;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.manager.hotel.dao.jpa.Constant.FETCH_GRAPH;
@@ -28,22 +31,28 @@ public class JpaRoomDao extends RoomDao {
     @PersistenceUnit
     private final EntityManagerFactory factory;
 
-    @Override
-    public List<Room> findByRoomTypeAndCapacity(
-            Criteria criteria) {
-        try (EntityManager entityManager =
-                     factory.createEntityManager()) {
-            CriteriaBuilder builder =
-                    entityManager.getCriteriaBuilder();
-            CriteriaQuery<Room> query =
-                    builder.createQuery(Room.class);
+    public List<Room> findByCriteria(Criteria criteria) {
+        try (EntityManager entityManager = factory.createEntityManager()) {
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Room> query = builder.createQuery(Room.class);
             Root<Room> root = query.from(Room.class);
-            query.select(root).where(builder
-                    .and(builder.equal(root.get("roomType"),
-                                    criteria.getRoom().getRoomType()),
-                            builder.greaterThanOrEqualTo(
-                                    root.get("capacity"),
-                                    criteria.getRoom().getCapacity())));
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (criteria.getId() != null) {
+                predicates.add(builder.equal(root.get("id"), criteria.getId()));
+            }
+            if (criteria.getCapacity() != null) {
+                predicates.add(builder.equal(root.get("capacity"), criteria.getCapacity()));
+            }
+            if (criteria.getRoomType() != null) {
+                predicates.add(builder.equal(root.get("roomType"), criteria.getRoomType()));
+            }
+            if (criteria.getRoomStatus() != null) {
+                predicates.add(builder.equal(root.get("roomStatus"), criteria.getRoomStatus()));
+            }
+            if (!predicates.isEmpty()) {
+                query.where(predicates.toArray(new Predicate[0]));
+            }
             return entityManager.createQuery(query).getResultList();
         }
     }
@@ -71,6 +80,26 @@ public class JpaRoomDao extends RoomDao {
             return entityManager.createQuery(query)
                                 .setHint(FETCH_GRAPH, entityGraph)
                                 .getResultList();
+        }
+    }
+
+    public Room update(Room room) {
+        try (EntityManager entityManager =
+                     factory.createEntityManager()) {
+            EntityTransaction transaction =
+                    entityManager.getTransaction();
+            try {
+                transaction.begin();
+                Room updated = entityManager.merge(room);
+                transaction.commit();
+                return updated;
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw new PersistenceException(
+                        "Error updating Room: " + e.getMessage(), e);
+            }
         }
     }
 }

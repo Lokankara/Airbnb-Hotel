@@ -5,11 +5,18 @@ import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Room;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoomService {
     List<RoomDto> findRooms();
 
-    Room findAvailableRoom(Criteria criteria);
+    List<RoomDto> findAvailableRooms(Criteria criteria);
 
-    Room findRoomById(Long id);
+    Optional<Room> findAvailable(Criteria criteria);
+
+    RoomDto findRoomById(Long id);
+
+    Room update(Room room);
+
+    RoomDto findAvailableById(Long id);
 }

@@ -4,6 +4,7 @@ import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.dto.GuestDto;
 import com.manager.hotel.model.dto.PostBookingDto;
 import com.manager.hotel.model.dto.RoomDto;
+import com.manager.hotel.model.entity.Booking;
 import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Guest;
 import com.manager.hotel.model.entity.Passport;
@@ -18,9 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static java.sql.Timestamp.valueOf;
 import static java.time.LocalDate.parse;
@@ -43,14 +44,6 @@ public class HotelFacade {
         return roomService.findRooms();
     }
 
-    public BookingDto checkInGuest(
-            final Long guestId, final Long roomId) {
-        Guest guest = guestService.findGuestById(guestId);
-        Room room = roomService.findRoomById(roomId); // TODO
-        guest.addRoom(room);
-        return bookingService.checkInGuest(guest);
-    }
-
     public BookingDto checkOutGuest(
             final Long guestId,
             final boolean earlyDeparture) {
@@ -58,37 +51,59 @@ public class HotelFacade {
                 guestId, earlyDeparture);
     }
 
+    public RoomDto findAvailableRoom(Long id) {
+        return roomService.findAvailableById(id);
+    }
+
+    public List<RoomDto> findAvailableRooms(Criteria criteria) {
+        return roomService.findAvailableRooms(criteria);
+    }
+
     @Transactional(rollbackFor = Exception.class)
-    public void saveBooking(
-            final PostBookingDto dto) {
-        Room room = getRoom(dto);
-        Guest guest = getGuest(dto, room);
-        Guest saved = guestService.save(guest);
-        Passport passport = getByFullName(dto, saved);
-        saved.setPassport(passport);
-        bookingService.checkInGuest(saved);
+    public BookingDto saveBooking(final PostBookingDto dto) {
+        Optional<Room> optional = roomService.findAvailable(getCriteria(dto));
+        if (optional.isPresent()) {
+            Room room = optional.get();
+            Guest guest = guestService.save(getGuest(dto, room));
+            Passport passport = passportService
+                    .findByFirstNameAndLastName(dto.getFirstname(), dto.getLastname())
+                    .orElseGet(() -> passportService.save(getPassport(dto, guest)));
+            room.setRoomStatus(RoomStatus.OCCUPIED);
+            room.setGuest(guest);
+            guest.setPassport(passport);
+            Guest savedGuest = guestService
+                    .findGuestById(guest.getId());
+            savedGuest.setPassport(passport);
+            savedGuest.addRoom(room);
+            guestService.update(savedGuest);
+            BookingDto booking = bookingService
+                    .save(getBooking(dto, guest));
+            roomService.update(room);
+            return booking;
+        } else {
+            return new BookingDto();
+        }
     }
 
-    private Passport getByFullName(
-            PostBookingDto dto, Guest saved) {
-        return passportService.findByFirstNameAndLastName(
-                                      dto.getFirstname(), dto.getLastname())
-                              .orElse(passportService.save(
-                                      getPassport(dto, saved)));
+    private static Booking getBooking(
+            PostBookingDto dto, Guest guest) {
+        return Booking.builder()
+                      .checkInDate(valueOf(parse(dto.getCheckin()).atStartOfDay()))
+                      .checkOutDate(valueOf(parse(dto.getCheckout()).atStartOfDay()))
+                      .guest(guest)
+                      .build();
     }
 
-    private static Passport getPassport(
-            PostBookingDto dto, Guest saved) {
+    private static Passport getPassport(PostBookingDto dto, Guest guest) {
         return Passport.builder()
-                       .email(dto.getEmail())
-                       .address(dto.getAddress())
-                       .creditCard(dto.getCreditCard())
-                       .phone(dto.getPhone())
-                       .email(dto.getEmail())
-                       .gender(dto.getGender())
-                       .guest(saved)
                        .firstName(dto.getFirstname())
                        .lastName(dto.getLastname())
+                       .address(dto.getAddress())
+                       .creditCard(dto.getCreditCard())
+                       .email(dto.getEmail())
+                       .phone(dto.getPhone())
+                       .gender(dto.getGender())
+                       .guest(guest)
                        .build();
     }
 
@@ -110,23 +125,13 @@ public class HotelFacade {
                     .build();
     }
 
-    private Room getRoom(PostBookingDto dto) {
-        Room room = roomService
-                .findAvailableRoom(getCriteria(dto));
-        room.setRoomStatus(RoomStatus.OCCUPIED);
-        return room;
-    }
-
     private static Criteria getCriteria(
             PostBookingDto dto) {
         return Criteria
                 .builder()
-                .room(Room.builder()
-                          .capacity(dto.getCapacity())
-                          .roomType(dto.getRoomType())
-                          .roomStatus(RoomStatus.VACANT)
-                          .build())
-                .booking(dto)
+                .capacity(dto.getCapacity())
+                .roomType(dto.getRoomType())
+                .roomStatus(RoomStatus.VACANT)
                 .build();
     }
 }

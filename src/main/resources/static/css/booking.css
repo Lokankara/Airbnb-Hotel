@@ -1,5 +1,10 @@
 body {
-    background: linear-gradient(to bottom right, #220000, rgba(233, 30, 99, 0.8));
+    background-image: url('https://source.unsplash.com/featured/1200x900/?gradient');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+label{
+    color: white;
 }
 
 .section {

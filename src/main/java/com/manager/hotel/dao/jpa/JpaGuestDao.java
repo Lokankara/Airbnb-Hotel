@@ -7,10 +7,12 @@ import com.manager.hotel.model.entity.Guest;
 import com.manager.hotel.model.entity.Passport;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +20,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static com.manager.hotel.dao.jpa.Constant.SELECT_GUESTS_BY_CRITERIA;
-import static java.util.Collections.singletonList;
+import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -42,16 +42,15 @@ public class JpaGuestDao extends GuestDao {
         }
     }
 
-
     @Override
-    public Guest findByPassportData(Passport passport) {
+    public Optional<Guest> findByPassportData(Passport passport) {
         try (EntityManager entityManager = factory.createEntityManager()) {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Guest> query = builder.createQuery(Guest.class);
             Root<Guest> root = query.from(Guest.class);
-            query.select(root).where(builder.equal(root.get("passportData"),
-                    passport.getGuest())); //TODO
-            return entityManager.createQuery(query).getResultList().get(0);
+            query.select(root).where(builder.equal(root.get("passportData"), passport.getGuest()));
+            List<Guest> guests = entityManager.createQuery(query).getResultList();
+            return guests.isEmpty() ? Optional.empty() : Optional.of(guests.get(0));
         }
     }
 
@@ -77,10 +76,39 @@ public class JpaGuestDao extends GuestDao {
     @Override
     public List<Guest> findByCriteria(final Criteria criteria) {
         try (EntityManager entityManager = factory.createEntityManager()) {
-            return criteria.getPassport() != null
-                    ? singletonList(findByPassportData(criteria.getPassport()))
-                    : entityManager.createQuery(SELECT_GUESTS_BY_CRITERIA + criteria.getRoom().getRoomStatus(), // TODO
-                    Guest.class).getResultList();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Guest> query = builder.createQuery(Guest.class);
+            Root<Guest> root = query.from(Guest.class);
+            Predicate predicate = builder.conjunction();
+
+            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
+                predicate = builder.and(predicate, builder.like(
+                        builder.lower(root.get("passportData")),
+                        "%" + criteria.getName().toLowerCase() + "%"));
+            }
+
+            if (criteria.getGuestStatus() != null) {
+                predicate = builder.and(predicate, builder.equal(
+                        root.get("guestStatus"), criteria.getGuestStatus()));
+            }
+
+            if (criteria.getGender() != null) {
+                predicate = builder.and(predicate,
+                        builder.equal(root.get("gender"), criteria.getGender()));
+            }
+
+            query.where(predicate);
+            return entityManager.createQuery(query).getResultList();
+        }
+    }
+
+    public Guest update(Guest guest) {
+        try (EntityManager entityManager = factory.createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            transaction.begin();
+            Guest updatedGuest = entityManager.merge(guest);
+            transaction.commit();
+            return updatedGuest;
         }
     }
 }

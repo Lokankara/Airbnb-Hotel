@@ -1,6 +1,5 @@
 package com.manager.hotel.web;
 
-import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -8,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.manager.hotel.web.ConstantPath.ROOM;
 import static com.manager.hotel.web.ConstantPath.ROOMS;
@@ -35,14 +33,5 @@ public class RoomController {
         model.addAttribute(ROOM, roomService
                 .findRoomById(roomId));
         return ROOM;
-    }
-
-    @GetMapping("/free")
-    public String showAvailableRooms(
-            final Model model,
-            @RequestParam final Criteria criteria) {
-        model.addAttribute(ROOMS, roomService
-                .findAvailableRoom(criteria));
-        return ROOMS;
     }
 }

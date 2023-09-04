@@ -2,8 +2,8 @@
 
 ### Hotel administrator.
 Room list: roomType class (enum), number of beds(capacity).
-List of guests: passport data, arrival and departure dates, room.
-- Check-in: selection of a suitable room (subject to availability), registration, issuing a receipt.
+List of guests: passport data, checkin, checkout and departure dates, room.
+- Check-in: selection of a suitable room (subject to availability), registration, issuing a booking.
 - Departure: selecting all guests who are leaving today,
   freeing up space or processing delay in issuing an additional receipt.
   Possibility of early departure with recalculation.
@@ -29,6 +29,3 @@ List of guests: passport data, arrival and departure dates, room.
 
 #### Home
 https://hotel-california.onrender.com/
-
-#### H2
-https://hotel-california.onrender.com/h2-console/

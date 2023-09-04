@@ -6,7 +6,6 @@ import com.manager.hotel.exception.GuestNotFoundException;
 import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.entity.Booking;
 import com.manager.hotel.model.entity.Guest;
-import com.manager.hotel.model.entity.Room;
 import com.manager.hotel.model.enums.RoomStatus;
 import com.manager.hotel.service.BookingService;
 import com.manager.hotel.service.mapper.BookingMapper;
@@ -19,33 +18,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.time.Duration.between;
-import static java.time.LocalDate.parse;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class JpaBookingService implements BookingService {
     private final JpaGuestDao jpaGuestDao;
-    private final JpaBookingDao jpaBookingDao;
+    private final JpaBookingDao dao;
     private final BookingMapper mapper;
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public BookingDto checkInGuest(
-            final Guest guest) {
-
-        Booking booking = Booking
-                .builder()
-                .checkInDate(guest.getCheckIn())
-                .arrival(guest.getArrivalDate())
-                .checkOutDate(guest.getDepartureDate())
-                .guest(guest)
-                .build();
-
-        Booking savedBooking = jpaBookingDao.save(booking);
-
-        return mapper.toDto(savedBooking);
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -60,21 +40,29 @@ public class JpaBookingService implements BookingService {
         Booking checkOut = getCheckOut(earlyDeparture, guest);
         guest.getRooms().forEach(room -> room.setRoomStatus(RoomStatus.VACANT));
         jpaGuestDao.save(guest);
-        return mapper.toDto(jpaBookingDao
+        return mapper.toDto(dao
                 .save(checkOut));
     }
 
     @Override
     public List<BookingDto> findAll() {
         return mapper.toListDto(
-                jpaBookingDao.findAll());
+                dao.findAll());
     }
 
     @Override
     public List<BookingDto> getLatest(
             Timestamp fromDate) {
-        return mapper.toListDto(jpaBookingDao
+        return mapper.toListDto(dao
                 .findLatestDeals(fromDate));
+    }
+
+
+    @Override
+    public BookingDto save(
+            Booking booking) {
+        return mapper.toDto(
+                dao.save(booking));
     }
 
     private static Booking getCheckOut(

@@ -44,7 +44,7 @@ POST http://localhost:8080/api/{{name}}/image
 GET http://localhost:8080/
 
 ###
-GET http://localhost:8080/departing
+GET http://localhost:8080/checkin
 
 ###
 < {%

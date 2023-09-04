@@ -17,7 +17,6 @@ import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,12 +52,10 @@ public class Room {
     private Long id;
     private int capacity;
     @NotNull
-    @Size(min = 1, max = 128)
     @Enumerated(EnumType.STRING)
     @Column(name = "room_type", length = 128, nullable = false)
     private RoomType roomType;
     @NotNull
-    @Size(min = 1, max = 128)
     @Enumerated(EnumType.STRING)
     @Column(name = "room_status", length = 128, nullable = false)
     private RoomStatus roomStatus;

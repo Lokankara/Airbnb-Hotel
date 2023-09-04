@@ -3,8 +3,10 @@ package com.manager.hotel.service;
 import com.manager.hotel.model.dto.GuestDto;
 import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Guest;
+import com.manager.hotel.model.entity.Passport;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GuestService {
     List<GuestDto> getAllGuests();
@@ -15,9 +17,11 @@ public interface GuestService {
 
     List<GuestDto> findByCriteria(Criteria criteria);
 
-    GuestDto delete(String id);
-
-    GuestDto updateStatus(String id);
+    GuestDto update(GuestDto guest);
 
     Guest save(Guest guest);
+
+    Optional<Guest> findByPassport(Passport passport);
+
+    Guest update(Guest guest);
 }

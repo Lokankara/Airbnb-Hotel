@@ -53,61 +53,12 @@
                             <input class="form-control" type="text" name="creditCard" placeholder="Credit Card">
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <input class="form-control" type="email" name="email"
-                                           placeholder="Enter your Email">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <input class="form-control" type="tel" name="phone"
-                                           placeholder="Enter you Phone">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <select class="form-control" name="capacity" required>
-                                        <option value="" selected hidden>no of rooms</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                    </select>
-                                    <span class="select-arrow"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select class="form-control" name="adults" required>
-                                        <option value="" selected hidden># of adults</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                    </select>
-                                    <span class="select-arrow"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select class="form-control" name="children" required>
-                                        <option value="" selected hidden># of children</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                    </select>
-                                    <span class="select-arrow"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select class="form-control" name="roomType"  required>
-                                        <option value="" selected hidden>Type of room</option>
+                                    <select class="form-control" name="roomType" required>
+                                        <option th:if="${room != null}" th:value="${room.roomType}" selected
+                                                th:text="${room.roomType}"></option>
+                                        <option th:if="${room == null}" value="" selected hidden>Type of room</option>
                                         <option th:each="type : ${T(com.manager.hotel.model.enums.RoomType).values()}"
                                                 th:value="${type}"
                                                 th:text="${type.name().toLowerCase()}"></option>
@@ -138,6 +89,61 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" type="email" name="email"
+                                           placeholder="Enter your Email">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" type="tel" name="phone"
+                                           placeholder="Enter you Phone">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" name="capacity" required>
+                                        <option th:if="${room != null}" th:value="${room.capacity}"
+                                                th:selected="selected" th:text="${room.capacity}"></option>
+                                        <option th:if="${room == null}" value="" selected hidden>no of rooms</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select>
+                                    <span class="select-arrow"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" name="adults" required>
+                                        <option value="" selected hidden># of adults</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                    <span class="select-arrow"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" name="children" required>
+                                        <option value="" selected hidden># of children</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+
+                                    <span class="select-arrow"></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="form-btn">
                                 <button type="submit" class="submit-btn">Book Now</button>
@@ -153,7 +159,13 @@
     </div>
 </div>
 <script th:src="@{webjars/jquery/3.7.0/dist/jquery.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let room = /*[[${room}]]*/ null;
+    /*]]>*/
+</script>
 <script>
+
     function autofill() {
         const inputs = document.getElementsByTagName("input");
         const selects = document.getElementsByTagName("select");
@@ -181,9 +193,9 @@
                 creditCard: "9876-5432-1098-7654",
                 checkin: "2023-08-21",
                 checkout: "2023-08-26",
-                capacity: "1",
-                adults: "1",
-                children: "1",
+                capacity: "2",
+                adults: "2",
+                children: "2",
                 guestStatus: "RESERVED",
                 gender: "MAN",
                 roomType: "KING",
@@ -197,7 +209,7 @@
                 creditCard: "5678-1234-9012-3456",
                 checkin: "2023-08-22",
                 checkout: "2023-08-27",
-                capacity: "1",
+                capacity: "3",
                 adults: "1",
                 children: "1",
                 guestStatus: "ARRIVAL",
@@ -213,8 +225,8 @@
                 creditCard: "7890-1234-9012-3456",
                 checkin: "2023-08-22",
                 checkout: "2023-08-27",
-                capacity: "1",
-                adults: "1",
+                capacity: "2",
+                adults: "2",
                 children: "1",
                 guestStatus: "ARRIVAL",
                 gender: "WOMAN",
@@ -229,9 +241,9 @@
                 creditCard: "9012-3456-7890-1234",
                 checkin: "2023-08-23",
                 checkout: "2023-08-28",
-                capacity: "1",
+                capacity: "2",
                 adults: "1",
-                children: "1",
+                children: "3",
                 guestStatus: "CHECK_IN",
                 gender: "MAN",
                 roomType: "CABANA",
@@ -245,14 +257,16 @@
         for (let i = 0; i < inputs.length; i++) {
             const inputName = inputs[i].getAttribute("name");
             if (guest[inputName]) {
-                inputs[i].value = guest[inputName];
+                    inputs[i].value = guest[inputName];
             }
         }
 
         for (let i = 0; i < selects.length; i++) {
-            const selectName = selects[i].getAttribute("name");
+            const selectName = selects[i].getAttribute('name');
             if (guest[selectName]) {
-                selects[i].value = guest[selectName];
+                if (room === null || (selectName !== 'roomType' && selectName !== 'capacity')) {
+                    selects[i].value = guest[selectName];
+                }
             }
         }
     }

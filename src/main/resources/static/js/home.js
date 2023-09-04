@@ -6,14 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-function openModal() {
-    let modal = document.querySelector('#modal-window');
-    modal.classList.add("showModal");
-}
-
 function closeModal() {
-    let m = document.querySelector('#modal-window');
-    m.classList.remove("showModal");
+    let modal = document.querySelector('#modal-window');
+    modal.classList.remove("showModal");
 }
 
 document.getElementsByClassName('.mode-switch').onclick = function () {
@@ -22,27 +17,44 @@ document.getElementsByClassName('.mode-switch').onclick = function () {
 
 const cardItems = document.querySelectorAll('.main-card');
 const modalHeader = document.querySelector('.modalHeader-js');
+const modalId = document.querySelector('.modal-id');
 const modalCardPrice = document.querySelector('.amount');
 const modalImage = document.querySelector('.modal-image-wrapper img');
 const modalStatus = document.querySelector('.modalText');
 const modalCapacity = document.querySelector('.modal-capacity');
 const modalBath = document.querySelector('.modal-bath');
 const modalSquare = document.querySelector('.modal-square');
+const bookButton = document.getElementById('bookButton');
+
+function openModal() {
+    let modal = document.querySelector('#modal-window');
+    modal.classList.add("showModal");
+}
 
 cardItems.forEach((cardItem) => {
     cardItem.addEventListener('click', function () {
+        const cardId = cardItem.querySelector('.card-id');
         const cardHeader = cardItem.querySelector('.cardText-js');
         const cardPrice = cardItem.querySelector('.card-price');
         const cardImage = cardItem.querySelector('.card-image-wrapper img');
         const cardStatus = cardItem.querySelector('.card-status');
         const cardRooms = cardItem.querySelector('.capacity');
 
-        modalCapacity.innerText =  cardRooms.innerText + " Bedrooms";
-        modalBath.innerText =  cardRooms.innerText + " Bathrooms";
+        modalId.value = cardId.value;
+        modalCapacity.innerText = cardRooms.innerText + " Bedrooms";
+        modalBath.innerText = cardRooms.innerText + " Bathrooms";
         modalImage.src = cardImage.src;
         modalStatus.innerText = cardStatus.innerText;
         modalHeader.innerText = cardHeader.innerText;
         modalCardPrice.innerText = cardPrice.innerText;
+
+        if (modalStatus.textContent.trim() !== 'VACANT') {
+            bookButton.disabled = true;
+            bookButton.style.background = "gray";
+        } else {
+            bookButton.disabled = false;
+            bookButton.style.background = "#d84851";
+        }
 
         let price = parseFloat(cardPrice.innerText.replace("$", ""));
         let rooms = parseInt(cardRooms.innerText);
@@ -67,3 +79,91 @@ window.onclick = function (event) {
         closeModal();
     }
 }
+
+function createCard(card) {
+    const cardWrapper = document.createElement("div");
+    cardWrapper.className = "card-wrapper main-card";
+
+    const cardLink = document.createElement("a");
+    cardLink.className = "card cardItem";
+    cardLink.addEventListener("click", getRooms);
+
+    const cardImage = document.createElement("img");
+    cardImage.src = card.imageSrc;
+    cardImage.alt = "Hotel";
+
+    const cardInfo = create("div", "card-info", "");
+    const cardImageWrapper = create("div", "card-image-wrapper", "");
+    const cardTitle = create("div", "card-text big cardText-js", card.title);
+    const cardLocation = create("div", "card-text small", card.location);
+    const cardPriceWrapper = create("div", "card-text small", "");
+    const cardPrice = create("span", "card-price", card.price);
+
+    const cardPriceLabel = document.createTextNode("Starts from: ");
+    cardPriceWrapper.appendChild(cardPriceLabel);
+    cardPriceWrapper.appendChild(cardPrice);
+
+    cardInfo.appendChild(cardTitle);
+    cardInfo.appendChild(cardLocation);
+    cardInfo.appendChild(cardPriceWrapper);
+
+    cardImageWrapper.appendChild(cardImage);
+    cardLink.appendChild(cardImageWrapper);
+    cardLink.appendChild(cardInfo);
+    cardWrapper.appendChild(cardLink);
+
+    return cardWrapper;
+}
+
+function create(element, name, text) {
+    const child = document.createElement(element);
+    child.className = name;
+    child.textContent = text;
+    return child;
+}
+
+const cardData = [
+    {
+        imageSrc: "https://source.unsplash.com/featured/1200x900/?hotel-room,interior",
+        title: "Room Conrad",
+        location: "Stockton Street",
+        price: "$100",
+    },
+    {
+        imageSrc: "https://source.unsplash.com/featured/1200x900/?interior,hotel",
+        title: "The Room Riviera",
+        location: "Stockton Street",
+        price: "$300",
+    },
+    {
+        imageSrc: "https://source.unsplash.com/featured/1200x900/?interior,modern",
+        title: "The Hotel Star Pacific",
+        location: "Stockton Street",
+        price: "$140",
+    },
+    {
+        imageSrc: "https://source.unsplash.com/featured/1200x900/?hotel,modern",
+        title: "Room Instant Destiny",
+        location: "Stockton Street",
+        price: "$180",
+    },
+    {
+        imageSrc: "https://source.unsplash.com/featured/1200x900/?room,design",
+        title: "The White Roses Room",
+        location: "Stockton Street",
+        price: "$700",
+    },
+    {
+        imageSrc: "https://source.unsplash.com/featured/1200x900/?room,modern",
+        title: "Room Tom's Dinner",
+        location: "Stockton Street",
+        price: "$150",
+    },
+];
+
+const cardContainer = document.getElementById("latest-deals");
+
+cardData.forEach((card) => {
+    const cardElement = createCard(card);
+    cardContainer.appendChild(cardElement);
+});

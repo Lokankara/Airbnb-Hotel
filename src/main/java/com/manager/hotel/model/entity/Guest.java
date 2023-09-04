@@ -1,11 +1,9 @@
 package com.manager.hotel.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.manager.hotel.model.dto.RoomDto;
 import com.manager.hotel.model.enums.Gender;
 import com.manager.hotel.model.enums.GuestStatus;
 import com.manager.hotel.model.enums.RoomStatus;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -34,6 +32,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -43,19 +42,12 @@ import java.util.Set;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-//@NamedEntityGraph(name = "guest-entity-graph",
-//        attributeNodes = {
-//                @NamedAttributeNode(value = "room",
-//                        subgraph = "rooms-subgraph")
-//        },
-//        subgraphs = {
-//                @NamedSubgraph(
-//                        name = "rooms-subgraph",
-//                        attributeNodes = {
-//                                @NamedAttributeNode("passport")
-//                        })
-//        }
-//)
+@NamedEntityGraph(name = "guest-entity-graph",
+        attributeNodes = {
+                @NamedAttributeNode(value = "rooms"),
+                @NamedAttributeNode(value = "passport")
+        }
+)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Guest {
     @Id
@@ -86,14 +78,16 @@ public class Guest {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "guest", fetch = FetchType.EAGER)
     private Set<Room> rooms;
+    @ToString.Exclude
     @JoinColumn(name = "passport_id")
     @OneToOne(fetch = FetchType.EAGER)
     private Passport passport;
+    @Builder.Default
     @ToString.Exclude
     @JsonManagedReference
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "guest", fetch = FetchType.EAGER)
-    private Set<Booking> bookings;
+    private Set<Booking> bookings = new HashSet<>();
     @Enumerated(EnumType.STRING)
     @Column(name = "guest_status", length = 64, nullable = false)
     private GuestStatus guestStatus;
@@ -104,9 +98,13 @@ public class Guest {
     private Gender gender;
 
     public void addRoom(Room room) {
+        if (rooms == null){
+            rooms = new HashSet<>();
+        }
         rooms.add(room);
         room.setGuest(this);
     }
+
     public void removeRoom(Room room) {
         rooms.remove(room);
         room.setGuest(null);
@@ -135,5 +133,12 @@ public class Guest {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public void addBooking(Booking booking) {
+        if (bookings == null) {
+            bookings = new HashSet<>();
+        }
+        bookings.add(booking);
     }
 }

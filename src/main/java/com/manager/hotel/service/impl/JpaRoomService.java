@@ -1,7 +1,6 @@
 package com.manager.hotel.service.impl;
 
 import com.manager.hotel.dao.jpa.JpaRoomDao;
-import com.manager.hotel.exception.NoAvailableRoomsException;
 import com.manager.hotel.model.dto.RoomDto;
 import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Room;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -19,32 +19,45 @@ import java.util.List;
 public class JpaRoomService implements RoomService {
 
     private final RoomMapper mapper;
-    private final JpaRoomDao roomRepository;
+    private final JpaRoomDao dao;
 
     @Override
     @Transactional(readOnly = true)
     public List<RoomDto> findRooms() {
-        return mapper.toListDto(roomRepository.findAll());
+        return mapper.toListDto(
+                dao.findAll());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Room findAvailableRoom(
+    public List<RoomDto> findAvailableRooms(
             final Criteria criteria) {
-        List<Room> availableRooms = roomRepository
-                .findByRoomTypeAndCapacity(criteria);
-        return availableRooms.stream()
-                .findFirst()
-                .orElseThrow(() -> new NoAvailableRoomsException(
-                        "No available rooms found by criteria: "
-                                + criteria));
+        return mapper.toListDto(dao
+                .findByCriteria(criteria));
+    }
+
+    @Override
+    public Optional<Room> findAvailable(Criteria criteria) {
+        List<Room> rooms = dao.findByCriteria(criteria);
+        return rooms.isEmpty()
+                ? Optional.empty()
+                : Optional.of(rooms.get(0));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Room findRoomById(
+    public RoomDto findRoomById(
             final Long id) {
-        return roomRepository
-                .getById(id);
+        return mapper.toDto(dao.getById(id));
+    }
+
+    @Override
+    public Room update(Room room) {
+        return dao.update(room);
+    }
+
+    @Override
+    public RoomDto findAvailableById(Long id) {
+        return findRoomById(id);
     }
 }

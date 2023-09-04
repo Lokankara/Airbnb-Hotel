@@ -10,6 +10,7 @@ import java.util.List;
 public interface GuestMapper {
 
     GuestDto toDto(Guest guest);
+    Guest toEntity(GuestDto dto);
 
     List<GuestDto> toListDto(List<Guest> guests);
 }

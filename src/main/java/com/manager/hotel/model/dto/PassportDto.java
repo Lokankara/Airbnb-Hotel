@@ -8,16 +8,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class PassportDto {
     @Enumerated(EnumType.STRING)
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     private Gender gender;
     private String address;
     private String email;

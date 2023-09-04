@@ -2,11 +2,16 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Booking with Filter and Actions</title>
+    <title>Hotel Guests</title>
+    <link rel="stylesheet" href="/css/media.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/home.css">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons'>
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vuetify@1.5.0/dist/vuetify.min.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css'>
-    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <style>
         .v-card__text pa-3 {
             padding: 0;
@@ -22,9 +27,9 @@
             <a href="/rooms" class="nav-link">Rooms</a>
             <a href="/guests" class="nav-link active">Guests</a>
             <a href="/search" class="nav-link">Search</a>
+            <a href="/checkin" class="nav-link">CheckIn</a>
             <a href="/booking" class="nav-link">Booking</a>
-            <a href="/departing" class="nav-link">Departing</a>
-            <a href="/rooms/free" class="nav-link">Available</a>
+            <a href="/rooms/vacant" class="nav-link">Available</a>
         </div>
         <div class="nav-right-side">
             <button class="mode-switch">
@@ -43,9 +48,113 @@
                 </svg>
             </button>
             <button class="profile-btn">
-                <span>Pasha</span>
+                <span>Paul</span>
                 <img src="https://avatars.githubusercontent.com/u/78595276?v=4" alt="cat">
             </button>
+        </div>
+    </section>
+    <section class="app-actions">
+        <div class="app-actions-line filter-line">
+            <div class="filter-action-buttons">
+                <button class="filter-btn">
+                    <span class="filter-icon">
+                        <svg class="btn-icon feather feather-book" xmlns="http://www.w3.org/2000/svg" width="24"
+                             height="24" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                    </span>
+                    <label>
+                        <input type="text" class="filter-text search-input" id="name" placeholder="Name"
+                               onkeyup="handleKeyPressGuest(event)">
+                    </label>
+                </button>
+                <button class="filter-btn more">
+                    <span class="filter-icon">
+                        <svg class="btn-icon feather feather-sliders" xmlns="http://www.w3.org/2000/svg" fill="none"
+                             stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>
+                        </svg>
+                    </span>
+                    <label>
+                        <select class="filter-text search-input" id="gender">
+                            <option value="" selected hidden>Gender</option>
+                            <option th:each="type : ${T(com.manager.hotel.model.enums.Gender).values()}"
+                                    th:value="${type}"
+                                    th:text="${type.name()}"></option>
+                        </select>
+                    </label>
+                </button>
+                <button class="filter-btn">
+                    <span class="filter-icon">
+                          <svg class="btn-icon feather feather-sliders" xmlns="http://www.w3.org/2000/svg" fill="none"
+                               stroke="currentColor"
+                               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>
+                        </svg>
+                    </span>
+                    <label>
+                        <select class="filter-text search-input" id="guestStatus">
+                            <option value="" selected hidden>Status</option>
+                            <option th:each="type : ${T(com.manager.hotel.model.enums.GuestStatus).values()}"
+                                    th:value="${type}"
+                                    th:text="${type.name()}"></option>
+                        </select>
+                    </label>
+                </button>
+                <button class="filter-btn">
+                    <span class="filter-icon">
+                        <svg class="btn-icon feather feather-book feather feather-calendar"
+                             xmlns="http://www.w3.org/2000/svg" width="24"
+                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3"
+                                  y="4"
+                                  width="18"
+                                  height="18"
+                                  rx="2"
+                                  ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3"
+                                  y1="10"
+                                  x2="21"
+                                  y2="10"/>
+                        </svg>
+                    </span>
+                    <label for="checkIn"></label>
+                    <input type="date" class="filter-text search-input" id="checkIn" placeholder=""
+                           onkeyup="handleKeyPressGuest(event)">
+                </button>
+                <button class="filter-btn">
+                    <span class="filter-icon">
+                        <svg class="btn-icon feather feather-book feather feather-calendar"
+                             xmlns="http://www.w3.org/2000/svg" width="24"
+                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3"
+                                  y="4"
+                                  width="18"
+                                  height="18"
+                                  rx="2"
+                                  ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3"
+                                  y1="10"
+                                  x2="21"
+                                  y2="10"/>
+                        </svg>
+                    </span>
+                    <label for="checkOut"></label>
+                    <input type="date" class="filter-text search-input" id="checkOut" placeholder=""
+                           onkeyup="handleKeyPressGuest(event)">
+                </button>
+                <button type="submit" class="search-btn" onclick="findGuests()">Find Guest</button>
+            </div>
         </div>
     </section>
     <v-app id="inspire">
@@ -55,7 +164,6 @@
                 <template v-if="reservationSelected.length >= 1">
                     <v-btn color="success" dark class="mb-2">Confirm Selected</v-btn>
                     <v-btn color="error" dark class="mb-2">Cancel Selected</v-btn>
-
                 </template>
                 <v-spacer></v-spacer>
                 <v-select label="Status" :items="['', 'RESERVED', 'OCCUPIED', 'VACANT', 'MAINTENANCE']"
@@ -143,102 +251,8 @@
 <script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/vuetify@1.5.0/dist/vuetify.min.js'></script>
 <script th:inline="javascript">const guests = [[${guests}]];</script>
-
-<script>
-    new Vue({
-        el: '#app',
-        data() {
-            return {
-                reservationSelected: [],
-                pagination: {
-                    rowsPerPage: 10
-                },
-
-                status: null,
-                reservationSelectedHeaders: [
-                    { text: 'Name', value: 'passportData' },
-                    { text: 'GuestStatus', value: 'guestStatus' },
-                    { text: 'Rooms', value: 'roomsNumber' },
-                    { text: 'Departure', value: 'departureDate' },
-                    { text: 'Arrive', value: 'arrivalDate' },
-                    { text: 'Type', value: 'roomTypes' },
-                    { text: 'RoomStatus', value: 'roomStatuses' },
-                    { text: 'Actions', align: 'left', value: 'title', sortable: false }
-                ],
-                reservations: guests
-            };
-
-        },
-        computed: {
-
-            combinedItems() {
-                if (this.status) {
-                    return this.filteredItems;
-                } else {
-                    return this.preparedItems;
-                }
-            },
-
-            preparedItems() {
-                return this.reservations.map(reservation => {
-                    const roomsNumber = reservation.rooms.map(room => room.capacity).join(', ');
-                    const roomTypes = reservation.rooms.map(room => room.roomType).join(', ');
-                    const roomStatuses = reservation.rooms.map(room => room.roomStatus).join(', ');
-
-                    return {
-                        ...reservation,
-                        roomsNumber,
-                        roomTypes,
-                        roomStatuses
-                    };
-                });
-            },
-            filteredItems() {
-                console.log('filteredItems computed property called');
-                return this.preparedItems.filter(i => {
-                    return !this.status || i.roomStatuses === this.status;
-                });
-            }
-        },
-        methods: {
-            updateData(id) {
-                var xhr = new XMLHttpRequest();
-                xhr.open('PATCH', `/guests/${id}`);
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        console.log(`Item with id ${id} updated successfully!`);
-                    } else {
-                        console.error(`An error occurred while updating item with id ${id}: ${xhr.status}`);
-                    }
-                };
-                xhr.send();
-            },
-            cancelData(id) {
-                var xhr = new XMLHttpRequest();
-                xhr.open('DELETE', `/guests/${id}`);
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        console.log(`Item with id ${id} deleted successfully!`);
-                    } else {
-                        console.error(`An error occurred while deleting item with id ${id}: ${xhr.status}`);
-                    }
-                };
-                xhr.send();
-            }
-        }
-    });
-
-
-    window.onload = () => {
-        const radioInputs = document.querySelectorAll('input[type="radio"]');
-        radioInputs.forEach(radio => {
-            radio.addEventListener('mouseover', () => {
-                radio.checked = true;
-            });
-        });
-    };
-</script>
-
+<script src="/js/find.js"></script>
+<script src="/js/vue.js"></script>
 
 <script type="module">
     export default {
@@ -270,6 +284,6 @@
         }
     }
 </script>
-<script src="/js/home.js"></script>
+<script src="/js/find.js"></script>
 </body>
 </html>

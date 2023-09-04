@@ -1,8 +1,12 @@
 package com.manager.hotel.web;
 
+import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.dto.PostBookingDto;
+import com.manager.hotel.model.dto.RoomDto;
+import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.service.facade.HotelFacade;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +15,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static com.manager.hotel.web.ConstantPath.BOOKING;
 import static com.manager.hotel.web.ConstantPath.GUESTS;
+import static com.manager.hotel.web.ConstantPath.HOME;
+import static com.manager.hotel.web.ConstantPath.ROOM;
 import static com.manager.hotel.web.ConstantPath.ROOMS;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/")
@@ -33,25 +41,36 @@ public class HotelController {
                 facade.getAllRooms());
         model.addAttribute(GUESTS,
                 facade.getAllGuests());
-        return "home";
+        return HOME;
+    }
+
+    @GetMapping("/booking/{id}")
+    public String getBooking(
+            final Model model,
+            final @PathVariable Long id) {
+        RoomDto roomDto = facade.findAvailableRoom(id);
+        model.addAttribute(ROOM, roomDto);
+        return BOOKING;
     }
 
     @PostMapping("/booking")
     public String saveBooking(
-            @ModelAttribute("booking")
-            final PostBookingDto dto) {
-        facade.saveBooking(dto);
-        return "redirect:/checkin";
+            RedirectAttributes redirectAttributes,
+            @ModelAttribute("booking") final PostBookingDto dto) {
+        BookingDto bookingDto = facade.saveBooking(dto);
+        redirectAttributes.addFlashAttribute("reservation", bookingDto);
+        return "redirect:/booking";
     }
 
-    @PostMapping("/guests/{guestId}/rooms/{roomId}")
-    public String checkIn(
-            final Model model,
-            final @PathVariable Long guestId,
-            final @PathVariable Long roomId) {
-        model.addAttribute(BOOKING,
-                facade.checkInGuest(guestId, roomId));
-        return BOOKING;
+    @GetMapping("/available")
+    public String availableRooms(
+            @ModelAttribute("criteria") Criteria criteria,
+            Model model) {
+        model.addAttribute(ROOMS, facade
+                .findAvailableRooms(criteria));
+        model.addAttribute(GUESTS,
+                facade.getAllGuests());
+        return HOME;
     }
 
     @PostMapping("/guests/{guestId}")

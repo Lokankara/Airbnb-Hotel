@@ -13,6 +13,6 @@ public abstract class RoomDao extends Dao<Room> {
 
     public abstract Room getById(Long id);
 
-    public abstract List<Room> findByRoomTypeAndCapacity(Criteria criteria);
+    public abstract List<Room> findByCriteria(Criteria criteria);
 
 }

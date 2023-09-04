@@ -42,6 +42,7 @@ public class Booking {
     @CreationTimestamp
     private Timestamp checkOutDate;
     private boolean earlyDeparture;
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.EAGER)
     private Guest guest;
 

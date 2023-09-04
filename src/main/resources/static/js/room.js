@@ -339,7 +339,7 @@ const Toggle = () => {
 const Overlay = forwardRef((props, ref) => {
     const [images] = useState([
         {id: "1", category: "Apartment", number: "01."},
-        {id: "2", category: "Office", number: "02."},
+        {id: "2", category: "Deluxe", number: "02."},
         {id: "3", category: "Studio", number: "03."},
         {id: "4", category: "Cabana", number: "04."}]);
 
@@ -499,12 +499,12 @@ const Navbar = forwardRef((props, ref) => {
                         }, "Search")),
                         React.createElement("li", null, React.createElement("a", {
                             className: "nav-item",
-                            href: "/booking"
-                        }, "Booking")),
+                            href: "/checkin"
+                        }, "CheckIn")),
                         React.createElement("li", null, React.createElement("a", {
                             className: "nav-item",
-                            href: "/departing"
-                        }, "Departing")),
+                            href: "/booking"
+                        }, "Booking")),
                         React.createElement("li", null, React.createElement("a", {
                             className: "nav-item",
                             href: "/available"
@@ -529,6 +529,7 @@ class App extends Component {
                 slides: [
                     {
                         id: "1",
+                        desc: "APARTMENT",
                         title: "Back to future.",
                         slideNumber: "01",
                         text: "Discover future.",
@@ -537,6 +538,7 @@ class App extends Component {
 
                     {
                         id: "2",
+                        desc: "DELUXE",
                         title: "Chill in the space.",
                         slideNumber: "02",
                         text: "Step into your space.",
@@ -545,6 +547,7 @@ class App extends Component {
 
                     {
                         id: "3",
+                        desc: "STUDIO",
                         title: "From dreams to reality.",
                         slideNumber: "03",
                         text: "Go big or go home.",
@@ -553,6 +556,7 @@ class App extends Component {
 
                     {
                         id: "4",
+                        desc: "CABANA",
                         title: "Make a wish.",
                         slideNumber: "04",
                         text: "Push it to the limit.",
@@ -786,8 +790,15 @@ class App extends Component {
                             React.createElement("div", {className: "slide-info-wrap"}, slideText))),
 
                     React.createElement("div", {className: "slide-info-box"},
-                        React.createElement("a", {href: "/home"}, "Need more" +
-                            " info & prices?"))),
+                        React.createElement("a", {href:
+                                this.state.slideCount % 4 === 0
+                                    ? "/available?roomType=CABANA"
+                                    : this.state.slideCount % 3 === 0
+                                        ? "/available?roomType=STUDIO"
+                                        : this.state.slideCount % 2 === 0
+                                            ? "/available?roomType=DELUXE"
+                                            : "/available?roomType=APARTMENT"},
+                            "Need more info & prices?"))),
 
                 React.createElement(Overlay, {
                     close: this.expand,
