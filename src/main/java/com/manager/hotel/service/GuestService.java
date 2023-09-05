@@ -19,6 +19,8 @@ public interface GuestService {
 
     GuestDto update(GuestDto guest);
 
+    Optional<Guest> findByFullName(String firstname, String lastname);
+
     Guest save(Guest guest);
 
     Optional<Guest> findByPassport(Passport passport);

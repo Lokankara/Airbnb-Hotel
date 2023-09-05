@@ -2,22 +2,102 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Check In</title>
-</head>
-<body>
-<div th:each="booking: ${bookings}" class="card-wrapper main-card">
-    <h2>Booking Details</h2>
-    <p>Final Bill: <span th:text="${booking.finalBill}"></span></p>
-    <p>Early Departure: <span th:text="${booking.earlyDeparture}"></span></p>
-    <p>Arrival: <span th:text="${booking.arrival}"></span></p>
-    <p>Check-in Date: <span th:text="${booking.checkInDate}"></span></p>
-    <p>Check-out Date: <span th:text="${booking.checkOutDate}"></span></p>
-    <p>roomType: <span th:each="room : ${booking.guest.rooms}" th:text="${room.roomType}"></span></p>
-    <p><strong>Passport:</strong> <span th:text="${booking.guest.passport}"></span></p>
-    <p><strong>Arrival Date:</strong> <span th:text="${booking.guest.arrivalDate}"></span></p>
-    <p><strong>Departure Date:</strong> <span th:text="${booking.guest.departureDate}"></span></p>
-    <p><strong>Room:</strong> <span th:text="${booking.guest.rooms}"></span></p>
-</div>
+    <title>Hotel Booking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+    <style>
+        .card {
+            position: absolute;
+            margin-left: 380px;
+            margin-top: -135px;
+        }
 
+        .wrapper {
+            padding: 5px;
+        }
+
+        .profile-img-wrapper {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="w3-light-grey">
+<section class="navigation">
+    <a href="/home" class="logo-link">Grand Budapest</a>
+    <div class="navigation-links">
+        <a href="/home" class="nav-link">Home</a>
+        <a href="/guests" class="nav-link">Guests</a>
+        <a href="/orders" class="nav-link">Orders</a>
+        <a href="/checkin" class="nav-link">Reservation</a>
+        <a href="/booking" class="nav-link active">Booking</a>
+        <a href="/available?roomStatus=VACANT" class="nav-link">Available</a>
+    </div>
+    <div class="nav-right-side">
+        <button class="mode-switch">
+            <svg class="sun feather feather-sun" fill="none" stroke="#fbb046" stroke-linecap="round"
+                 stroke-linejoin="round" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <defs/>
+                <circle cx="12" cy="12" r="5"/>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+            <svg class="moon feather feather-moon" fill="none" stroke="#ffffff" stroke-linecap="round"
+                 stroke-linejoin="round" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <defs/>
+                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+            </svg>
+        </button>
+        <button class="profile-btn">
+            <span>Paul</span>
+            <img src="https://avatars.githubusercontent.com/u/78595276?v=4" alt="cat">
+        </button>
+    </div>
+</section>
+<div class="w3-content" style="max-width:1532px;">
+    <div th:each="booking: ${bookings}" class="card-wrapper main-card m3">
+        <div th:each="room : ${booking.guest.rooms}" class="room-card">
+            <div class="w3-third w3-margin-bottom rounded float-start p-3">
+                <div class="wrapper">
+                    <img th:src="${room.path}" alt="Room" style="width:100%">
+                    <div class="w3-container w3-white">
+                        <div class="card-right">
+                            <label th:text="${room.roomType}"><i class="fa fa-hotel"></i></label>
+                            <p th:text="${room.roomStatus.name}"></p>
+                            <p class="w3-large"><i class="fa fa-bath"></i> <i class="fa fa-phone"></i>
+                                <i class="fa fa-tv"></i> <i class="fa fa-glass"></i> <i class="fa fa-cutlery"></i>
+                                <i class="fa fa-wifi"></i></p>
+                            <div class="card">
+                                <div class="profile-info-wrapper">
+                                    <div class="profile-img-wrapper">
+                                        <img th:src="@{'https://source.unsplash.com/random/600x400/?' + ${booking.guest.gender} + ',face,' + ${booking.guest.id}}"
+                                             alt="avatar">
+                                    </div>
+                                    <p th:text="${booking.guest.passportData}"></p>
+                                    <p style="text-align: center">Total: $<span th:text="${booking.finalBill}"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w3-button w3-block w3-black w3-margin-bottom">Departure</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modeSwitch = document.querySelector('.mode-switch');
+
+        modeSwitch.addEventListener('click', function () {
+            document.documentElement.classList.toggle('dark');
+        });
+    });
+</script>
 </html>

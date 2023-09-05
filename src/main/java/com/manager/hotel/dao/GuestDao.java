@@ -20,4 +20,6 @@ public abstract class GuestDao extends Dao<Guest> {
     public abstract Guest getById(Long id);
 
     public abstract List<Guest> findByCriteria(Criteria criteria);
+
+    public abstract Optional<Guest> findByFullName(String firstname, String lastname);
 }

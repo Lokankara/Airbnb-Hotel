@@ -1,7 +1,6 @@
 package com.manager.hotel.service.impl;
 
 import com.manager.hotel.dao.jpa.JpaRoomDao;
-import com.manager.hotel.exception.NoAvailableRoomsException;
 import com.manager.hotel.model.dto.RoomDto;
 import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Room;
@@ -23,7 +22,6 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -116,16 +114,17 @@ class JpaRoomServiceTest {
     @Test
     @DisplayName("Given a valid room ID, when findRoomById is called, then return the corresponding room")
     void testFindRoomByIdWithValidRoomId() {
-        when(dao.getById(1L)).thenReturn(room);
+        when(dao.findById(1L)).thenReturn(Optional.of(room));
         when(mapper.toDto(room)).thenReturn(dto);
-        RoomDto foundRoom = roomService.findRoomById(1L);
-        assertEquals(foundRoom, dto);
+        Optional<Room> foundRoom = roomService.findRoomById(1L);
+        assertTrue(foundRoom.isPresent());
+        assertEquals(foundRoom.get(), room);
     }
 
     @Test
     @DisplayName("Given a valid room, when update is called, then return the updated room")
     void testUpdateWithValidRoom() {
-        when(dao.update(room)).thenReturn(room);
+        when(dao.update(room)).thenReturn(Optional.ofNullable(room));
         Room updatedRoom = roomService.update(room);
         assertThat(updatedRoom).isEqualTo(room);
     }
@@ -137,8 +136,8 @@ class JpaRoomServiceTest {
         availableRooms.add(room);
         when(dao.findByCriteria(criteria)).thenReturn(availableRooms);
         Optional<Room> optional = roomService.findAvailable(criteria);
+        assertTrue(optional.isPresent());
         Room available = optional.get();
-        assertNotNull(available);
         assertEquals(room.getId(), available.getId());
         assertEquals(room.getCapacity(), available.getCapacity());
         assertEquals(room.getRoomType(), available.getRoomType());

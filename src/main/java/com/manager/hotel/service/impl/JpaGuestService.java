@@ -49,6 +49,11 @@ public class JpaGuestService implements GuestService {
     }
 
     @Override
+    public Optional<Guest> findByFullName(String firstname, String lastname) {
+        return dao.findByFullName(firstname, lastname);
+    }
+
+    @Override
     public Guest save(final Guest guest) {
         return dao.save(guest);
     }

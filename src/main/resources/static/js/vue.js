@@ -12,8 +12,9 @@ new Vue({
                 {text: 'Name', value: 'passportData'},
                 {text: 'GuestStatus', value: 'guestStatus'},
                 {text: 'Rooms', value: 'roomsNumber'},
-                {text: 'Departure', value: 'departureDate'},
-                {text: 'Arrive', value: 'arrivalDate'},
+                {text: 'Reservation', value: 'checkIn'},
+                {text: 'CheckOut', value: 'checkOut'},
+                {text: 'Departure', value: 'departure'},
                 {text: 'Type', value: 'roomTypes'},
                 {text: 'RoomStatus', value: 'roomStatuses'},
                 {text: 'Actions', align: 'left', value: 'title', sortable: false}

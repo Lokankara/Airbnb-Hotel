@@ -6,6 +6,20 @@
     outline: none;
 }
 
+#status {
+    font-weight: 500;
+}
+
+select {
+    border: none;
+}
+
+.modalText {
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 .room-status-VACANT {
     font-weight: 900;
     color: green;

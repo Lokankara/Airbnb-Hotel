@@ -3,8 +3,8 @@ create table if not exists guest
     guest_id             bigserial
         primary key,
     check_in   timestamp(6),
-    arrival_date   timestamp(6),
-    departure_date timestamp(6),
+    departure   timestamp(6),
+    check_out timestamp(6),
     passport_data  varchar(255),
     guest_status   varchar(255),
     constraint guest_guest_status_check check
@@ -29,15 +29,29 @@ create table if not exists guest
                               'REFUSED'))
 );
 
-INSERT INTO guest (passport_data, check_in, arrival_date, departure_date, guest_status, feedback, gender)
+CREATE TABLE IF NOT EXISTS Booking (
+                                       booking_id SERIAL PRIMARY KEY,
+                                       finalBill BIGINT,
+                                       departure TIMESTAMP,
+                                       checkInDate TIMESTAMP,
+                                       checkOutDate TIMESTAMP,
+                                       nights INTEGER,
+                                       rate INTEGER,
+                                       earlyDeparture BOOLEAN,
+                                       guest_id BIGINT REFERENCES Guest(id)
+);
+
+
+INSERT INTO guest (passport_data, check_out, check_in, departure, 
+                   guest_status, feedback, gender)
 VALUES
-    ('Michael Angel', NOW(), '2023-08-20 15:30:00', '2023-08-23 09:30:00', 'CHECK_OUT','It’s a very comfortable twin room containing a double bed with two single beds joined by a similar headboard. It’s appropriate for small children, as it caters to their high risk of falling off the bed.', 'WOMAN'),
-    ('Christopher Michael', NOW(), '2023-08-21 14:00:00', '2023-08-25 11:00:00', 'CHECK_IN', 'A twin room typically has only two single beds, while a double room has just one double bed designed for two people, also referred to as a marital bed. Two people can sleep in a twin hotel room but in different beds', 'MAN'),
-    ('Jessica Kristi', NOW(), '2023-08-22 16:30:00', '2023-08-26 10:00:00', 'EARLY_DEPARTURE','Hotel suites are different in size. In most hotels, a suite contains a room separate from the offered bedroom. One room generally has a living area with a beautiful couch to convert to a bed, a kitchenette, and a separate TV.', 'WOMAN'),
-    ('Matthew Caroline', NOW(), '2023-08-23 10:00:00', '2023-08-28 12:00:00', 'OCCUPIED','These hotel rooms usually contain two double beds. They can also have two queen beds. And, they are designed to accommodate two or more people. Double-double rooms are suitable for people traveling with young kids.', 'MAN'),
-    ('Ashley Colin', NOW(), '2023-08-24 11:30:00', '2023-08-30 09:00:00', 'CHECK_IN','This hotel room type contains a studio bed. A studio bed is a bed that can be converted into other pieces of furniture such as a couch or a sofa. This type of room can function like a fully furnished apartment.', 'WOMAN'),
-    ('Jennifer Dawn', NOW(), '2023-08-25 13:00:00', '2023-08-29 14:30:00', 'CHECK_OUT','Its advisable to understand hotel room options before booking. This ensures that you book the right room to help you enjoy your stay at your chosen hotel. Its also good to know what you are paying for in any hotel room type.', 'WOMAN'),
-    ('Joshua Kari', NOW(), '2023-08-26 15:30:00', '2023-08-31 10:30:00', 'DEPARTED','As a law requirement, hotels are supposed to offer a specific number of rooms that handicapped people can access with ease. These rooms usually have enough space for wheelchairs to move without much trouble. Their bathrooms are also designed in such a manner that allows a disabled person to use them efficiently.', 'MAN'),
+    ('Michael Angel', NOW(), '2023-08-20 15:30:00', '2023-09-23 09:30:00', 'CHECK_OUT','It’s a very comfortable twin room containing a double bed with two single beds joined by a similar headboard. It’s appropriate for small children, as it caters to their high risk of falling off the bed.', 'WOMAN'),
+    ('Christopher Michael', NOW(), '2023-08-21 14:00:00', '2023-09-25 11:00:00', 'CHECK_IN', 'A twin room typically has only two single beds, while a double room has just one double bed designed for two people, also referred to as a marital bed. Two people can sleep in a twin hotel room but in different beds', 'MAN'),
+    ('Jessica Kristi', NOW(), '2023-08-22 16:30:00', '2023-09-26 10:00:00', 'EARLY_DEPARTURE','Hotel suites are different in size. In most hotels, a suite contains a room separate from the offered bedroom. One room generally has a living area with a beautiful couch to convert to a bed, a kitchenette, and a separate TV.', 'WOMAN'),
+    ('Matthew Caroline', NOW(), '2023-08-23 10:00:00', '2023-09-28 12:00:00', 'OCCUPIED','These hotel rooms usually contain two double beds. They can also have two queen beds. And, they are designed to accommodate two or more people. Double-double rooms are suitable for people traveling with young kids.', 'MAN'),
+    ('Ashley Colin', NOW(), '2023-08-24 11:30:00', '2023-09-30 09:00:00', 'CHECK_IN','This hotel room type contains a studio bed. A studio bed is a bed that can be converted into other pieces of furniture such as a couch or a sofa. This type of room can function like a fully furnished apartment.', 'WOMAN'),
+    ('Jennifer Dawn', NOW(), '2023-08-25 13:00:00', '2023-09-29 14:30:00', 'CHECK_OUT','Its advisable to understand hotel room options before booking. This ensures that you book the right room to help you enjoy your stay at your chosen hotel. Its also good to know what you are paying for in any hotel room type.', 'WOMAN'),
+    ('Joshua Kari', NOW(), '2023-08-26 15:30:00', '2023-09-30 10:30:00', 'DEPARTED','As a law requirement, hotels are supposed to offer a specific number of rooms that handicapped people can access with ease. These rooms usually have enough space for wheelchairs to move without much trouble. Their bathrooms are also designed in such a manner that allows a disabled person to use them efficiently.', 'MAN'),
     ('Amanda Clayton', NOW(), '2023-08-27 16:00:00', '2023-09-01 11:00:00', 'VIP','', 'WOMAN'),
     ('Daniel Arthur', NOW(), '2023-08-28 17:30:00', '2023-09-02 12:30:00', 'CHECK_IN','', 'MAN'),
     ('David Roger', NOW(), '2023-08-29 14:00:00', '2023-09-03 13:00:00', 'DEPARTED', '', 'MAN'),
@@ -56,13 +70,13 @@ VALUES
     ('Stephanie Tonya', NOW(), '2023-09-11 19:30:00', '2023-09-16 09:30:00', 'CHECK_OUT', '', 'WOMAN'),
     ('Brian Rodney', NOW(), '2023-09-12 20:00:00', '2023-09-17 10:00:00', 'LOCK_OUT', '', 'MAN'),
     ('Nicole Bridget', NOW(), '2023-09-13 21:30:00', '2023-09-18 12:30:00', 'CHECK_OUT', '', 'WOMAN'),
-    ('Nicholas Joe', NOW(), '2023-08-20 15:30:00', '2023-08-23 09:30:00', 'CHECK_OUT','', 'MAN'),
-    ('Anthony Cindy', NOW(), '2023-08-21 14:00:00', '2023-08-25 11:00:00', 'CHECK_IN', '', 'MAN'),
-    ('Heather Oscar', NOW(), '2023-08-22 16:30:00', '2023-08-26 10:00:00', 'EARLY_DEPARTURE', '', 'WOMAN'),
-    ('Eric Willie', NOW(), '2023-08-23 10:00:00', '2023-08-28 12:00:00', 'OCCUPIED', '', 'MAN'),
-    ('Elizabeth Maurice', NOW(), '2023-08-24 11:30:00', '2023-08-30 09:00:00', 'CHECK_IN', '', 'WOMAN'),
-    ('Adam Jaime', NOW(), '2023-08-25 13:00:00', '2023-08-29 14:30:00', 'DEPARTED', '', 'MAN'),
-    ('Megan Angelica', NOW(), '2023-08-26 15:30:00', '2023-08-31 10:30:00', 'CHECK_OUT', '', 'WOMAN'),
+    ('Nicholas Joe', NOW(), '2023-08-20 15:30:00', '2023-09-23 09:30:00', 'CHECK_OUT','', 'MAN'),
+    ('Anthony Cindy', NOW(), '2023-08-21 14:00:00', '2023-09-25 11:00:00', 'CHECK_IN', '', 'MAN'),
+    ('Heather Oscar', NOW(), '2023-08-22 16:30:00', '2023-09-26 10:00:00', 'EARLY_DEPARTURE', '', 'WOMAN'),
+    ('Eric Willie', NOW(), '2023-08-23 10:00:00', '2023-09-28 12:00:00', 'OCCUPIED', '', 'MAN'),
+    ('Elizabeth Maurice', NOW(), '2023-08-24 11:30:00', '2023-09-30 09:00:00', 'CHECK_IN', '', 'WOMAN'),
+    ('Adam Jaime', NOW(), '2023-08-25 13:00:00', '2023-09-29 14:30:00', 'DEPARTED', '', 'MAN'),
+    ('Megan Angelica', NOW(), '2023-08-26 15:30:00', '2023-09-30 10:30:00', 'CHECK_OUT', '', 'WOMAN'),
     ('Melissa Sharon', NOW(), '2023-08-27 16:00:00', '2023-09-01 11:00:00', 'CHECK_IN', '', 'WOMAN'),
     ('Michael Anderson', NOW(), '2023-08-28 17:30:00', '2023-09-02 12:30:00', 'ARRIVAL', '', 'MAN'),
     ('Sophia Martinez', NOW(), '2023-08-29 14:00:00', '2023-09-03 13:00:00', 'CHECK_OUT', '', 'WOMAN'),
@@ -80,8 +94,8 @@ VALUES
     ('Emma Harris', NOW(), '2023-09-10 18:00:00', '2023-09-15 12:00:00', 'CHECK_OUT', '', 'WOMAN'),
     ('Liam Martin', NOW(), '2023-09-11 19:30:00', '2023-09-16 09:30:00', 'FIT', '', 'MAN'),
     ('Ava Smith', NOW(), '2023-09-12 20:00:00', '2023-09-17 10:00:00', 'CHECK_IN', '', 'WOMAN'),
-    ('Jane Smith', NOW(), '2023-08-21 16:00:00', '2023-08-24 10:00:00', 'CHECK_OUT', 'The staff was friendly and helpful.', 'WOMAN'),
-    ('Bob Johnson', NOW(), '2023-08-22 14:30:00', '2023-08-25 11:30:00', 'CHECK_OUT', 'The location was convenient.', 'MAN'),
+    ('Jane Smith', NOW(), '2023-08-21 16:00:00', '2023-09-24 10:00:00', 'CHECK_OUT', 'The staff was friendly and helpful.', 'WOMAN'),
+    ('Bob Johnson', NOW(), '2023-08-22 14:30:00', '2023-09-25 11:30:00', 'CHECK_OUT', 'The location was convenient.', 'MAN'),
     ('Alice Brown', NOW(), '2023-09-19 13:00:00', '2023-09-22 12:00:00', 'CHECK_OUT', 'The amenities were excellent.', 'WOMAN'),
     ('James Johnson', NOW(), '2023-09-13 21:30:00', '2023-09-18 12:30:00', 'RESERVED', '', 'MAN'),
     ('Tia Dalma', NOW(), '2023-08-25', '2023-08-30', 'EARLY_DEPARTURE', 'Had to leave early', 'WOMAN'),

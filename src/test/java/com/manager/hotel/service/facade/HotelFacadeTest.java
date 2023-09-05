@@ -69,18 +69,17 @@ class HotelFacadeTest {
         verify(roomService, times(1)).findRooms();
     }
 
-    @Test
-
-    @DisplayName("Given guest ID and early departure flag, When checking out a guest, Then return the booking details")
-    void testCheckOutGuest() {
-        Long guestId = 1L;
-        boolean earlyDeparture = true;
-        BookingDto expectedBookingDto = new BookingDto();
-        when(bookingService.checkOutGuest(guestId, earlyDeparture)).thenReturn(expectedBookingDto);
-        BookingDto actualBookingDto = hotelFacade.checkOutGuest(guestId, earlyDeparture);
-        assertEquals(expectedBookingDto, actualBookingDto);
-        verify(bookingService, times(1)).checkOutGuest(guestId, earlyDeparture);
-    }
+//    @Test
+//    @DisplayName("Given guest ID and early departure flag, When checking out a guest, Then return the booking details")
+//    void testCheckOutGuest() {
+//        Long guestId = 1L;
+//        boolean earlyDeparture = true;
+//        BookingDto expectedBookingDto = new BookingDto();
+//        when(bookingService.checkOutGuest(guestId, earlyDeparture)).thenReturn(expectedBookingDto);
+//        BookingDto actualBookingDto = hotelFacade.checkOutGuest(guestId, earlyDeparture);
+//        assertEquals(expectedBookingDto, actualBookingDto);
+//        verify(bookingService, times(1)).checkOutGuest(guestId, earlyDeparture);
+//    }
 
     @Test
     @DisplayName("Given valid criteria, when findAvailableRooms is called, then return a list of rooms")

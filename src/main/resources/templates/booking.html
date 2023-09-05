@@ -176,7 +176,7 @@
                 address: "Caribbean",
                 creditCard: "1234-5678-9012-3456",
                 checkin: "2023-08-20",
-                checkout: "2023-08-25",
+                checkout: "2023-09-25",
                 capacity: "2",
                 adults: "2",
                 children: "2",
@@ -192,7 +192,7 @@
                 address: "Tortuga",
                 creditCard: "9876-5432-1098-7654",
                 checkin: "2023-08-21",
-                checkout: "2023-08-26",
+                checkout: "2023-09-26",
                 capacity: "2",
                 adults: "2",
                 children: "2",
@@ -208,7 +208,7 @@
                 address: "Port Royal",
                 creditCard: "5678-1234-9012-3456",
                 checkin: "2023-08-22",
-                checkout: "2023-08-27",
+                checkout: "2023-09-27",
                 capacity: "3",
                 adults: "1",
                 children: "1",
@@ -224,7 +224,7 @@
                 address: "Port Royal",
                 creditCard: "7890-1234-9012-3456",
                 checkin: "2023-08-22",
-                checkout: "2023-08-27",
+                checkout: "2023-09-27",
                 capacity: "2",
                 adults: "2",
                 children: "1",
@@ -240,7 +240,7 @@
                 address: "The Flying Dutchman",
                 creditCard: "9012-3456-7890-1234",
                 checkin: "2023-08-23",
-                checkout: "2023-08-28",
+                checkout: "2023-09-28",
                 capacity: "2",
                 adults: "1",
                 children: "3",
@@ -264,7 +264,7 @@
         for (let i = 0; i < selects.length; i++) {
             const selectName = selects[i].getAttribute('name');
             if (guest[selectName]) {
-                if (room === null || (selectName !== 'roomType' && selectName !== 'capacity')) {
+                if (room.id === null || (selectName !== 'roomType' && selectName !== 'capacity')) {
                     selects[i].value = guest[selectName];
                 }
             }

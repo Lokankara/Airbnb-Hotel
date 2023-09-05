@@ -1,5 +1,6 @@
 package com.manager.hotel.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.manager.hotel.model.enums.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,18 +53,19 @@ public class Passport {
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "last_name", length = 128, nullable = false)
-    private String lastName;
+    private String lastname;
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "first_name", length = 128, nullable = false)
     @NotNull
-    private String firstName;
+    private String firstname;
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "credit_card", length = 128, nullable = false)
     private String creditCard;
     @NotNull
     @OneToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     @JoinColumn(name = "guest_id")
     private Guest guest;
 

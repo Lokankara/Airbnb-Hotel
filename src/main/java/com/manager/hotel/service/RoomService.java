@@ -10,13 +10,13 @@ import java.util.Optional;
 public interface RoomService {
     List<RoomDto> findRooms();
 
+    Optional<Room> findRoomById(Long id);
+
     List<RoomDto> findAvailableRooms(Criteria criteria);
 
     Optional<Room> findAvailable(Criteria criteria);
 
-    RoomDto findRoomById(Long id);
+    RoomDto getRoomById(Long id);
 
     Room update(Room room);
-
-    RoomDto findAvailableById(Long id);
 }

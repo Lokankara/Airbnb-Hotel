@@ -25,8 +25,8 @@ public class GuestDto {
     private Long id;
     private String passportData;
     private Timestamp checkIn;
-    private Timestamp arrivalDate;
-    private Timestamp departureDate;
+    private Timestamp departure;
+    private Timestamp checkOut;
     @Enumerated(EnumType.STRING)
     private GuestStatus guestStatus;
     private Set<RoomDto> rooms;

@@ -76,9 +76,9 @@ class JpaBookingServiceTest {
     @DisplayName("Given a timestamp, when getLatest is called, then return a list of latest booking DTOs")
     void testGetLatestBookings() {
         Timestamp fromDate = Timestamp.valueOf("2023-08-01 00:00:00");
-        when(dao.findLatestDeals(fromDate)).thenReturn(bookings);
+        when(dao.findLatestDeals()).thenReturn(bookings);
         when(mapper.toListDto(bookings)).thenReturn(bookingDtos);
-        List<BookingDto> resultBookingDtos = bookingService.getLatest(fromDate);
+        List<BookingDto> resultBookingDtos = bookingService.findLatest();
         assertNotNull(resultBookingDtos);
         assertEquals(2, resultBookingDtos.size());
         assertEquals(bookingDto.getId(), resultBookingDtos.get(0).getId());

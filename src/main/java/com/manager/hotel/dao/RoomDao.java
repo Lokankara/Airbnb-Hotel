@@ -11,8 +11,5 @@ public abstract class RoomDao extends Dao<Room> {
         super(Room.class);
     }
 
-    public abstract Room getById(Long id);
-
     public abstract List<Room> findByCriteria(Criteria criteria);
-
 }

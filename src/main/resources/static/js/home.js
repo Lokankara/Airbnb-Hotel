@@ -44,11 +44,12 @@ cardItems.forEach((cardItem) => {
         modalCapacity.innerText = cardRooms.innerText + " Bedrooms";
         modalBath.innerText = cardRooms.innerText + " Bathrooms";
         modalImage.src = cardImage.src;
-        modalStatus.innerText = cardStatus.innerText;
+        modalStatus.value = cardStatus.innerText;
+
         modalHeader.innerText = cardHeader.innerText;
         modalCardPrice.innerText = cardPrice.innerText;
 
-        if (modalStatus.textContent.trim() !== 'VACANT') {
+        if (modalStatus.value.trim() !== 'VACANT') {
             bookButton.disabled = true;
             bookButton.style.background = "gray";
         } else {
@@ -125,38 +126,38 @@ function create(element, name, text) {
 const cardData = [
     {
         imageSrc: "https://source.unsplash.com/featured/1200x900/?hotel-room,interior",
-        title: "Room Conrad",
-        location: "Stockton Street",
+        title: "Room Twin",
+        location: "VACANT",
         price: "$100",
     },
     {
         imageSrc: "https://source.unsplash.com/featured/1200x900/?interior,hotel",
-        title: "The Room Riviera",
-        location: "Stockton Street",
+        title: "The Queen",
+        location: "RESERVED",
         price: "$300",
     },
     {
         imageSrc: "https://source.unsplash.com/featured/1200x900/?interior,modern",
-        title: "The Hotel Star Pacific",
-        location: "Stockton Street",
+        title: "The King",
+        location: "OCCUPIED",
         price: "$140",
     },
     {
         imageSrc: "https://source.unsplash.com/featured/1200x900/?hotel,modern",
-        title: "Room Instant Destiny",
-        location: "Stockton Street",
+        title: "Room Quad",
+        location: "VACANT",
         price: "$180",
     },
     {
         imageSrc: "https://source.unsplash.com/featured/1200x900/?room,design",
-        title: "The White Roses Room",
-        location: "Stockton Street",
+        title: "Room Standard",
+        location: "MAINTENANCE",
         price: "$700",
     },
     {
         imageSrc: "https://source.unsplash.com/featured/1200x900/?room,modern",
-        title: "Room Tom's Dinner",
-        location: "Stockton Street",
+        title: "Room Apartment",
+        location: "OCCUPIED",
         price: "$150",
     },
 ];

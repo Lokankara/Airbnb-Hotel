@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import static com.manager.hotel.web.ConstantPath.HOME;
 import static com.manager.hotel.web.ConstantPath.ROOM;
 import static com.manager.hotel.web.ConstantPath.ROOMS;
 
@@ -23,7 +24,7 @@ public class RoomController {
             final Model model) {
         model.addAttribute(ROOMS,
                 roomService.findRooms());
-        return ROOMS;
+        return HOME;
     }
 
     @GetMapping("/{roomId}")
@@ -31,7 +32,7 @@ public class RoomController {
             final Model model,
             final @PathVariable Long roomId) {
         model.addAttribute(ROOM, roomService
-                .findRoomById(roomId));
+                .getRoomById(roomId));
         return ROOM;
     }
 }

@@ -1,9 +1,9 @@
 package com.manager.hotel.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.manager.hotel.model.enums.Gender;
 import com.manager.hotel.model.enums.GuestStatus;
-import com.manager.hotel.model.enums.RoomStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,7 +28,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Timestamp;
@@ -59,26 +58,24 @@ public class Guest {
     @Column(name = "passport_data", length = 128)
     private String passportData;
     @NotNull
-    @CreationTimestamp
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "arrival_date", length = 128)
-    private Timestamp arrivalDate;
+    @Column(name = "departure", length = 128)
+    private Timestamp departure;
     @NotNull
-    @CreationTimestamp
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "check_in", length = 128)
     private Timestamp checkIn;
     @NotNull
-    @CreationTimestamp
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "departure_date", length = 128)
-    private Timestamp departureDate;
+    @Column(name = "check_out", length = 128)
+    private Timestamp checkOut;
     @ToString.Exclude
     @JsonManagedReference
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "guest", fetch = FetchType.EAGER)
     private Set<Room> rooms;
     @ToString.Exclude
+    @JsonBackReference
     @JoinColumn(name = "passport_id")
     @OneToOne(fetch = FetchType.EAGER)
     private Passport passport;
@@ -98,7 +95,7 @@ public class Guest {
     private Gender gender;
 
     public void addRoom(Room room) {
-        if (rooms == null){
+        if (rooms == null) {
             rooms = new HashSet<>();
         }
         rooms.add(room);
@@ -108,14 +105,6 @@ public class Guest {
     public void removeRoom(Room room) {
         rooms.remove(room);
         room.setGuest(null);
-    }
-
-    public int getRate() {
-        return rooms.stream()
-                    .filter(room -> room.getRoomStatus() == RoomStatus.OCCUPIED)
-                    .findFirst()
-                    .map(room -> room.getRoomType().getRate())
-                    .orElse(0);
     }
 
     @Override

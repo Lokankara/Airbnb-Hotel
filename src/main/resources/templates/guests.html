@@ -24,12 +24,11 @@
         <a href="/" class="logo-link">Grand Budapest</a>
         <div class="navigation-links">
             <a href="/home" class="nav-link">Home</a>
-            <a href="/rooms" class="nav-link">Rooms</a>
             <a href="/guests" class="nav-link active">Guests</a>
-            <a href="/search" class="nav-link">Search</a>
-            <a href="/checkin" class="nav-link">CheckIn</a>
+            <a href="/orders" class="nav-link">Orders</a>
+            <a href="/checkin" class="nav-link">Reservation</a>
             <a href="/booking" class="nav-link">Booking</a>
-            <a href="/rooms/vacant" class="nav-link">Available</a>
+            <a href="/available?roomStatus=VACANT" class="nav-link">Available</a>
         </div>
         <div class="nav-right-side">
             <button class="mode-switch">
@@ -125,8 +124,8 @@
                                   y2="10"/>
                         </svg>
                     </span>
-                    <label for="checkIn"></label>
-                    <input type="date" class="filter-text search-input" id="checkIn" placeholder=""
+                    <label for="checkIn">In:</label>
+                    <input type="date" class="filter-text search-input" id="checkIn" placeholder="CheckIn"
                            onkeyup="handleKeyPressGuest(event)">
                 </button>
                 <button class="filter-btn">
@@ -149,8 +148,32 @@
                                   y2="10"/>
                         </svg>
                     </span>
-                    <label for="checkOut"></label>
-                    <input type="date" class="filter-text search-input" id="checkOut" placeholder=""
+                    <label for="checkOut">Out:</label>
+                    <input type="date" class="filter-text search-input" id="checkOut" placeholder="CheckOut"
+                           onkeyup="handleKeyPressGuest(event)">
+                </button>
+                <button class="filter-btn">
+                    <span class="filter-icon">
+                        <svg class="btn-icon feather feather-book feather feather-calendar"
+                             xmlns="http://www.w3.org/2000/svg" width="24"
+                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3"
+                                  y="4"
+                                  width="18"
+                                  height="18"
+                                  rx="2"
+                                  ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3"
+                                  y1="10"
+                                  x2="21"
+                                  y2="10"/>
+                        </svg>
+                    </span>
+                    <label for="departure">Departure:</label>
+                    <input type="date" class="filter-text search-input" id="departure"
                            onkeyup="handleKeyPressGuest(event)">
                 </button>
                 <button type="submit" class="search-btn" onclick="findGuests()">Find Guest</button>
@@ -219,10 +242,10 @@
                                 text-color="white">VIP
                         </v-chip>
                     <td class="">{{ props.item.roomsNumber }}</td>
-                    <td class="">{{ props.item.arrivalDate }}</td>
-                    <td class="">{{ props.item.departureDate }}</td>
+                    <td class="">{{ props.item.checkIn.substring(0, 16) }}</td>
+                    <td class="">{{ props.item.checkOut.substring(0, 16) }}</td>
+                    <td class="">{{ props.item.departure.substring(0, 16) }}</td>
                     <td class="">{{ props.item.roomTypes }}</td>
-
                     <td class="">
                         <v-chip small v-if="props.item.roomStatuses === 'RESERVED'" label color="grey lighten-4"
                                 text-color="grey darken-2">RESERVED
@@ -285,5 +308,15 @@
     }
 </script>
 <script src="/js/find.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modeSwitch = document.querySelector('.mode-switch');
+
+        modeSwitch.addEventListener('click', function () {
+            document.documentElement.classList.toggle('dark');
+        });
+    });
+</script>
+
 </body>
 </html>

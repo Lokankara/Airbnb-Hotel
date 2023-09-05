@@ -485,29 +485,29 @@ const Navbar = forwardRef((props, ref) => {
                             className: "nav-item",
                             href: "/home"
                         }, "Home")),
-                        React.createElement("li", null, React.createElement("a", {
-                            className: "nav-item",
-                            href: "/rooms"
-                        }, "Rooms")),
+                        // React.createElement("li", null, React.createElement("a", {
+                        //     className: "nav-item",
+                        //     href: "/rooms"
+                        // }, "Rooms")),
                         React.createElement("li", null, React.createElement("a", {
                             className: "nav-item",
                             href: "/guests"
                         }, "Guests")),
                         React.createElement("li", null, React.createElement("a", {
                             className: "nav-item",
-                            href: "/search"
-                        }, "Search")),
+                            href: "/orders"
+                        }, "Orders")),
                         React.createElement("li", null, React.createElement("a", {
                             className: "nav-item",
                             href: "/checkin"
-                        }, "CheckIn")),
+                        }, "Reservation")),
                         React.createElement("li", null, React.createElement("a", {
                             className: "nav-item",
                             href: "/booking"
                         }, "Booking")),
                         React.createElement("li", null, React.createElement("a", {
                             className: "nav-item",
-                            href: "/available"
+                            href: "/available?roomStatus=VACANT"
                         }, "Available")))))));
 });
 

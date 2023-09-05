@@ -20,12 +20,11 @@
         <a href="/home" class="logo-link">Grand Budapest</a>
         <div class="navigation-links">
             <a href="/home" class="nav-link active">Home</a>
-            <a href="/rooms" class="nav-link">Rooms</a>
             <a href="/guests" class="nav-link">Guests</a>
-            <a href="/search" class="nav-link">Search</a>
-            <a href="/checkin" class="nav-link">CheckIn</a>
+            <a href="/orders" class="nav-link">Orders</a>
+            <a href="/checkin" class="nav-link">Reservation</a>
             <a href="/booking" class="nav-link">Booking</a>
-            <a href="/rooms/vacant" class="nav-link">Available</a>
+            <a href="/available?roomStatus=VACANT" class="nav-link">Available</a>
         </div>
         <div class="nav-right-side">
             <button class="mode-switch">
@@ -45,7 +44,7 @@
             </button>
             <button class="profile-btn">
                 <span>Paul</span>
-                <img src="/img/ava.jpg" alt="avatar">
+                <img src="https://avatars.githubusercontent.com/u/78595276?v=4" alt="cat">
             </button>
         </div>
     </section>
@@ -63,17 +62,16 @@
                         </svg>
                     </span>
                     <label>
-                        <input type="number" class="filter-text search-input" id="capacity" placeholder="Rooms" min="0" max="5"  onkeyup="handleKeyPress(event)">
+                        <input type="number" class="filter-text search-input" id="capacity" placeholder="Rooms" min="0"
+                               max="5" onkeyup="handleKeyPress(event)">
                     </label>
                 </button>
                 <button class="filter-btn">
                     <span class="filter-icon">
-                        <svg class="btn-icon feather feather-map-pin" xmlns="http://www.w3.org/2000/svg"
-                             fill="none"
-                             stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
-                                    <circle cx="12" cy="10" r="3"/>
+                        <svg class="btn-icon feather feather-sliders" xmlns="http://www.w3.org/2000/svg" fill="none"
+                             stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>
                         </svg>
                     </span>
                     <label>
@@ -137,7 +135,7 @@
         <div id="latest-deals" class="app-main-right cards-area">
             <div class="app-main-right-header">
                 <span>Latest Deals</span>
-                <a href="/rooms">See More</a>
+                <a href="/home">See More</a>
             </div>
         </div>
     </section>
@@ -153,7 +151,15 @@
             <div class="modal-info-header">
                 <div class="left-side">
                     <h1 class="modalHeader-js"></h1>
-                    <p class="modalText"></p>
+                    <select class="modalText" id="status" onchange="updateStatus()">
+                        <option value="" selected hidden>Status</option>
+                        <option th:each="type : ${T(com.manager.hotel.model.enums.RoomStatus).values()}"
+                                th:value="${type}"
+                                th:class="'room-status-' + ${type}"
+                                th:text="${type.name()}">
+                        </option>
+                    </select>
+                    <input class="right-side" type="checkbox" id="early" name="early" onchange="updateStatus()"> Early Departure
                 </div>
                 <div class="right-side">
                     Starts from:
@@ -225,10 +231,11 @@
                         <input type="checkbox" id="favourite">
                         <label for="favourite">
                              <span class="favourite-icon">
-                                <svg class="btn-icon feather feather-heart" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
+                                <svg class="btn-icon feather feather-heart" xmlns="http://www.w3.org/2000/svg"
+                                     width="24" height="24"
+                                     viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
                                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                                 </svg>
                              </span>

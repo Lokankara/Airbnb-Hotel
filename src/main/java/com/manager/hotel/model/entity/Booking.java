@@ -1,5 +1,7 @@
 package com.manager.hotel.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +21,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+import static java.time.Duration.between;
 
 @Getter
 @Setter
@@ -33,16 +38,19 @@ import java.sql.Timestamp;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "booking_id")
     private Long id;
+    @Getter
     private Long finalBill;
-    @CreationTimestamp
-    private Timestamp arrival;
-    @CreationTimestamp
+//    @CreationTimestamp
+    private Timestamp departure;
     private Timestamp checkInDate;
-    @CreationTimestamp
     private Timestamp checkOutDate;
+    private Long nights;
+    private Long rate;
     private boolean earlyDeparture;
     @ToString.Exclude
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     private Guest guest;
 

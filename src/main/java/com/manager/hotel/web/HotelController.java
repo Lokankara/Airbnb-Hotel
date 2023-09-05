@@ -4,6 +4,7 @@ import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.dto.PostBookingDto;
 import com.manager.hotel.model.dto.RoomDto;
 import com.manager.hotel.model.entity.Criteria;
+import com.manager.hotel.model.enums.RoomStatus;
 import com.manager.hotel.service.facade.HotelFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,13 +75,12 @@ public class HotelController {
         return HOME;
     }
 
-    @PostMapping("/guests/{guestId}")
+    @PatchMapping("/rooms/{roomId}")
     public String earlyDeparture(
-            final Model model,
-            final @PathVariable Long guestId,
-            final @RequestParam boolean early) {
-        model.addAttribute(BOOKING,
-                facade.checkOutGuest(guestId, early));
-        return BOOKING;
+            final @PathVariable Long roomId,
+            final @RequestParam(name = "roomStatus") RoomStatus roomStatus,
+            final @RequestParam(name = "early") boolean early) {
+        facade.checkOutGuest(roomId, early, roomStatus);
+        return "redirect:/home";
     }
 }

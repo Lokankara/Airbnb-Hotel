@@ -1,7 +1,6 @@
 package com.manager.hotel.dao.jpa;
 
 import com.manager.hotel.dao.RoomDao;
-import com.manager.hotel.exception.RoomNotFoundException;
 import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Guest;
 import com.manager.hotel.model.entity.Room;
@@ -9,7 +8,6 @@ import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.PersistenceException;
 import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.Subgraph;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -21,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.manager.hotel.dao.jpa.Constant.FETCH_GRAPH;
 
@@ -57,12 +56,6 @@ public class JpaRoomDao extends RoomDao {
         }
     }
 
-    public Room getById(final Long id) {
-        return findById(id).orElseThrow(() ->
-                new RoomNotFoundException(
-                        "Room not found with ID " + id));
-    }
-
     @Override
     public List<Room> findAll() {
         try (EntityManager entityManager =
@@ -83,7 +76,7 @@ public class JpaRoomDao extends RoomDao {
         }
     }
 
-    public Room update(Room room) {
+    public Optional<Room> update(Room room) {
         try (EntityManager entityManager =
                      factory.createEntityManager()) {
             EntityTransaction transaction =
@@ -92,13 +85,12 @@ public class JpaRoomDao extends RoomDao {
                 transaction.begin();
                 Room updated = entityManager.merge(room);
                 transaction.commit();
-                return updated;
+                return Optional.of(updated);
             } catch (Exception e) {
                 if (transaction.isActive()) {
                     transaction.rollback();
                 }
-                throw new PersistenceException(
-                        "Error updating Room: " + e.getMessage(), e);
+                return Optional.empty();
             }
         }
     }

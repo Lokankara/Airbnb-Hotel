@@ -26,8 +26,8 @@ public class JpaPassportDao extends PassportDao {
         try (EntityManager entityManager =
                      factory.createEntityManager()) {
             return entityManager.createQuery(SELECT_PASSPORT, Passport.class)
-                    .setParameter("firstName", name)
-                    .setParameter("lastName", surname)
+                    .setParameter("firstname", name)
+                    .setParameter("lastname", surname)
                     .getResultList()
                     .stream()
                     .findFirst();

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 import static com.manager.hotel.web.ConstantPath.BOOKING;
 import static com.manager.hotel.web.ConstantPath.GUESTS;
 
@@ -27,8 +29,9 @@ public class GuestController {
     @GetMapping
     public String getAllGuests(
             final Model model) {
-        model.addAttribute(GUESTS,
-                guestService.getAllGuests());
+        List<GuestDto> allGuests = guestService.getAllGuests();
+        log.info("getAllGuests: " + (allGuests.size()));
+        model.addAttribute(GUESTS, allGuests);
         return GUESTS;
     }
 
@@ -55,8 +58,8 @@ public class GuestController {
     public String updateData(
             final Model model,
             final @ModelAttribute("guest") GuestDto dto) {
-        model.addAttribute(BOOKING,
+        model.addAttribute(GUESTS,
                 guestService.update(dto));
-        return BOOKING;
+        return GUESTS;
     }
 }

@@ -35,5 +35,5 @@ public class Criteria {
     private String name;
     private String checkIn;
     private String checkOut;
+    private String departure;
 }
-

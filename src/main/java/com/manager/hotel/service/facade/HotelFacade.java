@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -44,15 +45,27 @@ public class HotelFacade {
         return roomService.findRooms();
     }
 
-    public BookingDto checkOutGuest(
-            final Long guestId,
-            final boolean earlyDeparture) {
-        return bookingService.checkOutGuest(
-                guestId, earlyDeparture);
+    public void checkOutGuest(
+            Long roomId, boolean early, RoomStatus status) {
+        Optional<Room> optionalRoom = roomService.findRoomById(roomId);
+        if (optionalRoom.isPresent()) {
+            Room room = optionalRoom.get();
+            Booking booking = bookingService.findByRoomId(roomId);
+            booking.setEarlyDeparture(early);
+            room.setRoomStatus(status);
+            log.info(booking.getGuest().toString());
+            log.info(room.getGuest().toString());
+            if (early){
+                Guest guest = booking.getGuest();
+                guest.removeRoom(room);
+                guestService.update(guest);
+            }
+            roomService.update(room);
+        }
     }
 
     public RoomDto findAvailableRoom(Long id) {
-        return roomService.findAvailableById(id);
+        return roomService.getRoomById(id);
     }
 
     public List<RoomDto> findAvailableRooms(Criteria criteria) {
@@ -64,40 +77,50 @@ public class HotelFacade {
         Optional<Room> optional = roomService.findAvailable(getCriteria(dto));
         if (optional.isPresent()) {
             Room room = optional.get();
-            Guest guest = guestService.save(getGuest(dto, room));
+            Guest guest = guestService.findByFullName(dto.getFirstname(), dto.getLastname())
+                                      .orElseGet(() -> guestService.save(getGuest(dto, room)));
             Passport passport = passportService
                     .findByFirstNameAndLastName(dto.getFirstname(), dto.getLastname())
                     .orElseGet(() -> passportService.save(getPassport(dto, guest)));
+
+            guest.setCheckIn(valueOf(parse(dto.getCheckin()).atStartOfDay()));
+            guest.setCheckOut(valueOf(parse(dto.getCheckout()).atStartOfDay()));
+            guest.setPassport(passport);
             room.setRoomStatus(RoomStatus.OCCUPIED);
             room.setGuest(guest);
-            guest.setPassport(passport);
-            Guest savedGuest = guestService
-                    .findGuestById(guest.getId());
-            savedGuest.setPassport(passport);
-            savedGuest.addRoom(room);
-            guestService.update(savedGuest);
-            BookingDto booking = bookingService
-                    .save(getBooking(dto, guest));
+            guestService.update(guest);
             roomService.update(room);
-            return booking;
+            long nights = getNights(room);
+            long rate = room.getRoomType().getRate();
+            return bookingService.save(getBooking(guest, nights, rate));
         } else {
             return new BookingDto();
         }
     }
 
+    private static long getNights(Room room) {
+        return Duration.between(
+                room.getGuest().getCheckIn().toInstant(),
+                room.getGuest().getCheckOut().toInstant()).toDays() + 1;
+    }
+
     private static Booking getBooking(
-            PostBookingDto dto, Guest guest) {
+            Guest guest, Long nights, Long rate) {
         return Booking.builder()
-                      .checkInDate(valueOf(parse(dto.getCheckin()).atStartOfDay()))
-                      .checkOutDate(valueOf(parse(dto.getCheckout()).atStartOfDay()))
+                      .nights(nights)
+                      .rate(rate)
+                      .finalBill(nights * rate)
+                      .checkInDate(guest.getCheckIn())
+                      .checkOutDate(guest.getCheckOut())
                       .guest(guest)
                       .build();
     }
 
-    private static Passport getPassport(PostBookingDto dto, Guest guest) {
+    private static Passport getPassport(
+            PostBookingDto dto, Guest guest) {
         return Passport.builder()
-                       .firstName(dto.getFirstname())
-                       .lastName(dto.getLastname())
+                       .firstname(dto.getFirstname())
+                       .lastname(dto.getLastname())
                        .address(dto.getAddress())
                        .creditCard(dto.getCreditCard())
                        .email(dto.getEmail())
@@ -111,13 +134,13 @@ public class HotelFacade {
             final PostBookingDto dto,
             final Room room) {
         return Guest.builder()
-                    .arrivalDate(valueOf(now()))
+                    .departure(valueOf(now()))
                     .checkIn(valueOf(parse(
                             dto.getCheckin())
                             .atStartOfDay()))
                     .guestStatus(dto.getGuestStatus())
                     .gender(dto.getGender())
-                    .departureDate(valueOf(parse(
+                    .checkOut(valueOf(parse(
                             dto.getCheckout())
                             .atStartOfDay()))
                     .passportData(dto.getFirstname() + " " + dto.getLastname())

@@ -32,12 +32,14 @@ public class JpaRoomService implements RoomService {
     @Transactional(readOnly = true)
     public List<RoomDto> findAvailableRooms(
             final Criteria criteria) {
-        return mapper.toListDto(dao
-                .findByCriteria(criteria));
+        return mapper.toListDto(
+                dao.findByCriteria(criteria));
     }
 
     @Override
-    public Optional<Room> findAvailable(Criteria criteria) {
+    @Transactional(readOnly = true)
+    public Optional<Room> findAvailable(
+            Criteria criteria) {
         List<Room> rooms = dao.findByCriteria(criteria);
         return rooms.isEmpty()
                 ? Optional.empty()
@@ -46,18 +48,21 @@ public class JpaRoomService implements RoomService {
 
     @Override
     @Transactional(readOnly = true)
-    public RoomDto findRoomById(
+    public Optional<Room> findRoomById(
             final Long id) {
-        return mapper.toDto(dao.getById(id));
+        return dao.findById(id);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Room update(Room room) {
-        return dao.update(room);
+        return dao.update(room)
+                  .orElse(new Room());
     }
 
     @Override
-    public RoomDto findAvailableById(Long id) {
-        return findRoomById(id);
+    public RoomDto getRoomById(Long id) {
+        return mapper.toDto(findRoomById(id)
+                .orElse(new Room()));
     }
 }

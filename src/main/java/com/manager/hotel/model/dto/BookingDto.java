@@ -19,8 +19,10 @@ public class BookingDto {
     private Long id;
     private Long finalBill;
     private boolean earlyDeparture;
-    private Timestamp arrival;
+    private Timestamp departure;
     private Timestamp checkInDate;
     private Timestamp checkOutDate;
     private GuestDto guest;
+    private Long nights;
+    private Long rate;
 }
