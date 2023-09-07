@@ -6,8 +6,8 @@ import com.manager.hotel.model.entity.Guest;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceUnit;
-import jakarta.persistence.Subgraph;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -19,10 +19,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.manager.hotel.dao.jpa.Constant.FETCH_GRAPH;
 import static com.manager.hotel.dao.jpa.Constant.SELECT_ALL_ORDERS;
-import static com.manager.hotel.dao.jpa.Constant.SELECT_BOOKING_BY_ROOM_ID;
 import static com.manager.hotel.dao.jpa.Constant.SELECT_BY_IDS;
 import static com.manager.hotel.dao.jpa.Constant.SELECT_ORDERS_BY_IDS;
 
@@ -38,17 +38,15 @@ public class JpaBookingDao extends BookingDao {
         try (EntityManager entityManager = factory.createEntityManager()) {
             EntityGraph<Booking> entityGraph = entityManager.createEntityGraph(Booking.class);
             entityGraph.addAttributeNodes("guest");
-            Subgraph<Guest> guestSubgraph = entityGraph.addSubgraph("guest");
-            guestSubgraph.addAttributeNodes("passport");
-            guestSubgraph.addAttributeNodes("bookings");
-            return entityManager
-                    .createQuery(SELECT_BOOKING_BY_ROOM_ID, Booking.class)
-                    .setParameter("roomId", roomId)
-                    .setHint(FETCH_GRAPH, entityGraph)
-                    .getSingleResult();
+            TypedQuery<Booking> query = entityManager.createQuery(
+                    "SELECT b FROM Booking b WHERE b.room.id = :roomId", Booking.class);
+            query.setParameter("roomId", roomId);
+            query.setHint(FETCH_GRAPH, entityGraph);
+            return query.getSingleResult();
         }
     }
 
+    @Override
     public List<Booking> findLatestDeals() {
         try (EntityManager entityManager = factory.createEntityManager()) {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -63,7 +61,9 @@ public class JpaBookingDao extends BookingDao {
             ));
             TypedQuery<Booking> typedQuery = entityManager.createQuery(query);
             typedQuery.setParameter("fromDate", new Date());
-            return typedQuery.getResultList();
+            return typedQuery.getResultList().stream()
+                             .filter(booking -> !booking.isClose())
+                             .toList();
         }
     }
 
@@ -97,7 +97,29 @@ public class JpaBookingDao extends BookingDao {
                         .orElse(null);
                 booking.setGuest(guest);
             }
-            return bookings;
+            return bookings.stream()
+                           .filter(booking -> !booking.isClose())
+                           .toList();
+        }
+    }
+
+    @Override
+    public Optional<Booking> update(Booking booking) {
+        try (EntityManager entityManager =
+                     factory.createEntityManager()) {
+            EntityTransaction transaction =
+                    entityManager.getTransaction();
+            try {
+                transaction.begin();
+                Booking updated = entityManager.merge(booking);
+                transaction.commit();
+                return Optional.of(updated);
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                return Optional.empty();
+            }
         }
     }
 }

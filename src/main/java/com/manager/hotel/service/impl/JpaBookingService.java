@@ -22,11 +22,6 @@ public class JpaBookingService implements BookingService {
     private final BookingMapper mapper;
 
     @Override
-    public Booking findByRoomId(Long id) {
-        return dao.getBookingByRoomId(id);
-    }
-
-    @Override
     public List<BookingDto> findAll() {
         return mapper.toListDto(
                 dao.findAll());
@@ -39,10 +34,26 @@ public class JpaBookingService implements BookingService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public BookingDto save(
-            Booking booking) {
+    public Booking save(Booking booking) {
+        return dao.save(booking);
+    }
+
+    @Override
+    public BookingDto toDto(Booking booking) {
+        return mapper.toDto(booking);
+    }
+
+    @Override
+    public BookingDto update(Booking booking) {
         return mapper.toDto(
-                dao.save(booking));
+                dao.update(booking)
+                   .orElse(new Booking()));
+    }
+
+    @Override
+    public BookingDto findByRoomId(
+            Long roomId) {
+        return mapper.toDto(
+                dao.getBookingByRoomId(roomId));
     }
 }

@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -62,13 +60,6 @@ public class JpaGuestService implements GuestService {
     public Optional<Guest> findByPassport(
             Passport passport) {
         return dao.findByPassportData(passport);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<GuestDto> findDepartingToday() {
-        return mapper.toListDto(dao
-                .findByDepartureDate(now()));
     }
 
     @Override

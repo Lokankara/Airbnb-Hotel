@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceUnit;
 import jakarta.persistence.Subgraph;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -30,6 +31,7 @@ public class JpaRoomDao extends RoomDao {
     @PersistenceUnit
     private final EntityManagerFactory factory;
 
+    @Override
     public List<Room> findByCriteria(Criteria criteria) {
         try (EntityManager entityManager = factory.createEntityManager()) {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -58,6 +60,7 @@ public class JpaRoomDao extends RoomDao {
 
     @Override
     public List<Room> findAll() {
+
         try (EntityManager entityManager =
                      factory.createEntityManager()) {
             EntityGraph<Room> entityGraph =
@@ -76,6 +79,7 @@ public class JpaRoomDao extends RoomDao {
         }
     }
 
+    @Override
     public Optional<Room> update(Room room) {
         try (EntityManager entityManager =
                      factory.createEntityManager()) {
@@ -92,6 +96,16 @@ public class JpaRoomDao extends RoomDao {
                 }
                 return Optional.empty();
             }
+        }
+    }
+
+    public Optional<Room> findRoomById(Long id) {
+        try (EntityManager entityManager = factory.createEntityManager()) {
+            String jpql = "SELECT r FROM Room r LEFT JOIN FETCH r.guest WHERE r.id = :roomId";
+            TypedQuery<Room> query = entityManager.createQuery(jpql, Room.class);
+            query.setParameter("roomId", id);
+            Room room = query.getResultList().stream().findFirst().orElse(new Room());
+            return Optional.of(room);
         }
     }
 }

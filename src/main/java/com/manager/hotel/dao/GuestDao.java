@@ -21,5 +21,7 @@ public abstract class GuestDao extends Dao<Guest> {
 
     public abstract List<Guest> findByCriteria(Criteria criteria);
 
+    public abstract Guest update(Guest guest);
+
     public abstract Optional<Guest> findByFullName(String firstname, String lastname);
 }

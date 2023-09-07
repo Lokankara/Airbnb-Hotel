@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.manager.hotel.web.MockData.roomId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -86,11 +87,19 @@ class JpaBookingServiceTest {
     }
 
     @Test
+    @DisplayName("Given a room ID, when findByRoomId is called, then return a BookingDto object")
+    void testFindByRoomId() {
+        BookingDto bookingDto = new BookingDto();
+        when(bookingService.findByRoomId(roomId)).thenReturn(bookingDto);
+        BookingDto result = bookingService.findByRoomId(roomId);
+        assertEquals(bookingDto, result);
+    }
+
+    @Test
     @DisplayName("Given a booking, when save is called, then return a booking DTO")
     void testSaveBooking() {
         when(dao.save(booking)).thenReturn(booking);
-        when(mapper.toDto(booking)).thenReturn(bookingDto);
-        BookingDto savedBookingDto = bookingService.save(booking);
+        Booking savedBookingDto = bookingService.save(booking);
         assertNotNull(savedBookingDto);
         assertEquals(bookingDto.getId(), savedBookingDto.getId());
     }

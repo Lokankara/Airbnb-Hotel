@@ -1,15 +1,14 @@
 function updateStatus() {
+    closeModal();
     const selectedValue = document.getElementById("status").value;
-    const early = document.getElementById("early").value;
     const id = modalId.value;
-    const url = `/rooms/${id}?roomStatus=${selectedValue}&early=${early}`;
+    const url = `/rooms/${id}?roomStatus=${selectedValue}`;
     sendPatch(url);
 }
 
 function sendPatch(url) {
-
     fetch(url, {
-        method: 'PATCH',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -19,15 +18,17 @@ function sendPatch(url) {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            return response.json();
+            const contentType = response.headers.get('Content-Type');
+            return contentType && contentType.includes('application/json') ? response.json() : response.text();
         })
         .then(data => {
-            console.log(data);
+            window.location.reload();
         })
         .catch(error => {
             console.error('Error:', error);
         });
 }
+
 
 function handleKeyPressGuest(event) {
     if (event.key === 'Enter') {

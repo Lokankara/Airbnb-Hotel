@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,12 +19,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-
-import static java.time.Duration.between;
 
 @Getter
 @Setter
@@ -42,17 +39,21 @@ public class Booking {
     private Long id;
     @Getter
     private Long finalBill;
-//    @CreationTimestamp
     private Timestamp departure;
     private Timestamp checkInDate;
     private Timestamp checkOutDate;
     private Long nights;
     private Long rate;
-    private boolean earlyDeparture;
+    @Builder.Default
+    private boolean earlyDeparture = false;
+    @Builder.Default
+    private boolean close = false;
     @ToString.Exclude
     @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     private Guest guest;
+    @OneToOne
+    private Room room;
 
     @Override
     public boolean equals(Object o) {

@@ -23,10 +23,10 @@ create table if not exists guest
                           'VIP')),
     feedback   varchar(1024),
     constraint guest_gender_check check
-            (gender in ('MAN',
-                              'WOMAN',
-                              'OTHER',
-                              'REFUSED'))
+        (gender in ('MAN',
+                    'WOMAN',
+                    'OTHER',
+                    'REFUSED'))
 );
 
 CREATE TABLE IF NOT EXISTS Booking (
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS Booking (
 );
 
 
-INSERT INTO guest (passport_data, check_out, check_in, departure, 
+INSERT INTO guest (passport_data, check_out, check_in, departure,
                    guest_status, feedback, gender)
 VALUES
     ('Michael Angel', NOW(), '2023-08-20 15:30:00', '2023-09-23 09:30:00', 'CHECK_OUT','It’s a very comfortable twin room containing a double bed with two single beds joined by a similar headboard. It’s appropriate for small children, as it caters to their high risk of falling off the bed.', 'WOMAN'),

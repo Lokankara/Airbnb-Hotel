@@ -2,10 +2,10 @@ package com.manager.hotel.dao.jpa;
 
 import com.manager.hotel.model.entity.Booking;
 import com.manager.hotel.model.entity.Guest;
+import com.manager.hotel.model.entity.Room;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Subgraph;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -24,9 +24,9 @@ import java.util.List;
 
 import static com.manager.hotel.dao.jpa.Constant.FETCH_GRAPH;
 import static com.manager.hotel.dao.jpa.Constant.SELECT_ALL_ORDERS;
-import static com.manager.hotel.dao.jpa.Constant.SELECT_BOOKING_BY_ROOM_ID;
 import static com.manager.hotel.dao.jpa.Constant.SELECT_BY_IDS;
 import static com.manager.hotel.dao.jpa.Constant.SELECT_ORDERS_BY_IDS;
+import static com.manager.hotel.web.MockData.roomId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -45,8 +45,6 @@ class JpaBookingDaoTest {
     private TypedQuery<Booking> query;
     @Mock
     private EntityGraph<Booking> entityGraph;
-    @Mock
-    private Subgraph<Object> guestSubgraph;
     @Mock
     private TypedQuery<Booking> bookingQuery;
     @Mock
@@ -75,25 +73,25 @@ class JpaBookingDaoTest {
     @Test
     @DisplayName("Given a room ID, When getting a Booking by room ID, Then the Booking for that room should be returned")
     void testGetBookingByRoomId() {
-        Long roomId = 1L;
-        Booking expectedBooking = new Booking();
+        Booking expected = new Booking();
+        expected.setRoom(new Room());
         when(factory.createEntityManager()).thenReturn(entityManager);
         when(entityManager.createEntityGraph(Booking.class)).thenReturn(entityGraph);
-        when(entityGraph.addSubgraph("guest")).thenReturn(guestSubgraph);
-        when(entityManager.createQuery(SELECT_BOOKING_BY_ROOM_ID, Booking.class)).thenReturn(query);
+        when(entityManager.createQuery("SELECT b FROM Booking b WHERE b.room.id = :roomId", Booking.class)).thenReturn(query);
         when(query.setParameter("roomId", roomId)).thenReturn(query);
         when(query.setHint(FETCH_GRAPH, entityGraph)).thenReturn(query);
-        when(query.getSingleResult()).thenReturn(expectedBooking);
-        Booking actualBooking = bookingDao.getBookingByRoomId(roomId);
+        when(query.getSingleResult()).thenReturn(expected);
 
-        assertEquals(expectedBooking, actualBooking);
+        Booking actualBooking = bookingDao.getBookingByRoomId(roomId);
+        assertEquals(expected, actualBooking);
         verify(factory).createEntityManager();
         verify(entityManager).createEntityGraph(Booking.class);
         verify(entityManager).createQuery(any(String.class), eq(Booking.class));
-        verify(entityGraph).addSubgraph(any(String.class));
+        verify(query).setHint(FETCH_GRAPH, entityGraph);
         verify(query).setParameter("roomId", roomId);
         verify(query).getSingleResult();
     }
+
 
     @Test
     @DisplayName("When finding all Bookings, Then a list of all Bookings should be returned")

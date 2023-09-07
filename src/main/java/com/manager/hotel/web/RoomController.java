@@ -2,6 +2,7 @@ package com.manager.hotel.web;
 
 import com.manager.hotel.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import static com.manager.hotel.web.ConstantPath.HOME;
 import static com.manager.hotel.web.ConstantPath.ROOM;
 import static com.manager.hotel.web.ConstantPath.ROOMS;
 
+@Slf4j
 @Controller
 @RequestMapping("/rooms")
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class RoomController {
     public String showRooms(
             final Model model) {
         model.addAttribute(ROOMS,
-                roomService.findRooms());
+                roomService.findAll());
         return HOME;
     }
 
@@ -32,7 +34,7 @@ public class RoomController {
             final Model model,
             final @PathVariable Long roomId) {
         model.addAttribute(ROOM, roomService
-                .getRoomById(roomId));
+                .getById(roomId));
         return ROOM;
     }
 }

@@ -133,6 +133,7 @@ public class JpaGuestDao extends GuestDao {
         }
     }
 
+    @Override
     public Guest update(Guest guest) {
         try (EntityManager entityManager = factory.createEntityManager()) {
             EntityTransaction transaction = entityManager.getTransaction();

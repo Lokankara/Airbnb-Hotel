@@ -11,8 +11,6 @@ import java.util.Optional;
 public interface GuestService {
     List<GuestDto> getAllGuests();
 
-    List<GuestDto> findDepartingToday();
-
     Guest findGuestById(Long id);
 
     List<GuestDto> findByCriteria(Criteria criteria);

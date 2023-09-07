@@ -3,7 +3,9 @@ package com.manager.hotel.service.facade;
 import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.dto.GuestDto;
 import com.manager.hotel.model.dto.RoomDto;
-import com.manager.hotel.model.entity.Criteria;
+import com.manager.hotel.model.entity.Booking;
+import com.manager.hotel.model.entity.Passport;
+import com.manager.hotel.model.entity.Room;
 import com.manager.hotel.service.BookingService;
 import com.manager.hotel.service.GuestService;
 import com.manager.hotel.service.PassportService;
@@ -17,7 +19,18 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static com.manager.hotel.service.facade.HotelFacade.getCriteria;
+import static com.manager.hotel.web.MockData.booking;
+import static com.manager.hotel.web.MockData.criteria;
+import static com.manager.hotel.web.MockData.firstname;
+import static com.manager.hotel.web.MockData.jack;
+import static com.manager.hotel.web.MockData.lastname;
+import static com.manager.hotel.web.MockData.passport;
+import static com.manager.hotel.web.MockData.postDto;
+import static com.manager.hotel.web.MockData.room;
+import static com.manager.hotel.web.MockData.roomId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -61,34 +74,73 @@ class HotelFacadeTest {
     @DisplayName("Given room service returns rooms, When getting all rooms, Then return the expected rooms")
     void testGetAllRooms() {
         List<RoomDto> expectedRooms = new ArrayList<>();
-        when(roomService.findRooms()).thenReturn(expectedRooms);
+        when(roomService.findAll()).thenReturn(expectedRooms);
 
         List<RoomDto> actualRooms = hotelFacade.getAllRooms();
 
         assertEquals(expectedRooms, actualRooms);
-        verify(roomService, times(1)).findRooms();
+        verify(roomService, times(1)).findAll();
     }
 
-//    @Test
-//    @DisplayName("Given guest ID and early departure flag, When checking out a guest, Then return the booking details")
-//    void testCheckOutGuest() {
-//        Long guestId = 1L;
-//        boolean earlyDeparture = true;
-//        BookingDto expectedBookingDto = new BookingDto();
-//        when(bookingService.checkOutGuest(guestId, earlyDeparture)).thenReturn(expectedBookingDto);
-//        BookingDto actualBookingDto = hotelFacade.checkOutGuest(guestId, earlyDeparture);
-//        assertEquals(expectedBookingDto, actualBookingDto);
-//        verify(bookingService, times(1)).checkOutGuest(guestId, earlyDeparture);
-//    }
-
     @Test
-    @DisplayName("Given valid criteria, when findAvailableRooms is called, then return a list of rooms")
+    @DisplayName("Given a Criteria object, When finding available rooms, Then a list of available RoomDto objects should be returned")
     void testFindAvailableRooms() {
-        Criteria criteria = new Criteria();
         List<RoomDto> expectedRooms = new ArrayList<>();
         when(roomService.findAvailableRooms(criteria)).thenReturn(expectedRooms);
         List<RoomDto> actualRooms = hotelFacade.findAvailableRooms(criteria);
         assertEquals(expectedRooms, actualRooms);
         verify(roomService, times(1)).findAvailableRooms(criteria);
     }
+
+    @Test
+    void testFindById() {
+        Room expectedRoom = new Room();
+        expectedRoom.setId(roomId);
+        Optional<Room> expectedOptionalRoom = Optional.of(expectedRoom);
+        when(roomService.findById(roomId)).thenReturn(expectedOptionalRoom);
+        Optional<Room> actualOptionalRoom = roomService.findById(roomId);
+        assertEquals(expectedOptionalRoom, actualOptionalRoom);
+    }
+
+    @Test
+    @DisplayName("Given a firstname and lastname, when findByFullName is called, then return guest")
+    void testFindByFirstNameAndLastName() {
+        when(passportService.findByFirstNameAndLastName(firstname, lastname)).thenReturn(Optional.of(passport));
+        Optional<Passport> result = passportService.findByFirstNameAndLastName(firstname, lastname);
+        assertEquals(Optional.of(passport), result);
+    }
+
+    @Test
+    void testUpdate() {
+        BookingDto updatedBookingDto = new BookingDto();
+        when(bookingService.update(booking)).thenReturn(updatedBookingDto);
+        BookingDto result = bookingService.update(booking);
+        assertEquals(updatedBookingDto, result);
+    }
+
+    @Test
+    void testSaveBookingWithDate() {
+        Booking booking = new Booking();
+        booking.setNights(4L);
+        booking.setRate(100L);
+        booking.setGuest(jack);
+        booking.setRoom(room);
+        when(roomService.findAvailable(getCriteria(postDto))).thenReturn(Optional.of(room));
+        when(guestService.findByFullName(postDto.getFirstname(), postDto.getLastname())).thenReturn(Optional.of(jack));
+        when(passportService.findByFirstNameAndLastName(postDto.getFirstname(), postDto.getLastname())).thenReturn(Optional.of(passport));
+        when(bookingService.save(booking)).thenReturn(booking);
+        Booking result = bookingService.save(booking);
+        assertEquals(booking, result);
+    }
+
+    @Test
+    void testSaveBooking() {
+        when(roomService.findAvailable(getCriteria(postDto))).thenReturn(Optional.of(room));
+        when(guestService.findByFullName(postDto.getFirstname(), postDto.getLastname())).thenReturn(Optional.of(jack));
+        when(passportService.findByFirstNameAndLastName(postDto.getFirstname(), postDto.getLastname())).thenReturn(Optional.of(passport));
+        when(bookingService.save(booking)).thenReturn(booking);
+        Booking result = bookingService.save(booking);
+        assertEquals(booking, result);
+    }
 }
+

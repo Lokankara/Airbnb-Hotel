@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-import static com.manager.hotel.web.ConstantPath.BOOKING;
 import static com.manager.hotel.web.ConstantPath.GUESTS;
 
 @Slf4j

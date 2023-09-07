@@ -19,12 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static java.sql.Timestamp.valueOf;
+import static java.time.Duration.between;
 import static java.time.LocalDate.parse;
 import static java.time.LocalDateTime.now;
 
@@ -42,34 +43,37 @@ public class HotelFacade {
     }
 
     public List<RoomDto> getAllRooms() {
-        return roomService.findRooms();
+        return roomService.findAll();
     }
 
-    public void checkOutGuest(
-            Long roomId, boolean early, RoomStatus status) {
-        Optional<Room> optionalRoom = roomService.findRoomById(roomId);
+    public BookingDto departure(Long id, boolean early) {
+        Optional<Room> optionalRoom = roomService.findById(id);
         if (optionalRoom.isPresent()) {
             Room room = optionalRoom.get();
-            Booking booking = bookingService.findByRoomId(roomId);
-            booking.setEarlyDeparture(early);
-            room.setRoomStatus(status);
-            log.info(booking.getGuest().toString());
-            log.info(room.getGuest().toString());
-            if (early){
-                Guest guest = booking.getGuest();
-                guest.removeRoom(room);
-                guestService.update(guest);
+            Booking booking = room.getBooking();
+            if (booking != null) {
+                booking.setCheckOutDate(new Timestamp(System.currentTimeMillis()));
+                booking.setEarlyDeparture(early);
+                if (early) {
+                    booking.setFinalBill(booking.getFinalBill() - booking.getRate());
+                }
+                room.setRoomStatus(RoomStatus.VACANT);
+                room.setBooking(null);
+                room.setGuest(null);
+                roomService.update(room);
+                booking.setRoom(null);
+                booking.setClose(Boolean.TRUE);
+                booking.setDeparture(Timestamp.valueOf(now()));
+                return bookingService.update(booking);
             }
-            roomService.update(room);
         }
+        return new BookingDto();
     }
 
-    public RoomDto findAvailableRoom(Long id) {
-        return roomService.getRoomById(id);
-    }
-
-    public List<RoomDto> findAvailableRooms(Criteria criteria) {
-        return roomService.findAvailableRooms(criteria);
+    public List<RoomDto> findAvailableRooms(
+            final Criteria criteria) {
+        return roomService
+                .findAvailableRooms(criteria);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -88,27 +92,40 @@ public class HotelFacade {
             guest.setPassport(passport);
             room.setRoomStatus(RoomStatus.OCCUPIED);
             room.setGuest(guest);
-            guestService.update(guest);
-            roomService.update(room);
+
             long nights = getNights(room);
             long rate = room.getRoomType().getRate();
-            return bookingService.save(getBooking(guest, nights, rate));
+            Booking booking = getBooking(guest, room, nights, rate);
+            guestService.update(guest);
+            Booking save = bookingService.save(booking);
+            room.setBooking(save);
+            roomService.update(room);
+            return bookingService.toDto(save);
         } else {
             return new BookingDto();
         }
     }
 
+    public void updatedRoom(
+            final Long id,
+            final RoomStatus status) {
+        roomService.updateStatus(id, status);
+    }
+
     private static long getNights(Room room) {
-        return Duration.between(
+        return between(
                 room.getGuest().getCheckIn().toInstant(),
-                room.getGuest().getCheckOut().toInstant()).toDays() + 1;
+                room.getGuest().getCheckOut().toInstant())
+                .toDays() + 1;
     }
 
     private static Booking getBooking(
-            Guest guest, Long nights, Long rate) {
+            Guest guest, Room room,
+            Long nights, Long rate) {
         return Booking.builder()
                       .nights(nights)
                       .rate(rate)
+                      .room(room)
                       .finalBill(nights * rate)
                       .checkInDate(guest.getCheckIn())
                       .checkOutDate(guest.getCheckOut())
@@ -148,7 +165,7 @@ public class HotelFacade {
                     .build();
     }
 
-    private static Criteria getCriteria(
+    static Criteria getCriteria(
             PostBookingDto dto) {
         return Criteria
                 .builder()

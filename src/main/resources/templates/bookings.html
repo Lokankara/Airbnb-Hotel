@@ -13,28 +13,24 @@
     <style>
         .card {
             position: absolute;
-            margin-left: 380px;
+            margin-left: 375px;
             margin-top: -135px;
         }
 
         .wrapper {
             padding: 5px;
         }
-
-        .profile-img-wrapper {
-            margin: 0 auto;
-        }
     </style>
 </head>
-<body class="w3-light-grey">
+<body>
 <section class="navigation">
     <a href="/home" class="logo-link">Grand Budapest</a>
     <div class="navigation-links">
         <a href="/home" class="nav-link">Home</a>
         <a href="/guests" class="nav-link">Guests</a>
-        <a href="/orders" class="nav-link">Orders</a>
+        <a href="/orders" class="nav-link active">Orders</a>
         <a href="/checkin" class="nav-link">Reservation</a>
-        <a href="/booking" class="nav-link active">Booking</a>
+        <a href="/booking" class="nav-link">Booking</a>
         <a href="/available?roomStatus=VACANT" class="nav-link">Available</a>
     </div>
     <div class="nav-right-side">
@@ -61,9 +57,9 @@
 </section>
 <div class="w3-content" style="max-width:1532px;">
     <div th:each="booking: ${bookings}" class="card-wrapper main-card m3">
-        <div th:each="room : ${booking.guest.rooms}" class="room-card">
+        <div th:each="room : ${booking.room}" class="room-card">
             <div class="w3-third w3-margin-bottom rounded float-start p-3">
-                <div class="wrapper">
+                <form action="/rooms" method="post" class="wrapper">
                     <img th:src="${room.path}" alt="Room" style="width:100%">
                     <div class="w3-container w3-white">
                         <div class="card-right">
@@ -73,19 +69,27 @@
                                 <i class="fa fa-tv"></i> <i class="fa fa-glass"></i> <i class="fa fa-cutlery"></i>
                                 <i class="fa fa-wifi"></i></p>
                             <div class="card">
+                                <input type="hidden" id="roomId" name="roomId" th:value="${booking.room.id}">
+                                <input type="hidden" id="bookingId"
+                                       name="bookingId"
+                                       th:value="${booking.id}">
                                 <div class="profile-info-wrapper">
-                                    <div class="profile-img-wrapper">
+                                    <div style="margin: 0 auto;" class="profile-img-wrapper">
                                         <img th:src="@{'https://source.unsplash.com/random/600x400/?' + ${booking.guest.gender} + ',face,' + ${booking.guest.id}}"
                                              alt="avatar">
                                     </div>
-                                    <p th:text="${booking.guest.passportData}"></p>
-                                    <p style="text-align: center">Total: $<span th:text="${booking.finalBill}"></span></p>
+                                    <div style="text-align: center" th:text="${booking.guest.passportData}"></div>
+                                    <div style="text-align: center">Total: $<span th:text="${booking.finalBill}"></span>
+                                    </div>
+                                    <label for="early"></label>
+                                    <input class="right-side" type="checkbox" id="early"
+                                           name="early"> Early
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button class="w3-button w3-block w3-black w3-margin-bottom">Departure</button>
-                </div>
+                    <button type="submit" class="w3-button w3-block w3-black w3-margin-bottom">Departure</button>
+                </form>
             </div>
         </div>
     </div>

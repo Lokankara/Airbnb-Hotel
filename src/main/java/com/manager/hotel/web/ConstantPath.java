@@ -11,4 +11,5 @@ public final class ConstantPath {
     public static final String BOOKING = "booking";
     public static final String BOOKINGS = "bookings";
     public static final String RESERVATION = "reservation";
+    public static final String REDIRECT = "redirect:/booking";
 }

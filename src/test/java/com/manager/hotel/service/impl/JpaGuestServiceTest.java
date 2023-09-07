@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.manager.hotel.web.MockData.firstname;
+import static com.manager.hotel.web.MockData.lastname;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -132,10 +134,8 @@ class JpaGuestServiceTest {
         Guest expectedGuest = new Guest();
         expectedGuest.setId(guestId);
         expectedGuest.setPassportData("John");
-
         when(dao.getById(guestId)).thenReturn(expectedGuest);
         Guest resultGuest = guestService.findGuestById(guestId);
-
         assertNotNull(resultGuest);
         assertEquals(expectedGuest.getId(), resultGuest.getId());
         assertEquals(expectedGuest.getPassportData(), resultGuest.getPassportData());
@@ -147,5 +147,13 @@ class JpaGuestServiceTest {
         when(dao.getById(-1L)).thenReturn(null);
         Guest resultGuest = guestService.findGuestById(-1L);
         assertNull(resultGuest);
+    }
+
+    @Test
+    @DisplayName("Given a firstname and lastname, when findByFullName is called, then return guest")
+    void testFindByFullName() {
+        when(guestService.findByFullName(firstname, lastname)).thenReturn(Optional.of(guest));
+        Optional<Guest> result = guestService.findByFullName(firstname, lastname);
+        assertEquals(Optional.of(guest), result);
     }
 }

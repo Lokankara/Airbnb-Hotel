@@ -18,11 +18,13 @@ import java.sql.Timestamp;
 public class BookingDto {
     private Long id;
     private Long finalBill;
+    private boolean close;
     private boolean earlyDeparture;
     private Timestamp departure;
     private Timestamp checkInDate;
     private Timestamp checkOutDate;
-    private GuestDto guest;
-    private Long nights;
     private Long rate;
+    private Long nights;
+    private RoomDto room;
+    private GuestDto guest;
 }

@@ -2,7 +2,6 @@ package com.manager.hotel.web;
 
 import com.manager.hotel.model.dto.GuestDto;
 import com.manager.hotel.model.dto.RoomDto;
-import com.manager.hotel.model.enums.RoomStatus;
 import com.manager.hotel.service.facade.HotelFacade;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,14 +15,14 @@ import java.util.List;
 
 import static com.manager.hotel.web.MockData.bookingDto;
 import static com.manager.hotel.web.MockData.criteria;
-import static com.manager.hotel.web.MockData.dto;
-import static com.manager.hotel.web.MockData.id;
 import static com.manager.hotel.web.MockData.jackSparrow;
+import static com.manager.hotel.web.MockData.postDto;
 import static com.manager.hotel.web.MockData.roomDto;
+import static com.manager.hotel.web.MockData.roomId;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -60,27 +59,19 @@ class HotelControllerTest {
                .andExpect(model().attribute("rooms", rooms))
                .andExpect(model().attribute("guests", guests))
                .andExpect(view().name("home"));
-    }
-
-    @Test
-    @DisplayName("Given a room ID, When accessing the booking page, Then it should return the booking view with the selected room")
-    void testGetBooking() throws Exception {
-        when(facade.findAvailableRoom(id)).thenReturn(roomDto);
-        mockMvc.perform(get("/booking/" + id))
-               .andExpect(status().isOk())
-               .andExpect(model().attribute("room", roomDto))
-               .andExpect(view().name("booking"));
+        verify(facade).getAllGuests();
     }
 
     @Test
     @DisplayName("Given a booking request, When saving a booking, Then it should redirect to the booking page with reservation data")
     void testSaveBooking() throws Exception {
-        when(facade.saveBooking(dto)).thenReturn(bookingDto);
+        when(facade.saveBooking(postDto)).thenReturn(bookingDto);
         mockMvc.perform(post("/booking")
-                       .flashAttr("booking", dto))
+                       .flashAttr("booking", postDto))
                .andExpect(status().is3xxRedirection())
                .andExpect(redirectedUrl("/booking"))
                .andExpect(flash().attribute("reservation", bookingDto));
+        verify(facade).saveBooking(postDto);
     }
 
     @Test
@@ -97,18 +88,20 @@ class HotelControllerTest {
                .andExpect(model().attribute("rooms", rooms))
                .andExpect(model().attribute("guests", guests))
                .andExpect(view().name("home"));
+        verify(facade).getAllGuests();
     }
 
     @Test
-    @DisplayName("Given a room ID and early departure request, When processing early departure, Then it should redirect to the home page")
-    void testEarlyDeparture() throws Exception {
-        RoomStatus roomStatus = RoomStatus.VACANT;
+    @DisplayName("Given a room ID and early departure, When departing from the room, Then it should redirect to the appropriate view")
+    void testDepartureFromRoom() throws Exception {
         boolean early = true;
-        mockMvc.perform(patch("/rooms/" + id)
-                       .param("roomStatus", roomStatus.toString())
+        when(facade.departure(roomId, early)).thenReturn(bookingDto);
+        mockMvc.perform(post("/rooms")
+                       .param("roomId", roomId.toString())
                        .param("early", String.valueOf(early)))
                .andExpect(status().is3xxRedirection())
-               .andExpect(redirectedUrl("/home"));
-        verify(facade).checkOutGuest(id, early, roomStatus);
+               .andExpect(flash().attributeExists("reservation"))
+               .andExpect(redirectedUrl("/booking"));
+        verify(facade, times(1)).departure(roomId, early);
     }
 }

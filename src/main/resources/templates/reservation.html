@@ -16,7 +16,6 @@
             width: 100%;
             word-break: break-word;
             -webkit-font-smoothing: antialiased;
-            background-color: #f5dbce;
         }
 
         img {
@@ -76,14 +75,15 @@
     <tr>
         <td align="center" style="padding-top: 50px; padding-left: 200px; padding-right: 200px;" width="100%">
             <div th:if="${reservation == null or reservation.guest == null or reservation.guest.rooms == null or #lists.isEmpty(reservation.guest.rooms)}">
-            <p>No available room found for this booking.</p>
+                <p id = "noAvailable">No available room found for this booking.</p>
             </div>
-            <table class="sm-w-full" width="600" role="presentation" th:if="${reservation != null and reservation.guest?.rooms != null}">
+            <table class="sm-w-full" width="600" role="presentation"
+                   th:if="${reservation != null and reservation.guest?.rooms != null}">
                 <tr>
-                    <td class="sm-hidden" style="padding-top: 40px; padding-bottom: 40px;" width="1000">
-                        <img th:each="room : ${reservation.guest.rooms}" th:src="${room.path}"
-                             alt="Room"
-                             width="1000">
+                    <td id="tdImage" class="sm-hidden" style="padding-top: 40px; padding-bottom: 40px;" width="1000">
+                        <img id="roomImage" alt="Room" width="1000"
+                             th:if="${reservation != null && reservation.room != null && reservation.room.path != null}"
+                             th:src="${reservation.room.path}">
                     </td>
                     <td align="left" class="sm-p-20 sm-dui17-b-t"
                         style="border-radius: 2px; padding: 40px; position: relative; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -2px rgba(0, 0, 0, .05); vertical-align: top; z-index: 50;"
@@ -110,7 +110,8 @@
                             </tr>
                             <tr>
                                 <td class="sm-inline-block" style="color: #718096;" width="50%">Nights</td>
-                                <td class="sm-inline-block" style="font-weight: 600; text-align: right;" width="50%" align="right">
+                                <td class="sm-inline-block" style="font-weight: 600; text-align: right;" width="50%"
+                                    align="right">
                                     <span th:text="${reservation.nights}"></span>
                                 </td>
                             </tr>
@@ -119,6 +120,15 @@
                                 <td class="sm-w-3-4 sm-inline-block" style="font-weight: 600; text-align: right;"
                                     width="50%" align="right">
                                     <span th:text="${reservation.guest.guestStatus}"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sm-inline-block" style="color:
+                                #718096;" width="50%">Card
+                                </td>
+                                <td class="sm-inline-block" style="font-weight: 600; text-align: right;" width="50%"
+                                    align="right">
+                                    <span th:text="${reservation.guest.passport.creditCard}"></span>
                                 </td>
                             </tr>
                         </table>
@@ -167,12 +177,11 @@
                             <tr>
                                 <td style="color: #718096;" width="50%">Price per night</td>
                                 <td style="font-weight: 600; text-align: right;" width="50%" align="right">$
-                                    <span th:each="room : ${reservation.guest.rooms}"
-                                          th:text="${room.roomType.rate}"></span>
+                                    <span th:text="${reservation.rate}"></span>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="color: #718096;" width="50%">roomType</td>
+                                <td style="color: #718096;" width="50%">room Type</td>
                                 <td style="font-weight: 600; text-align: right;" width="50%" align="right">
                                     <span th:each="room : ${reservation.guest.rooms}" th:text="${room.roomType}"></span>
                                 </td>
@@ -193,5 +202,25 @@
         </td>
     </tr>
 </table>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let reservation = /*[[${reservation}]]*/ null;
+    if (reservation !== null && reservation.room !== null && reservation.room.path !== null) {
+        localStorage.setItem('roomImagePath', reservation.room.path);
+    }
+    const i = document.getElementById('roomImage');
+    if (i === null) {
+        const newImage = document.createElement('img');
+        newImage.id = 'roomImage';
+        newImage.alt = 'Room';
+        newImage.width = '1000';
+        const tdImage = document.getElementById('tdImage');
+        tdImage.appendChild(newImage);
+        newImage.src = localStorage.getItem('roomImagePath');
+        const noAvailable = document.getElementById('noAvailable');
+        noAvailable.textContent="";
+    }
+    /*]]>*/
+</script>
 </body>
 </html>

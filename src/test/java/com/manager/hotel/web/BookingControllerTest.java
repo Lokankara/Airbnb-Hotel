@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.manager.hotel.web.MockData.bookingDto;
 import static com.manager.hotel.web.MockData.roomDto;
+import static com.manager.hotel.web.MockData.roomId;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -56,5 +57,16 @@ class BookingControllerTest {
                .andExpect(status().isOk())
                .andExpect(model().attribute("bookings", bookings))
                .andExpect(view().name("bookings"));
+    }
+
+    @Test
+    @DisplayName("Given a room ID, When accessing the booking details, Then it should return the reservation view with booking information")
+    void getBookingShouldReturnReservationViewWithBookingInfo() throws Exception {
+        when(service.findByRoomId(roomId)).thenReturn(bookingDto);
+        mockMvc.perform(get("/booking/{roomId}", roomId))
+               .andExpect(status().isOk())
+               .andExpect(view().name("reservation"))
+               .andExpect(model().attributeExists("room"))
+               .andExpect(model().attribute("room", bookingDto));
     }
 }

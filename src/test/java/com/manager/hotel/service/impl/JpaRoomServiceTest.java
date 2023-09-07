@@ -28,14 +28,11 @@ import static org.mockito.Mockito.when;
 class JpaRoomServiceTest {
     @InjectMocks
     private JpaRoomService roomService;
-
     @Mock
     private RoomMapper mapper;
-
     @Mock
     private JpaRoomDao dao;
     private Criteria criteria;
-    private RoomDto dto;
     private Room room;
     private Room room1;
     private Room room2;
@@ -59,7 +56,6 @@ class JpaRoomServiceTest {
         expected.add(roomDto2);
         MockitoAnnotations.openMocks(this);
         room = Room.builder().id(2L).capacity(2).build();
-        dto = RoomDto.builder().id(1L).capacity(1).build();
         criteria = Criteria
                 .builder()
                 .capacity(2)
@@ -72,7 +68,7 @@ class JpaRoomServiceTest {
     @DisplayName("Given no rooms in the database, when findRooms is called, then return an empty list")
     void testFindRoomsWithNoRoomsInDatabase() {
         when(dao.findAll()).thenReturn(new ArrayList<>());
-        List<RoomDto> roomDtos = roomService.findRooms();
+        List<RoomDto> roomDtos = roomService.findAll();
         assertNotNull(roomDtos);
         assertTrue(roomDtos.isEmpty());
     }
@@ -82,7 +78,7 @@ class JpaRoomServiceTest {
     void testFindRooms() {
         when(dao.findAll()).thenReturn(rooms);
         when(mapper.toListDto(rooms)).thenReturn(expected);
-        List<RoomDto> roomDtos = roomService.findRooms();
+        List<RoomDto> roomDtos = roomService.findAll();
         assertEquals(expected, roomDtos);
         assertNotNull(roomDtos);
         assertEquals(2, roomDtos.size());
@@ -111,15 +107,6 @@ class JpaRoomServiceTest {
                 .isEqualTo(Arrays.asList(roomDto1, roomDto2));
     }
 
-    @Test
-    @DisplayName("Given a valid room ID, when findRoomById is called, then return the corresponding room")
-    void testFindRoomByIdWithValidRoomId() {
-        when(dao.findById(1L)).thenReturn(Optional.of(room));
-        when(mapper.toDto(room)).thenReturn(dto);
-        Optional<Room> foundRoom = roomService.findRoomById(1L);
-        assertTrue(foundRoom.isPresent());
-        assertEquals(foundRoom.get(), room);
-    }
 
     @Test
     @DisplayName("Given a valid room, when update is called, then return the updated room")
@@ -143,11 +130,4 @@ class JpaRoomServiceTest {
         assertEquals(room.getRoomType(), available.getRoomType());
         assertEquals(room.getRoomStatus(), available.getRoomStatus());
     }
-
-//    @Test
-//    @DisplayName("Given no available rooms, when findAvailable is called with criteria, then throw NoAvailableRoomsException")
-//    void testFindAvailableWithNoAvailableRooms() {
-//        when(dao.findByCriteria(criteria)).thenReturn(new ArrayList<>());
-//        assertThrows(NoAvailableRoomsException.class, () -> roomService.findAvailable(criteria));
-//    }
 }

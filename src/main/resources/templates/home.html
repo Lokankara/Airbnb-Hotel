@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Borel&family=Roboto:wght@400;500;600;700;900&display=swap"
           rel="stylesheet">
@@ -122,7 +123,7 @@
                             Rooms:
                         </div>
                         <div class="card-text small">
-                            Price:
+                            Price per day:
                             <span class="card-price" th:text="'$' + ${room.getRoomType().getRate()}"></span>
                         </div>
                     </div>
@@ -159,7 +160,6 @@
                                 th:text="${type.name()}">
                         </option>
                     </select>
-                    <input class="right-side" type="checkbox" id="early" name="early" onchange="updateStatus()"> Early Departure
                 </div>
                 <div class="right-side">
                     Starts from:

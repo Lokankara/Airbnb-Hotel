@@ -10,7 +10,11 @@ public interface BookingService {
 
     List<BookingDto> findLatest();
 
-    Booking findByRoomId(Long id);
+    Booking save(Booking booking);
 
-    BookingDto save(Booking booking);
+    BookingDto toDto(Booking booking);
+
+    BookingDto update(Booking booking);
+
+    BookingDto findByRoomId(Long roomId);
 }

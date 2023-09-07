@@ -21,25 +21,25 @@ select {
 }
 
 .room-status-VACANT {
-    font-weight: 900;
+    font-weight: 500;
     color: green;
     float: right;
 }
 
 .room-status-OCCUPIED {
-    font-weight: 900;
+    font-weight: 500;
     color: darkviolet;
     float: right;
 }
 
 .room-status-RESERVED {
-    font-weight: 900;
+    font-weight: 500;
     color: grey;
     float: right;
 }
 
 .room-status-MAINTENANCE {
-    font-weight: 900;
+    font-weight: 500;
     color: red;
     float: right;
 }
@@ -498,7 +498,7 @@ input#capacity {
     overflow: hidden;
     border-radius: 50%;
     flex-shrink: 0;
-    margin-right: 12px;
+    border: 3px solid white;
 }
 
 .profile-img-wrapper img {
