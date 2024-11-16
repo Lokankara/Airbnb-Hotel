@@ -1,17 +1,12 @@
 package com.manager.hotel.service;
 
-import com.manager.hotel.config.SecurityUtils;
 import com.manager.hotel.dao.UserRepository;
-import com.manager.hotel.dto.ReadUserDTO;
-import com.manager.hotel.entity.User;
 import com.manager.hotel.mapper.UserMapper;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.oauth2.core.user.OAuth2User;
+import com.manager.hotel.model.dto.ReadUserDTO;
+import com.manager.hotel.model.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 

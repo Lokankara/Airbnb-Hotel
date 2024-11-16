@@ -13,9 +13,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -34,17 +31,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedEntityGraph(name = "room-entity-graph",
-        attributeNodes = {
-                @NamedAttributeNode(value = "guest", subgraph = "guest-subgraph")
-        },
-        subgraphs = {
-                @NamedSubgraph(name = "guest-subgraph", attributeNodes = {
-                        @NamedAttributeNode("passport"),
-                        @NamedAttributeNode("bookings")
-                })
-        }
-)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Room {
     @Id

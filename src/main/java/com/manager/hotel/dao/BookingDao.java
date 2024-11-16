@@ -1,18 +1,10 @@
 package com.manager.hotel.dao;
 
 import com.manager.hotel.model.entity.Booking;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+@Repository
+public interface BookingDao extends JpaRepository<Booking, Long> {
 
-public abstract class BookingDao extends Dao<Booking> {
-    protected BookingDao() {
-        super(Booking.class);
-    }
-
-    public abstract Booking getBookingByRoomId(Long id);
-
-    public abstract List<Booking> findLatestDeals();
-
-    public abstract Optional<Booking> update(Booking booking);
 }

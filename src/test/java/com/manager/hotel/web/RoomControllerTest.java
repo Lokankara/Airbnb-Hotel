@@ -1,7 +1,6 @@
 package com.manager.hotel.web;
 
 import com.manager.hotel.model.dto.RoomDto;
-import com.manager.hotel.model.enums.RoomStatus;
 import com.manager.hotel.service.RoomService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,17 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.manager.hotel.web.MockData.id;
-import static com.manager.hotel.web.MockData.room;
 import static com.manager.hotel.web.MockData.roomDto;
 import static com.manager.hotel.web.MockData.roomId;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 

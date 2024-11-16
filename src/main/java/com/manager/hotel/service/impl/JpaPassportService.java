@@ -15,15 +15,13 @@ public class JpaPassportService implements PassportService {
     private final PassportDao passportDao;
 
     @Override
-    public Passport save(
-            final Passport passport) {
+    public Passport save(final Passport passport) {
         return passportDao.save(passport);
     }
 
     @Override
     public Optional<Passport> findByFirstNameAndLastName(
             final String name, final String surname) {
-        return passportDao
-                .findByFirstNameAndLastName(name, surname);
+        return passportDao.findByFirstnameAndLastname(name, surname);
     }
 }

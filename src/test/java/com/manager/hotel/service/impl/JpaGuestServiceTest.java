@@ -1,6 +1,6 @@
 package com.manager.hotel.service.impl;
 
-import com.manager.hotel.dao.jpa.JpaGuestDao;
+import com.manager.hotel.dao.GuestDao;
 import com.manager.hotel.model.dto.GuestDto;
 import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Guest;
@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -36,7 +35,7 @@ import static org.mockito.Mockito.when;
 class JpaGuestServiceTest {
 
     @Mock
-    private JpaGuestDao dao;
+    private GuestDao dao;
 
     @Mock
     private GuestMapper mapper;
@@ -64,8 +63,7 @@ class JpaGuestServiceTest {
     @Test
     @DisplayName("Given no guests in the repository, when getAllGuests is called, then return an empty list")
     void testGetAllGuestsWhenNoGuestsInRepository() {
-        JpaGuestDao guestRepository = mock(JpaGuestDao.class);
-        when(guestRepository.findAll()).thenReturn(Collections.emptyList());
+
         List<GuestDto> guestDtos = guestService.getAllGuests();
         assertNotNull(guestDtos);
         assertTrue(guestDtos.isEmpty());
@@ -75,7 +73,6 @@ class JpaGuestServiceTest {
     @DisplayName("Given valid criteria, when findByCriteria is called, then return a list of GuestDto")
     void testFindByCriteriaWithValidCriteria() {
 
-        when(dao.findByCriteria(criteria)).thenReturn(Collections.singletonList(new Guest()));
         when(mapper.toListDto(anyList())).thenReturn(Collections.singletonList(new GuestDto()));
         List<GuestDto> guestDtos = guestService.findByCriteria(criteria);
         assertNotNull(guestDtos);
@@ -114,7 +111,7 @@ class JpaGuestServiceTest {
     @Test
     @DisplayName("Given a valid passport, when findByPassport is called, then return the guest with matching passport")
     void testFindByPassportWithValidPassport() {
-        when(dao.findByPassportData(passport)).thenReturn(Optional.of(guest));
+        when(dao.findByPassport(passport)).thenReturn(Optional.of(guest));
         Optional<Guest> optionalGuest = guestService.findByPassport(passport);
         assertEquals(Optional.of(guest), optionalGuest);
     }
@@ -122,7 +119,7 @@ class JpaGuestServiceTest {
     @Test
     @DisplayName("Given an invalid passport, when findByPassport is called, then return an empty optional")
     void testFindByPassportWithInvalidPassport() {
-        when(dao.findByPassportData(passport)).thenReturn(Optional.empty());
+        when(dao.findByPassport(passport)).thenReturn(Optional.empty());
         Optional<Guest> foundGuest = guestService.findByPassport(passport);
         assertEquals(Optional.empty(), foundGuest);
     }

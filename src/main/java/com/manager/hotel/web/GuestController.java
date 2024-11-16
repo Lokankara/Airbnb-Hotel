@@ -38,8 +38,7 @@ public class GuestController {
     public String getGuestById(
             final Model model,
             final @PathVariable Long id) {
-        model.addAttribute("guest",
-                guestService.findGuestById(id));
+        model.addAttribute("guest", guestService.findGuestById(id));
         return "guest";
     }
 
@@ -48,17 +47,14 @@ public class GuestController {
             final Model model,
             @ModelAttribute Criteria criteria) {
         log.info(criteria.toString());
-        model.addAttribute(GUESTS, guestService
-                .findByCriteria(criteria));
+        model.addAttribute(GUESTS, guestService.getAllGuests());
         return GUESTS;
     }
 
     @PatchMapping
-    public String updateData(
-            final Model model,
+    public String updateData(final Model model,
             final @ModelAttribute("guest") GuestDto dto) {
-        model.addAttribute(GUESTS,
-                guestService.update(dto));
+        model.addAttribute(GUESTS, guestService.update(dto));
         return GUESTS;
     }
 }

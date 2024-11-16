@@ -1,6 +1,6 @@
 package com.manager.hotel.service.impl;
 
-import com.manager.hotel.dao.jpa.JpaBookingDao;
+import com.manager.hotel.dao.BookingDao;
 import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.entity.Booking;
 import com.manager.hotel.service.BookingService;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JpaBookingService implements BookingService {
 
-    private final JpaBookingDao dao;
+    private final BookingDao dao;
     private final BookingMapper mapper;
 
     @Override
@@ -29,8 +29,7 @@ public class JpaBookingService implements BookingService {
 
     @Override
     public List<BookingDto> findLatest() {
-        return mapper.toListDto(
-                dao.findLatestDeals());
+        return mapper.toListDto(dao.findAll());
     }
 
     @Override
@@ -45,15 +44,12 @@ public class JpaBookingService implements BookingService {
 
     @Override
     public BookingDto update(Booking booking) {
-        return mapper.toDto(
-                dao.update(booking)
-                   .orElse(new Booking()));
+        return mapper.toDto(dao.save(booking));
     }
 
     @Override
-    public BookingDto findByRoomId(
-            Long roomId) {
+    public BookingDto findByRoomId(Long roomId) {
         return mapper.toDto(
-                dao.getBookingByRoomId(roomId));
+                dao.findById(roomId).orElse(new Booking()));
     }
 }

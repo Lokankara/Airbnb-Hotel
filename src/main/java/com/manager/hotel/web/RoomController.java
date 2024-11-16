@@ -24,8 +24,7 @@ public class RoomController {
     @GetMapping
     public String showRooms(
             final Model model) {
-        model.addAttribute(ROOMS,
-                roomService.findAll());
+        model.addAttribute(ROOMS, roomService.findAll());
         return HOME;
     }
 
@@ -33,8 +32,7 @@ public class RoomController {
     public String checkIn(
             final Model model,
             final @PathVariable Long roomId) {
-        model.addAttribute(ROOM, roomService
-                .getById(roomId));
+        model.addAttribute(ROOM, roomService.getById(roomId));
         return ROOM;
     }
 }

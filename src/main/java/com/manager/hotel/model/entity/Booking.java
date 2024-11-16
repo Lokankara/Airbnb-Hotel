@@ -8,9 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,25 +19,52 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.UuidGenerator;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.util.Objects;
+import java.util.UUID;
 
-@Getter
 @Setter
+@Getter
 @Entity
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "booking")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@NamedEntityGraph(name = "Booking.guest",
-        attributeNodes = @NamedAttributeNode("guest"))
-public class Booking {
+public class Booking implements Serializable {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "booking_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookingSequenceGenerator")
+    @SequenceGenerator(name = "bookingSequenceGenerator", sequenceName = "booking_generator", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
-    @Getter
+
+    @UuidGenerator
+    @Column(name = "public_id", nullable = false)
+    private UUID publicId;
+
+    @Column(name = "start_date", nullable = false)
+    private OffsetDateTime startDate;
+
+    @Column(name = "end_date", nullable = false)
+    private OffsetDateTime endDate;
+
+    @Column(name = "total_price", nullable = false)
+    private int totalPrice;
+
+    @Column(name = "nb_of_travelers", nullable = false)
+    private int numberOfTravelers;
+
+    @Column(name = "fk_tenant", nullable = false)
+    private UUID fkTenant;
+
+    @Column(name = "fk_listing", nullable = false)
+    private UUID fkListing;
+
     private Long finalBill;
     private Timestamp departure;
     private Timestamp checkInDate;
@@ -50,6 +77,7 @@ public class Booking {
     private boolean close = false;
     @ToString.Exclude
     @JsonBackReference
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Guest guest;
     @OneToOne
@@ -57,18 +85,26 @@ public class Booking {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Booking booking = (Booking) o;
-        return id.equals(booking.id);
+        return totalPrice == booking.totalPrice && numberOfTravelers == booking.numberOfTravelers && Objects.equals(startDate, booking.startDate) && Objects.equals(endDate, booking.endDate) && Objects.equals(fkTenant, booking.fkTenant) && Objects.equals(fkListing, booking.fkListing);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(startDate, endDate, totalPrice, numberOfTravelers, fkTenant, fkListing);
+    }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", totalPrice=" + totalPrice +
+                ", numberOfTravelers=" + numberOfTravelers +
+                ", fkTenant=" + fkTenant +
+                ", fkListing=" + fkListing +
+                '}';
     }
 }

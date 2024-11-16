@@ -1,8 +1,8 @@
 package com.manager.hotel.mapper;
 
-import com.manager.hotel.dto.ReadUserDTO;
-import com.manager.hotel.entity.Authority;
-import com.manager.hotel.entity.User;
+import com.manager.hotel.model.dto.ReadUserDTO;
+import com.manager.hotel.model.entity.Authority;
+import com.manager.hotel.model.entity.User;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

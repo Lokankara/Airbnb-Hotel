@@ -1,27 +1,14 @@
 package com.manager.hotel.dao;
 
-import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Guest;
 import com.manager.hotel.model.entity.Passport;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
-public abstract class GuestDao extends Dao<Guest> {
-    protected GuestDao() {
-        super(Guest.class);
-    }
+@Repository
+public interface GuestDao extends JpaRepository<Guest, Long> {
 
-    public abstract Optional<Guest> findByPassportData(Passport passport);
-
-    public abstract List<Guest> findByDepartureDate(LocalDateTime now);
-
-    public abstract Guest getById(Long id);
-
-    public abstract List<Guest> findByCriteria(Criteria criteria);
-
-    public abstract Guest update(Guest guest);
-
-    public abstract Optional<Guest> findByFullName(String firstname, String lastname);
+    Optional<Guest> findByPassport(Passport passport);
 }

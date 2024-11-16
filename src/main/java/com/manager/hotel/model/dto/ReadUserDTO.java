@@ -1,4 +1,4 @@
-package com.manager.hotel.dto;
+package com.manager.hotel.model.dto;
 
 import java.util.Set;
 import java.util.UUID;

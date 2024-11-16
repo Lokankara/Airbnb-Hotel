@@ -1,15 +1,13 @@
 package com.manager.hotel.dao;
 
 import com.manager.hotel.model.entity.Passport;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-public abstract class PassportDao extends Dao<Passport> {
+@Repository
+public interface PassportDao extends JpaRepository<Passport, Long> {
 
-    protected PassportDao() {
-        super(Passport.class);
-    }
-
-    public abstract Optional<Passport> findByFirstNameAndLastName(
-            String name, String surname);
+    Optional<Passport> findByFirstnameAndLastname(String name, String surname);
 }

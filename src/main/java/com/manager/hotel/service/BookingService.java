@@ -1,7 +1,7 @@
 package com.manager.hotel.service;
 
-import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.entity.Booking;
+import com.manager.hotel.model.dto.BookingDto;
 
 import java.util.List;
 

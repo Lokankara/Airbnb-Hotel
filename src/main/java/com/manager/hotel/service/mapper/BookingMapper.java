@@ -1,7 +1,7 @@
 package com.manager.hotel.service.mapper;
 
-import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.entity.Booking;
+import com.manager.hotel.model.dto.BookingDto;
 import org.mapstruct.Mapper;
 
 import java.util.List;

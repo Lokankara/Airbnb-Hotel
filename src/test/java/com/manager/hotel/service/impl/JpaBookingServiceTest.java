@@ -1,6 +1,6 @@
 package com.manager.hotel.service.impl;
 
-import com.manager.hotel.dao.jpa.JpaBookingDao;
+import com.manager.hotel.dao.BookingDao;
 import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.entity.Booking;
 import com.manager.hotel.service.mapper.BookingMapper;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 class JpaBookingServiceTest {
 
     @Mock
-    private JpaBookingDao dao;
+    private BookingDao dao;
 
     @Mock
     private BookingMapper mapper;
@@ -36,8 +36,8 @@ class JpaBookingServiceTest {
     private Booking booking2;
     private BookingDto bookingDto;
     private BookingDto bookingDto2;
-    private List<Booking> bookings = new ArrayList<>();
-    private List<BookingDto> bookingDtos = new ArrayList<>();
+    private final List<Booking> bookings = new ArrayList<>();
+    private final List<BookingDto> bookingDtos = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -77,7 +77,6 @@ class JpaBookingServiceTest {
     @DisplayName("Given a timestamp, when getLatest is called, then return a list of latest booking DTOs")
     void testGetLatestBookings() {
         Timestamp fromDate = Timestamp.valueOf("2023-08-01 00:00:00");
-        when(dao.findLatestDeals()).thenReturn(bookings);
         when(mapper.toListDto(bookings)).thenReturn(bookingDtos);
         List<BookingDto> resultBookingDtos = bookingService.findLatest();
         assertNotNull(resultBookingDtos);
