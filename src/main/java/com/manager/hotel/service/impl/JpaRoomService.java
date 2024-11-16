@@ -6,7 +6,7 @@ import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Room;
 import com.manager.hotel.model.enums.RoomStatus;
 import com.manager.hotel.service.RoomService;
-import com.manager.hotel.service.mapper.RoomMapper;
+import com.manager.hotel.mapper.RoomMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

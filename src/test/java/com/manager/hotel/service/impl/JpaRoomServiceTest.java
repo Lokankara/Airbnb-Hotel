@@ -6,7 +6,7 @@ import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Room;
 import com.manager.hotel.model.enums.RoomStatus;
 import com.manager.hotel.model.enums.RoomType;
-import com.manager.hotel.service.mapper.RoomMapper;
+import com.manager.hotel.mapper.RoomMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

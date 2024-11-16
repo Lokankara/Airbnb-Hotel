@@ -1,7 +1,7 @@
 package com.manager.hotel.web;
 
 import com.manager.hotel.model.dto.BookingDto;
-import com.manager.hotel.service.BookingService;
+import com.manager.hotel.service.BookingRoomService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class BookingControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private BookingService service;
+    private BookingRoomService service;
 
     @Test
     @DisplayName("When accessing the check-in page with a room, Then the booking page should be displayed with the room attributes")

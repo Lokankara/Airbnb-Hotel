@@ -1,4 +1,4 @@
-package com.manager.hotel.service.mapper;
+package com.manager.hotel.mapper;
 
 import com.manager.hotel.model.dto.RoomDto;
 import com.manager.hotel.model.entity.Room;

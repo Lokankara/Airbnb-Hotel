@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS passport (
 );
 
 
-
 CREATE TABLE IF NOT EXISTS Booking
 (
     booking_id     SERIAL PRIMARY KEY,
@@ -24,7 +23,7 @@ CREATE TABLE IF NOT EXISTS Booking
     rate           INTEGER,
     earlyDeparture BOOLEAN,
     close          BOOLEAN,
-    guest_id       BIGINT REFERENCES Guest (id),
-    room_id        BIGINT REFERENCES Room (id)
+    guest_id       BIGINT REFERENCES Guest (guest_id),
+    room_id        BIGINT REFERENCES Room (room_id)
 );
 

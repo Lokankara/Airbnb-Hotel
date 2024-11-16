@@ -74,4 +74,8 @@ public class UserService {
         Optional<User> oneByPublicId = userRepository.findOneByPublicId(publicId);
         return oneByPublicId.map(userMapper::readUserDTOToUser);
     }
+
+    public ReadUserDTO getAuthenticatedUserFromSecurityContext() {
+        return new ReadUserDTO(null, null, null, null, null, null);
+    }
 }

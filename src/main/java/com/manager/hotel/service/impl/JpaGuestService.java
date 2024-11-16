@@ -6,7 +6,7 @@ import com.manager.hotel.model.entity.Criteria;
 import com.manager.hotel.model.entity.Guest;
 import com.manager.hotel.model.entity.Passport;
 import com.manager.hotel.service.GuestService;
-import com.manager.hotel.service.mapper.GuestMapper;
+import com.manager.hotel.mapper.GuestMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

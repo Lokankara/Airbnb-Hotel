@@ -22,7 +22,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name = "hotel_user")
+@Table(name = "airbnb_user")
 public class User implements Serializable {
 
     @Id

@@ -17,6 +17,8 @@ import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -65,6 +67,9 @@ public class Listing implements Serializable {
 
     @Column(name = "landlord_public_id")
     private UUID landlordPublicId;
+
+    private Instant createdDate;
+    private Instant lastModifiedDate;
 
     @OneToMany(mappedBy = "listing", cascade = CascadeType.REMOVE)
     private Set<ListingPicture> pictures = new HashSet<>();

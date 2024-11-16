@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -42,6 +43,9 @@ public class ListingPicture implements Serializable {
 
     @Column(name = "is_cover")
     private boolean isCover;
+
+    private Instant createdDate;
+    private Instant lastModifiedDate;
 
     @Override
     public boolean equals(Object o) {

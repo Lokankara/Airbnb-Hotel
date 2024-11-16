@@ -2,7 +2,7 @@ package com.manager.hotel.web;
 
 import com.manager.hotel.model.dto.BookingDto;
 import com.manager.hotel.model.dto.RoomDto;
-import com.manager.hotel.service.BookingService;
+import com.manager.hotel.service.BookingRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ import static com.manager.hotel.web.ConstantPath.ROOM;
 @RequiredArgsConstructor
 public class BookingController {
 
-    private final BookingService service;
+    private final BookingRoomService service;
 
     @GetMapping("/checkin")
     public String inputBookingForm(
