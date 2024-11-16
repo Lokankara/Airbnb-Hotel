@@ -5,7 +5,7 @@ COPY . .
 RUN mvn clean package -DskipTests -Dmaven
 
 # Run stage	
-FROM openjdk:17-slim
+FROM openjdk:21-slim
 
 COPY --from=build /target/hotel-0.0.1-SNAPSHOT.jar hotel.jar
 EXPOSE 8080
