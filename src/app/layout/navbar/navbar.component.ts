@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, effect, inject, OnInit} from '@angular/core';
 import {ButtonModule} from "primeng/button";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {ToolbarModule} from "primeng/toolbar";
@@ -8,6 +8,8 @@ import {AvatarComponent} from "./avatar/avatar.component";
 import {DialogService} from "primeng/dynamicdialog";
 import {MenuItem} from "primeng/api";
 import {ToastService} from "../toast.service";
+import {AuthService} from "../../core/auth.service";
+import {User} from "../../core/user.model";
 
 @Component({
   selector: 'app-navbar',
@@ -30,20 +32,64 @@ export class NavbarComponent implements OnInit {
   guests = "Add guests";
   dates = "Any week";
   currentMenuItems: MenuItem [] | undefined = [];
-
+  authService = inject(AuthService);
   toastService = inject(ToastService);
+  login = () => this.authService.login();
+  logout = () => this.authService.logout();
+  private connectedUser: User = {email: this.authService.notConnected};
 
-  ngOnInit(): void {
-    this.currentMenuItems = this.fetchMenu();
-    this.toastService.send({severity: "info", summary: "Welcome to Airbnb"})
+  constructor() {
+    effect(() => {
+      if (this.authService.fetchUser().status === "OK") {
+        this.connectedUser = this.authService.fetchUser().value!;
+        this.currentMenuItems = this.fetchMenu();
+      }
+    })
   }
 
-  private fetchMenu() {
-    return [{
-      label: "Sign up",
-      styleClass: "font-bold"
-    },
-      {label: "Log in"}]
+  ngOnInit(): void {
+    this.authService.fetch(false);
+  }
+
+  private hasToBeLandlord() {
+    return this.authService.hasAnyAuthority("ROLE_LANDLORD");
+  }
+
+  private fetchMenu(): MenuItem[] {
+    if (this.authService.isAuthenticated()) {
+      return [
+        {
+          label: "My properties",
+          routerLink: "landlord/properties",
+          visible: this.hasToBeLandlord(),
+        },
+        {
+          label: "My booking",
+          routerLink: "booking",
+        },
+        {
+          label: "My reservation",
+          routerLink: "landlord/reservation",
+          visible: this.hasToBeLandlord(),
+        },
+        {
+          label: "Log out",
+          command: this.logout
+        },
+      ]
+    } else {
+      return [
+        {
+          label: "Sign up",
+          styleClass: "font-bold",
+          command: this.login
+        },
+        {
+          label: "Log in",
+          command: this.login
+        }
+      ]
+    }
   }
 
   openNewSearch() {

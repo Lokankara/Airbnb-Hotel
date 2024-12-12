@@ -1,20 +1,10 @@
 package com.manager.hotel.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import com.manager.hotel.model.AbstractAuditingEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -22,7 +12,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "listing_picture")
-public class ListingPicture implements Serializable {
+public class ListingPicture extends AbstractAuditingEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listingPictureSequenceGenerator")
@@ -44,8 +34,18 @@ public class ListingPicture implements Serializable {
     @Column(name = "is_cover")
     private boolean isCover;
 
-    private Instant createdDate;
-    private Instant lastModifiedDate;
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    public boolean isCover() {
+        return isCover;
+    }
+
+    public void setCover(boolean cover) {
+        isCover = cover;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -63,9 +63,9 @@ public class ListingPicture implements Serializable {
     @Override
     public String toString() {
         return "ListingPicture{" +
-                "file=" + Arrays.toString(file) +
-                ", fileContentType='" + fileContentType + '\'' +
-                ", isCover=" + isCover +
-                '}';
+            "file=" + Arrays.toString(file) +
+            ", fileContentType='" + fileContentType + '\'' +
+            ", isCover=" + isCover +
+            '}';
     }
 }

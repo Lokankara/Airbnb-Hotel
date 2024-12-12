@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring") //, uses = {ListingPictureMapper.class}
+@Mapper(componentModel = "spring", uses = {ListingPictureMapper.class})
 public interface ListingMapper {
 
 //    @Mapping(target = "landlordPublicId", ignore = true)
@@ -29,21 +29,24 @@ public interface ListingMapper {
 //    @Mapping(target = "beds", source = "infos.beds.value")
 //    @Mapping(target = "bathrooms", source = "infos.baths.value")
 //    @Mapping(target = "price", source = "price.value")
-    Listing saveListingDTOToListing(SaveListingDTO saveListingDTO);
+//    Listing saveListingDTOToListing(SaveListingDTO saveListingDTO);
 
     CreatedListingDTO listingToCreatedListingDTO(Listing listing);
+
+    //    @Mapping(target = "cover", source = "pictures", qualifiedByName = "extract-cover")
+    default DisplayCardListingDTO listingToDisplayCardListingDTO(Listing listing) {
+        return new DisplayCardListingDTO(null, null, null, null, null);
+    }
 
     @Mapping(target = "cover", source = "pictures")
     List<DisplayCardListingDTO> listingToDisplayCardListingDTOs(List<Listing> listings);
 
-//    @Mapping(target = "cover", source = "pictures", qualifiedByName = "extract-cover")
-    DisplayCardListingDTO listingToDisplayCardListingDTO(Listing listing);
 
     default PriceVO mapPriceToPriceVO(int price) {
         return new PriceVO(price);
     }
 
-//    @Mapping(target = "landlord", ignore = true)
+    //    @Mapping(target = "landlord", ignore = true)
 //    @Mapping(target = "description.title.value", source = "title")
 //    @Mapping(target = "description.description.value", source = "description")
 //    @Mapping(target = "infos.bedrooms.value", source = "bedrooms")
@@ -52,7 +55,9 @@ public interface ListingMapper {
 //    @Mapping(target = "infos.baths.value", source = "bathrooms")
 //    @Mapping(target = "category", source = "bookingCategory")
 //    @Mapping(target = "price.value", source = "price")
-//    DisplayListingDTO listingToDisplayListingDTO(Listing listing);
+    default DisplayListingDTO listingToDisplayListingDTO(Listing listing) {
+        return new DisplayListingDTO();
+    }
 
 //    @Mapping(target = "listingPublicId", source = "publicId")
     ListingCreateBookingDTO mapListingToListingCreateBookingDTO(Listing listing);

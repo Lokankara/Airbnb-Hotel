@@ -51,15 +51,14 @@ public class TenantService {
 
     @Transactional(readOnly = true)
     public State<DisplayListingDTO, String> getOne(UUID publicId) {
-        Optional<Listing> listingByPublicIdOpt = listingRepository.findByPublicId(publicId);
+        Optional<Listing> listingByPublicIdOpt = listingRepository.findByListingPublicId(publicId);
 
         if (listingByPublicIdOpt.isEmpty()) {
             return State.<DisplayListingDTO, String>builder()
-                    .forError(String.format("Listing doesn't exist for publicId: %s", publicId));
+                .forError(String.format("Listing doesn't exist for publicId: %s", publicId));
         }
 
-//        DisplayListingDTO displayListingDTO = listingMapper.listingToDisplayListingDTO(listingByPublicIdOpt.get());
-        DisplayListingDTO displayListingDTO = new DisplayListingDTO();
+        DisplayListingDTO displayListingDTO = listingMapper.listingToDisplayListingDTO(listingByPublicIdOpt.get());
 
         ReadUserDTO readUserDTO = userService.getByPublicId(listingByPublicIdOpt.get().getLandlordPublicId()).orElseThrow();
         LandlordListingDTO landlordListingDTO = new LandlordListingDTO(readUserDTO.firstName(), readUserDTO.imageUrl());
@@ -73,19 +72,18 @@ public class TenantService {
     public Page<DisplayCardListingDTO> search(Pageable pageable, SearchDTO newSearch) {
 
         Page<Listing> allMatchedListings = listingRepository.findAllByLocationAndBathroomsAndBedroomsAndGuestsAndBeds(pageable, newSearch.location(),
-                newSearch.infos().baths().value(),
-                newSearch.infos().bedrooms().value(),
-                newSearch.infos().guests().value(),
-                newSearch.infos().beds().value());
+            newSearch.infos().baths().value(),
+            newSearch.infos().bedrooms().value(),
+            newSearch.infos().guests().value(),
+            newSearch.infos().beds().value());
 
-        List<UUID> listingUUIDs = allMatchedListings.stream().map(Listing::getPublicId).toList();
+        List<UUID> listingUUIDs = allMatchedListings.stream().map(Listing::getListingPublicId).toList();
 
         List<UUID> bookingUUIDs = bookingRoomService.getBookingMatchByListingIdsAndBookedDate(listingUUIDs, newSearch.dates());
 
-        List<DisplayCardListingDTO> listingsNotBooked = allMatchedListings.stream().filter(listing -> !bookingUUIDs.contains(listing.getPublicId()))
-                .map(listingMapper::listingToDisplayCardListingDTO)
-                .toList();
-
+        List<DisplayCardListingDTO> listingsNotBooked = allMatchedListings.stream().filter(listing -> !bookingUUIDs.contains(listing.getListingPublicId()))
+            .map(listingMapper::listingToDisplayCardListingDTO)
+            .toList();
         return new PageImpl<>(listingsNotBooked, pageable, listingsNotBooked.size());
     }
 }

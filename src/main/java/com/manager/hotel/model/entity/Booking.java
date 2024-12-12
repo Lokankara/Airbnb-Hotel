@@ -1,6 +1,7 @@
 package com.manager.hotel.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.manager.hotel.model.AbstractAuditingEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +22,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -35,7 +35,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "booking")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Booking implements Serializable {
+public class Booking extends AbstractAuditingEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookingSequenceGenerator")
@@ -77,7 +77,6 @@ public class Booking implements Serializable {
     private boolean close = false;
     @ToString.Exclude
     @JsonBackReference
-
     @ManyToOne(fetch = FetchType.EAGER)
     private Guest guest;
     @OneToOne

@@ -1,20 +1,11 @@
 package com.manager.hotel.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import com.manager.hotel.model.AbstractAuditingEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -23,7 +14,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "airbnb_user")
-public class User implements Serializable {
+public class User extends AbstractAuditingEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequenceGenerator")

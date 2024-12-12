@@ -58,7 +58,7 @@ public class LandlordService {
 
     @Transactional
     public State<UUID, String> delete(UUID publicId, ReadUserDTO landlord) {
-        long deletedSuccessfuly = listingRepository.deleteByPublicIdAndLandlordPublicId(publicId, landlord.publicId());
+        long deletedSuccessfuly = listingRepository.deleteByListingPublicIdAndLandlordPublicId(publicId, landlord.publicId());
         if (deletedSuccessfuly > 0) {
             return State.<UUID, String>builder().forSuccess(publicId);
         } else {
@@ -67,11 +67,11 @@ public class LandlordService {
     }
 
     public Optional<ListingCreateBookingDTO> getByListingPublicId(UUID publicId) {
-        return listingRepository.findByPublicId(publicId).map(listingMapper::mapListingToListingCreateBookingDTO);
+        return listingRepository.findByListingPublicId(publicId).map(listingMapper::mapListingToListingCreateBookingDTO);
     }
 
     public List<DisplayCardListingDTO> getCardDisplayByListingPublicId(List<UUID> allListingPublicIDs) {
-        return listingRepository.findAllByPublicIdIn(allListingPublicIDs)
+        return listingRepository.findAllByListingPublicIdIn(allListingPublicIDs)
                 .stream()
                 .map(listingMapper::listingToDisplayCardListingDTO)
                 .toList();
@@ -79,7 +79,7 @@ public class LandlordService {
 
     @Transactional(readOnly = true)
     public Optional<DisplayCardListingDTO> getByPublicIdAndLandlordPublicId(UUID listingPublicId, UUID landlordPublicId) {
-        return listingRepository.findOneByPublicIdAndLandlordPublicId(listingPublicId, landlordPublicId)
+        return listingRepository.findOneByListingPublicIdAndLandlordPublicId(listingPublicId, landlordPublicId)
                 .map(listingMapper::listingToDisplayCardListingDTO);
     }
 }
