@@ -1,10 +1,10 @@
-@import '_mixins';
-@import '_colors';
+@import './_mixins';
+@import './_colors';
 
 @import './components/input/_editor';
 
 @layer primeng {
-    @import '_common';
+    @import './_common';
 
     //Input
     @import './components/input/_autocomplete';
@@ -31,12 +31,12 @@
     @import './components/input/_slider';
     @import './components/input/_togglebutton';
     @import './components/input/_treeselect';
-    
+
     //Button
     @import './components/button/_button';
     @import './components/button/_speeddial';
     @import './components/button/_splitbutton';
-    
+
     //Data
     @import './components/data/_carousel';
     @import './components/data/_datatable';
@@ -50,7 +50,7 @@
     @import './components/data/_tree';
     @import './components/data/_treetable';
     @import './components/data/_virtualscroller';
-    
+
     //Panel
     @import './components/panel/_accordion';
     @import './components/panel/_card';
@@ -61,17 +61,17 @@
     @import './components/panel/_splitter';
     @import './components/panel/_tabview';
     @import './components/panel/_toolbar';
-    
+
     //Overlay
     @import './components/overlay/_confirmpopup';
     @import './components/overlay/_dialog';
     @import './components/overlay/_overlaypanel';
     @import './components/overlay/_sidebar';
     @import './components/overlay/_tooltip';
-    
+
     //File
     @import './components/file/_fileupload';
-    
+
     //Menu
     @import './components/menu/_breadcrumb';
     @import './components/menu/_contextmenu';
@@ -84,16 +84,16 @@
     @import './components/menu/_steps';
     @import './components/menu/_tabmenu';
     @import './components/menu/_tieredmenu';
-    
+
     //Messages
     @import './components/messages/_inlinemessage';
     @import './components/messages/_message';
-    @import 'components/messages/toast';
-    
+    @import './components/messages/toast';
+
     //MultiMedia
     @import './components/multimedia/_galleria';
     @import './components/multimedia/_image';
-    
+
     //Misc
     @import './components/misc/_avatar';
     @import './components/misc/_badge';
