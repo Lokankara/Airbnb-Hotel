@@ -1,6 +1,6 @@
 package com.manager.hotel.model.entity;
 
-import com.manager.hotel.model.AbstractAuditingEntity;
+import com.manager.hotel.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "listing_picture")
-public class ListingPicture extends AbstractAuditingEntity<Long> {
+public class ListingPicture extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listingPictureSequenceGenerator")

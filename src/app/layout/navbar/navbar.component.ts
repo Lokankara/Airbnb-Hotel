@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit {
   toastService = inject(ToastService);
   login = () => this.authService.login();
   logout = () => this.authService.logout();
-  private connectedUser: User = {email: this.authService.notConnected};
+  connectedUser: User = {email: this.authService.notConnected};
 
   constructor() {
     effect(() => {

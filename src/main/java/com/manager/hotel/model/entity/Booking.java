@@ -1,7 +1,7 @@
 package com.manager.hotel.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.manager.hotel.model.AbstractAuditingEntity;
+import com.manager.hotel.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,7 +35,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "booking")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Booking extends AbstractAuditingEntity<Long> {
+public class Booking extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookingSequenceGenerator")

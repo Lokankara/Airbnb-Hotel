@@ -1,6 +1,6 @@
 package com.manager.hotel.model.entity;
 
-import com.manager.hotel.model.AbstractAuditingEntity;
+import com.manager.hotel.model.BaseEntity;
 import com.manager.hotel.model.enums.BookingCategory;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -26,7 +26,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "listing")
-public class Listing extends AbstractAuditingEntity<Long> {
+public class Listing extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listingSequenceGenerator")
