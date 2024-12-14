@@ -68,7 +68,7 @@ public class UserService {
       userToUpdate.setEmail(user.getEmail());
       userToUpdate.setFirstName(user.getFirstName());
       userToUpdate.setLastName(user.getLastName());
-      userToUpdate.setAuthorities(user.getAuthorities());
+//      userToUpdate.setAuthorities(user.getAuthorities());
       userToUpdate.setImageUrl(user.getImageUrl());
       userRepository.saveAndFlush(userToUpdate);
     }
