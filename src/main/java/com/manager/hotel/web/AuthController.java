@@ -23,7 +23,6 @@ public class AuthController {
 
     private final AuthenticationService userService;
 
-
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> register(

@@ -36,13 +36,13 @@ public class UserService {
 
   @Transactional(readOnly = true)
   public Optional<ReadUserDTO> getByEmail(String email) {
-    return userRepository.findOneByEmail(email).map(userMapper::readUserDTOToUser);
+    return userRepository.findByEmail(email).map(userMapper::readUserDTOToUser);
   }
 
   public void syncWithIdp(OAuth2User oAuth2User, boolean forceResync) {
     Map<String, Object> attributes = oAuth2User.getAttributes();
     User user = SecurityUtils.mapOauth2AttributesToUser(attributes);
-    Optional<User> existingUser = userRepository.findOneByEmail(user.getEmail());
+    Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
     if (existingUser.isPresent()) {
       if (attributes.get(UPDATED_AT_KEY) != null) {
         Instant lastModifiedDate = existingUser.orElseThrow().getLastModifiedDate();
@@ -62,7 +62,7 @@ public class UserService {
   }
 
   private void updateUser(User user) {
-    Optional<User> userToUpdateOpt = userRepository.findOneByEmail(user.getEmail());
+    Optional<User> userToUpdateOpt = userRepository.findByEmail(user.getEmail());
     if (userToUpdateOpt.isPresent()) {
       User userToUpdate = userToUpdateOpt.get();
       userToUpdate.setEmail(user.getEmail());
@@ -75,6 +75,6 @@ public class UserService {
   }
 
   public Optional<ReadUserDTO> getByPublicId(UUID publicId) {
-    return userRepository.findOneByPublicId(publicId).map(userMapper::readUserDTOToUser);
+    return userRepository.findByPublicId(publicId).map(userMapper::readUserDTOToUser);
   }
 }

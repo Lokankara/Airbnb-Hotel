@@ -18,8 +18,8 @@ import java.util.Map;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE_MIXED;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class EmailService {
 
@@ -35,18 +35,11 @@ public class EmailService {
         String activationCode,
         String subject
     ) throws MessagingException {
-        String templateName;
-        if (emailTemplate == null) {
-            templateName = "confirm-email";
-        } else {
-            templateName = emailTemplate.name();
-        }
+        String templateName = emailTemplate == null
+            ? "confirm-email" : emailTemplate.name();
+
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(
-            mimeMessage,
-            MULTIPART_MODE_MIXED,
-            UTF_8.name()
-        );
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MULTIPART_MODE_MIXED, UTF_8.name());
         Map<String, Object> properties = new HashMap<>();
         properties.put("username", username);
         properties.put("confirmationUrl", confirmationUrl);
