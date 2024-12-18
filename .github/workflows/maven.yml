@@ -1,24 +1,95 @@
-name: Java CI with Maven
+name: CI with postgres and test
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    push:
+        branches:
+            - master
+    pull_request:
+        types: [ opened, synchronize, reopened ]
+        branches:
+            - master
+
+permissions:
+    checks: write
 
 jobs:
-  build:
+    Test:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
 
-    runs-on: ubuntu-latest
+        services:
+            postgres:
+                image: postgres:15
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: root
+                    POSTGRES_DB: airbnb
+                options: >-
+                    --health-cmd "pg_isready -U postgres"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
+        env:
+            SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/airbnb
+            SPRING_DATASOURCE_USERNAME: postgres
+            SPRING_DATASOURCE_PASSWORD: root
+            DB_NAME: airbnb
 
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+
+            -   name: Install psql client
+                run: sudo apt-get update && sudo apt-get install --yes --no-install-recommends postgresql-client
+
+            -   name: Wait for Postgres to be ready
+                run: |
+                    echo "Waiting for Postgres..."
+                    for i in $(seq 1 60); do
+                      pg_isready -h localhost -p 5432 -U "$SPRING_DATASOURCE_USERNAME" && break
+                      sleep 1
+                    done
+                    pg_isready -h localhost -p 5432 -U "$SPRING_DATASOURCE_USERNAME" || (echo "Postgres did not become ready in time" && exit 1)
+                env:
+                    PGPASSWORD: ${{ env.SPRING_DATASOURCE_PASSWORD }}
+
+            -   name: Initialize DB from SQL files (robust path detection)
+                run: |
+                    set -euo pipefail
+                    echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+                    SQL_FILES=$(find "$GITHUB_WORKSPACE" -type f -path '*/src/main/resources/db/*.sql' -print | sort || true)
+                    if [ -z "$SQL_FILES" ]; then
+                      echo "No files under */src/main/resources/db; trying filename lookup"
+                      SQL_FILES=$(find "$GITHUB_WORKSPACE" -type f \( -iname 'booking.sql' -o -iname 'guests.sql' -o -iname 'rooms.sql' \) -print | sort || true)
+                    fi
+                    if [ -z "$SQL_FILES" ]; then
+                      echo "No SQL files found under src/main/resources/db nor by filenames (booking.sql|guests.sql|rooms.sql)." >&2
+                      echo "Listing top-level repo contents for debugging:" >&2
+                      ls -la "$GITHUB_WORKSPACE"
+                      exit 1
+                    fi
+                    echo "Found SQL files:"
+                    echo "$SQL_FILES" | while IFS= read -r f; do
+                      [ -n "$f" ] || continue
+                      echo "Applying $f"
+                      PGPASSWORD="$SPRING_DATASOURCE_PASSWORD" psql -h localhost -U "$SPRING_DATASOURCE_USERNAME" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f "$f"
+                    done
+                env:
+                    SPRING_DATASOURCE_USERNAME: ${{ env.SPRING_DATASOURCE_USERNAME }}
+                    SPRING_DATASOURCE_PASSWORD: ${{ env.SPRING_DATASOURCE_PASSWORD }}
+                    DB_NAME: ${{ env.DB_NAME }}
+
+            -   name: Set up JDK 21
+                uses: actions/setup-java@v4
+                with:
+                    java-version: '21'
+                    distribution: 'temurin'
+                    cache: maven
+
+            -   name: Test with Maven
+                run: mvn -B -e -V test

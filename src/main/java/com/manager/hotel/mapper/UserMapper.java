@@ -1,6 +1,6 @@
 package com.manager.hotel.mapper;
 
-import com.manager.hotel.model.dto.ReadUserDTO;
+import com.manager.hotel.model.dto.ReadUserDto;
 import com.manager.hotel.model.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public interface UserMapper {
 
     @Mapping(target = "authorities", source = "authorities")
-    ReadUserDTO readUserDTOToUser(User user);
+    ReadUserDto ReadUserDtoToUser(User user);
 
     default Set<String> map(Collection<? extends GrantedAuthority> authorities) {
         return authorities.stream()

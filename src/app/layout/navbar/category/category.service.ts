@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
 import {Category, CategoryName} from "./category.model";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
 
-  private _categories: Category[] = [
+  private categories: Category[] = [
     {
       icon: "eye",
       displayName: "All",
@@ -142,25 +142,22 @@ export class CategoryService {
     },
   ];
 
-  private changeCategory$ = new BehaviorSubject<Category>(this.getCategoriesByDefault())
+  private changeCategory$ = new BehaviorSubject<Category>(this.getCategoryByDefault());
   changeCategoryObs = this.changeCategory$.asObservable();
 
   changeCategory(category: Category): void {
     this.changeCategory$.next(category);
   }
 
-  getCategoriesByDefault(): Category {
-    return this._categories[0];
+  getCategories(): Category[] {
+    return this.categories;
   }
 
-  get categories(): Category[] {
-    return this._categories;
+  getCategoryByDefault() {
+    return this.categories[0];
   }
 
-  private getCategoryByTechnicalName(technicalName: CategoryName): Category | undefined {
+  getCategoryByTechnicalName(technicalName: CategoryName): Category | undefined {
     return this.categories.find(category => category.technicalName === technicalName);
-  }
-
-  constructor() {
   }
 }

@@ -1,0 +1,28 @@
+name: Java Static Code Analysis
+
+on:
+    push:
+        branches: [ master ]
+    pull_request:
+        branches: [ master ]
+
+jobs:
+    static-code-analysis:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v4
+
+            -   name: Set up JDK 21
+                uses: actions/setup-java@v4
+                with:
+                    distribution: 'temurin'
+                    java-version: '21'
+                    cache: 'maven'
+
+            -   name: Build with Maven
+                run: mvn clean package -DskipTests
+
+            -   name: Run SpotBugs with SARIF output
+                run: mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs -Dspotbugs.sarifOutput=true

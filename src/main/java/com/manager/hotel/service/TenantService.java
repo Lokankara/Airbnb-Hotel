@@ -2,14 +2,12 @@ package com.manager.hotel.service;
 
 import com.manager.hotel.dao.ListingRepository;
 import com.manager.hotel.mapper.ListingMapper;
-import com.manager.hotel.model.dto.DisplayCardListingDTO;
-import com.manager.hotel.model.dto.DisplayListingDTO;
-import com.manager.hotel.model.dto.LandlordListingDTO;
-import com.manager.hotel.model.dto.ReadUserDTO;
-import com.manager.hotel.model.dto.SearchDTO;
+import com.manager.hotel.model.dto.*;
+import com.manager.hotel.model.dto.ReadUserDto;
 import com.manager.hotel.model.entity.Listing;
 import com.manager.hotel.model.enums.BookingCategory;
 import com.manager.hotel.state.State;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,22 +19,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class TenantService {
 
     private final ListingRepository listingRepository;
-
     private final ListingMapper listingMapper;
-
     private final UserService userService;
     private final BookingRoomService bookingRoomService;
 
-
-    public TenantService(ListingRepository listingRepository, ListingMapper listingMapper, UserService userService, BookingRoomService bookingRoomService) {
-        this.listingRepository = listingRepository;
-        this.listingMapper = listingMapper;
-        this.userService = userService;
-        this.bookingRoomService = bookingRoomService;
-    }
 
     public Page<DisplayCardListingDTO> getAllByCategory(Pageable pageable, BookingCategory category) {
         Page<Listing> allOrBookingCategory;
@@ -59,9 +49,8 @@ public class TenantService {
         }
 
         DisplayListingDTO displayListingDTO = listingMapper.listingToDisplayListingDTO(listingByPublicIdOpt.get());
-
-        ReadUserDTO readUserDTO = userService.getByPublicId(listingByPublicIdOpt.get().getLandlordPublicId()).orElseThrow();
-        LandlordListingDTO landlordListingDTO = new LandlordListingDTO(readUserDTO.firstName(), readUserDTO.imageUrl());
+        ReadUserDto readUserDto = userService.getByPublicId(listingByPublicIdOpt.get().getLandlordPublicId()).orElseThrow();
+        LandlordListingDTO landlordListingDTO = new LandlordListingDTO(readUserDto.firstName(), readUserDto.imageUrl());
         displayListingDTO.setLandlord(landlordListingDTO);
 
         return State.<DisplayListingDTO, String>builder().forSuccess(displayListingDTO);

@@ -17,9 +17,9 @@ import java.io.Serializable;
 @Table(name = "authority")
 public class Authority implements Serializable {
 
+  @Id
   @NotNull
   @Size(max = 50)
-  @Id
   @Column(length = 50)
   private String name;
 }

@@ -1,6 +1,5 @@
 package com.manager.hotel.model.entity;
 
-import com.manager.hotel.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

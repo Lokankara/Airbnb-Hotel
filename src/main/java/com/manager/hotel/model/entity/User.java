@@ -1,6 +1,5 @@
 package com.manager.hotel.model.entity;
 
-import com.manager.hotel.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -78,12 +77,22 @@ public class User extends BaseEntity implements UserDetails, Principal  {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
     private Set<Authority> authorities = new HashSet<>();
 
+    public void setAuthoritiesFromGranted(Collection<? extends GrantedAuthority> granted) {
+        this.authorities = granted.stream()
+            .map(ga -> {
+                Authority a = new Authority();
+                a.setName(ga.getAuthority());
+                return a;
+            })
+            .collect(Collectors.toSet());
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles
             .stream()
             .map(r -> new SimpleGrantedAuthority(r.getName()))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Override
@@ -122,6 +131,6 @@ public class User extends BaseEntity implements UserDetails, Principal  {
 
     @Override
     public String getName() {
-        return email;
+        return getEmail();
     }
 }

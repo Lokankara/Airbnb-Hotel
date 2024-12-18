@@ -1,4 +1,4 @@
-@import "assets/scss/airbnb-variables";
+@import "./../../../../assets/scss/airbnb-variables";
 
 .categories {
   -ms-overflow-style: none;
@@ -9,7 +9,6 @@
   overflow-x: scroll;
   gap: 30px;
   background-color: $white;
-
   .category {
     cursor: pointer;
     border-bottom: 2px transparent solid;
@@ -44,7 +43,6 @@
     .name {
       font-weight: bold;
     }
-
     border-bottom: 2px $border-color solid;
   }
 }

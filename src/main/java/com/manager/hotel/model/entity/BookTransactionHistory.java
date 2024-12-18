@@ -1,6 +1,5 @@
 package com.manager.hotel.model.entity;
 
-import com.manager.hotel.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

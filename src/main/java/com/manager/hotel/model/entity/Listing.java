@@ -1,6 +1,5 @@
 package com.manager.hotel.model.entity;
 
-import com.manager.hotel.model.BaseEntity;
 import com.manager.hotel.model.enums.BookingCategory;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -1,23 +1,18 @@
-create table if not exists room
-(
-    room_id     SERIAL PRIMARY KEY,
-    capacity    INT          NOT NULL,
-    room_type   VARCHAR(128) NOT NULL,
-    room_status VARCHAR(128) NOT NULL,
-    path        VARCHAR(255),
-    guest_id    BIGINT,
-    FOREIGN KEY (guest_id) REFERENCES guest (guest_id),
-    constraint room_room_status_check check (room_status in ('VACANT', 'RESERVED', 'RESERVED', 'MAINTENANCE')),
-    constraint room_room_type_check check (room_type in
-                                           ('SINGLE', 'DOUBLE', 'TRIPLE',
-                                            'QUAD', 'QUEEN', 'KING', 'TWIN',
-                                            'HOLLYWOOD', 'STUDIO', 'CABANA',
-                                            'VILLA', 'PENTHOUSES', 'STANDARD',
-                                            'DELUXE', 'JOINT', 'CONNECTING',
-                                            'SUIT', 'APARTMENT', 'JUNIOR',
-                                            'BRIDAL', 'HONEYMOON',
-                                            'PRESIDENTIAL', 'ACCESSIBLE'))
-);
+BEGIN;
+ALTER TABLE room
+      DROP CONSTRAINT IF EXISTS room_room_type_check;
+ALTER TABLE room
+      ADD CONSTRAINT room_room_type_check CHECK (
+        room_type IN (
+          'SINGLE','DOUBLE','TRIPLE','QUAD','QUEEN','KING','TWIN','HOLLYWOOD','STUDIO',
+          'CABANA','VILLA','PENTHOUSES','STANDARD','DELUXE','JOINT','CONNECTING',
+          'SUITE','SUITE','APARTMENT','JUNIOR','BRIDAL','HONEYMOON',
+          'PRESIDENTIAL','ACCESSIBLE'
+        )
+      ) NOT VALID;
+ALTER TABLE room
+      VALIDATE CONSTRAINT room_room_type_check;
+COMMIT;
 
 INSERT INTO room (capacity, room_type, room_status, path, guest_id)
 VALUES (1, 'SINGLE', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_1.jpg', null),
@@ -36,7 +31,7 @@ VALUES (1, 'SINGLE', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Im
        (2, 'DELUXE', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_14.jpg', null),
        (4, 'JOINT', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_15.jpg', null),
        (4, 'CONNECTING', 'MAINTENANCE', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_16.jpg', null),
-       (2, 'SUIT', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_17.jpg', null),
+       (2, 'SUITE', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_17.jpg', null),
        (2, 'APARTMENT', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_18.jpg', null),
        (2, 'JUNIOR', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_19.jpg', null),
        (2, 'BRIDAL', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_20.jpg', null),
@@ -56,7 +51,7 @@ VALUES (1, 'SINGLE', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Im
        (2, 'HOLLYWOOD', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_34.jpg', null),
        (2, 'STUDIO', 'MAINTENANCE', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_35.jpg', null),
        (2, 'CABANA', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_36.jpg', null),
-       (2, 'SUIT', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_37.jpg', null),
+       (2, 'SUITE', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_37.jpg', null),
        (2, 'APARTMENT', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_38.jpg', null),
        (2, 'JUNIOR', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_39.jpg', null),
        (2, 'BRIDAL', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_40.jpg', null),
@@ -66,7 +61,7 @@ VALUES (1, 'SINGLE', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Im
        (2, 'DELUXE', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_44.jpg', null),
        (4, 'JOINT', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_45.jpg', null),
        (4, 'CONNECTING', 'MAINTENANCE', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_46.jpg', null),
-       (2, 'SUIT', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_47.jpg', null),
+       (2, 'SUITE', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_47.jpg', null),
        (2, 'APARTMENT', 'MAINTENANCE', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_48.jpg', null),
        (2, 'JUNIOR', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_49.jpg', null),
        (2, 'BRIDAL', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_50.jpg', null),
@@ -86,7 +81,7 @@ VALUES (1, 'SINGLE', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Im
        (2, 'DELUXE', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_114.jpg', null),
        (4, 'JOINT', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_115.jpg', null),
        (4, 'CONNECTING', 'MAINTENANCE', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_116.jpg', null),
-       (2, 'SUIT', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_117.jpg', null),
+       (2, 'SUITE', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_117.jpg', null),
        (2, 'APARTMENT', 'MAINTENANCE', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_118.jpg', null),
        (2, 'JUNIOR', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_119.jpg', null),
        (2, 'BRIDAL', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_120.jpg', null),
@@ -102,4 +97,3 @@ VALUES (1, 'SINGLE', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Im
        (4, 'QUAD', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_130.jpg', null),
        (2, 'QUEEN', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_131.jpg', null),
        (2, 'KING', 'MAINTENANCE', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_132.jpg', null);
-
