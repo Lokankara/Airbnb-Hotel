@@ -2,11 +2,9 @@ name: Java Static Code Analysis
 
 on:
     push:
-        branches:
-            - master
+        branches: [ master ]
     pull_request:
-        branches:
-            - master
+        branches: [ master ]
 
 jobs:
     static-code-analysis:
@@ -29,13 +27,13 @@ jobs:
             -   name: Run SpotBugs analysis
                 run: mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs
 
-            -   name: Upload SpotBugs report
-                uses: actions/upload-artifact@v4
+            -   name: Convert SpotBugs XML to SARIF (JSON)
+                uses: advanced-security/spotbugs-sarif@v1
                 with:
-                    name: spotbugs-report
-                    path: target/spotbugsXml.xml
+                    spotbugs-xml-path: target/spotbugsXml.xml
+                    sarif-output-path: target/spotbugs.sarif
 
-            -   name: Upload to GitHub Code Scanning
-                uses: github/codeql-action/upload-sarif@v2
+            -   name: Upload SARIF report to GitHub Code Scanning
+                uses: github/codeql-action/upload-sarif@v3
                 with:
-                    sarif_file: target/spotbugsXml.xml
+                    sarif_file: target/spotbugs.sarif
