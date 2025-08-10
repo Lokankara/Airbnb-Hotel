@@ -53,11 +53,9 @@ jobs:
 
             - name: Initialize DB from SQL files (robust path detection)
               run: |
-                  set -euxo pipefail
+                  set -euo pipefail
                   echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-                  # Primary search: standard Maven resource path(s)
                   SQL_FILES=$(find "$GITHUB_WORKSPACE" -type f -path '*/src/main/resources/db/*.sql' -print | sort || true)
-                  # Fallback: search by known filenames (booking/guests/rooms)
                   if [ -z "$SQL_FILES" ]; then
                     echo "No files under */src/main/resources/db; trying filename lookup"
                     SQL_FILES=$(find "$GITHUB_WORKSPACE" -type f \( -iname 'booking.sql' -o -iname 'guests.sql' -o -iname 'rooms.sql' \) -print | sort || true)
@@ -70,7 +68,6 @@ jobs:
                   fi
                   echo "Found SQL files:"
                   echo "$SQL_FILES"
-                  # Apply each file safely (handles spaces in names)
                   echo "$SQL_FILES" | while IFS= read -r f; do
                     [ -n "$f" ] || continue
                     echo "Applying $f"
@@ -82,7 +79,7 @@ jobs:
                   DB_NAME: ${{ env.DB_NAME }}
 
             - name: Set up JDK 21
-              uses: actions/setup-java@v3
+              uses: actions/setup-java@v4
               with:
                   java-version: '21'
                   distribution: 'temurin'

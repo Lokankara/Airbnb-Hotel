@@ -1,13 +1,18 @@
+BEGIN;
 ALTER TABLE room
-    DROP CONSTRAINT room_room_type_check,
-    ADD CONSTRAINT room_room_type_check CHECK (
+      DROP CONSTRAINT IF EXISTS room_room_type_check;
+ALTER TABLE room
+      ADD CONSTRAINT room_room_type_check CHECK (
         room_type IN (
-                      'SINGLE','DOUBLE','TRIPLE','QUAD','QUEEN','KING','TWIN','HOLLYWOOD','STUDIO',
-                      'CABANA','VILLA','PENTHOUSES','STANDARD','DELUXE','JOINT','CONNECTING',
-                      'SUIT','SUITE','APARTMENT','JUNIOR','BRIDAL','HONEYMOON',
-                      'PRESIDENTIAL','ACCESSIBLE'
-            )
-        );
+          'SINGLE','DOUBLE','TRIPLE','QUAD','QUEEN','KING','TWIN','HOLLYWOOD','STUDIO',
+          'CABANA','VILLA','PENTHOUSES','STANDARD','DELUXE','JOINT','CONNECTING',
+          'SUIT','SUITE','APARTMENT','JUNIOR','BRIDAL','HONEYMOON',
+          'PRESIDENTIAL','ACCESSIBLE'
+        )
+      ) NOT VALID;
+ALTER TABLE room
+      VALIDATE CONSTRAINT room_room_type_check;
+COMMIT;
 
 INSERT INTO room (capacity, room_type, room_status, path, guest_id)
 VALUES (1, 'SINGLE', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_1.jpg', null),
