@@ -129,8 +129,10 @@
                 <configuration>
                     <effort>Max</effort>
                     <threshold>Low</threshold>
-                    <xmlOutput>true</xmlOutput>
                     <includeTests>false</includeTests>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <xmlOutput>false</xmlOutput>
+                    <sarifOutput>true</sarifOutput>
                 </configuration>
                 <executions>
                     <execution>
