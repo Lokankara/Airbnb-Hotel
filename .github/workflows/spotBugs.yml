@@ -24,16 +24,12 @@ jobs:
             -   name: Build with Maven
                 run: mvn clean package -DskipTests
 
-            -   name: Run SpotBugs analysis
-                run: mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs
+            -   name: Run SpotBugs with SARIF output
+                run: |
+                    mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs -Dspotbugs.outputFormat=sarif -Dspotbugs.sarifOutput=true
+                    # The SARIF report is generated at `target/spotbugsXml.sarif`
 
-            -   name: Convert SpotBugs XML to SARIF (JSON)
-                uses: advanced-security/spotbugs-sarif@v1
-                with:
-                    spotbugs-xml-path: target/spotbugsXml.xml
-                    sarif-output-path: target/spotbugs.sarif
-
-            -   name: Upload SARIF report to GitHub Code Scanning
+            -   name: Upload SARIF to GitHub Code Scanning
                 uses: github/codeql-action/upload-sarif@v3
                 with:
-                    sarif_file: target/spotbugs.sarif
+                    sarif_file: target/spotbugsXml.sarif
