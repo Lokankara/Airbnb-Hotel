@@ -17,7 +17,7 @@ jobs:
                 image: postgres:15
                 env:
                     POSTGRES_USER: postgres
-                    POSTGRES_PASSWORD: root
+                    POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
                     POSTGRES_DB: airbnb
                 options: >-
                     --health-cmd "pg_isready -U postgres"
@@ -30,7 +30,7 @@ jobs:
         env:
             SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/airbnb
             SPRING_DATASOURCE_USERNAME: postgres
-            SPRING_DATASOURCE_PASSWORD: root
+            SPRING_DATASOURCE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
             DB_NAME: airbnb
 
         steps:
@@ -67,15 +67,15 @@ jobs:
                     exit 1
                   fi
                   echo "Found SQL files:"
-                  echo "$SQL_FILES"
                   echo "$SQL_FILES" | while IFS= read -r f; do
                     [ -n "$f" ] || continue
                     echo "Applying $f"
-                    PGPASSWORD="$SPRING_DATASOURCE_PASSWORD" psql -h localhost -U "$SPRING_DATASOURCE_USERNAME" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f "$f"
+                    psql -h localhost -U "$SPRING_DATASOURCE_USERNAME" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f "$f"
                   done
               env:
                   SPRING_DATASOURCE_USERNAME: ${{ env.SPRING_DATASOURCE_USERNAME }}
                   SPRING_DATASOURCE_PASSWORD: ${{ env.SPRING_DATASOURCE_PASSWORD }}
+                  PGPASSWORD: ${{ env.SPRING_DATASOURCE_PASSWORD }}
                   DB_NAME: ${{ env.DB_NAME }}
 
             - name: Set up JDK 21

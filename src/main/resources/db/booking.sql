@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS room
     path        VARCHAR(255),
     guest_id    BIGINT       NULL REFERENCES guest (guest_id) ON DELETE SET NULL,
     CONSTRAINT room_room_status_check CHECK (room_status IN ('VACANT', 'RESERVED', 'MAINTENANCE')),
+    CONSTRAINT room_capacity_positive CHECK (capacity > 0),
     CONSTRAINT room_room_type_check CHECK (room_type IN (
                                                          'SINGLE', 'DOUBLE', 'TRIPLE', 'QUAD', 'QUEEN', 'KING', 'TWIN',
                                                          'HOLLYWOOD', 'STUDIO',

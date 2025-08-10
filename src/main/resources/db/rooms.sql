@@ -1,17 +1,25 @@
 BEGIN;
+
 ALTER TABLE room
-      DROP CONSTRAINT IF EXISTS room_room_type_check;
+    DROP CONSTRAINT IF EXISTS room_room_type_check;
+
 ALTER TABLE room
-      ADD CONSTRAINT room_room_type_check CHECK (
+    ADD CONSTRAINT room_room_type_check CHECK (
         room_type IN (
-          'SINGLE','DOUBLE','TRIPLE','QUAD','QUEEN','KING','TWIN','HOLLYWOOD','STUDIO',
-          'CABANA','VILLA','PENTHOUSES','STANDARD','DELUXE','JOINT','CONNECTING',
-          'SUIT','SUITE','APARTMENT','JUNIOR','BRIDAL','HONEYMOON',
-          'PRESIDENTIAL','ACCESSIBLE'
-        )
-      ) NOT VALID;
+                      'SINGLE', 'DOUBLE', 'TRIPLE', 'QUAD', 'QUEEN', 'KING', 'TWIN', 'HOLLYWOOD', 'STUDIO',
+                      'CABANA', 'VILLA', 'PENTHOUSES', 'STANDARD', 'DELUXE', 'JOINT', 'CONNECTING',
+                      'SUITE', 'APARTMENT', 'JUNIOR', 'BRIDAL', 'HONEYMOON',
+                      'PRESIDENTIAL', 'ACCESSIBLE'
+            )
+        ) NOT VALID;
+
+UPDATE room
+SET room_type = 'SUITE'
+WHERE room_type = 'SUIT';
+
 ALTER TABLE room
-      VALIDATE CONSTRAINT room_room_type_check;
+    VALIDATE CONSTRAINT room_room_type_check;
+
 COMMIT;
 
 INSERT INTO room (capacity, room_type, room_status, path, guest_id)
