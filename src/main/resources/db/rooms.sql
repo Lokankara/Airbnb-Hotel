@@ -1,3 +1,14 @@
+ALTER TABLE room
+    DROP CONSTRAINT room_room_type_check,
+    ADD CONSTRAINT room_room_type_check CHECK (
+        room_type IN (
+                      'SINGLE','DOUBLE','TRIPLE','QUAD','QUEEN','KING','TWIN','HOLLYWOOD','STUDIO',
+                      'CABANA','VILLA','PENTHOUSES','STANDARD','DELUXE','JOINT','CONNECTING',
+                      'SUIT','SUITE','APARTMENT','JUNIOR','BRIDAL','HONEYMOON',
+                      'PRESIDENTIAL','ACCESSIBLE'
+            )
+        );
+
 INSERT INTO room (capacity, room_type, room_status, path, guest_id)
 VALUES (1, 'SINGLE', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_1.jpg', null),
        (2, 'DOUBLE', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_2.jpg', null),
@@ -81,4 +92,3 @@ VALUES (1, 'SINGLE', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Im
        (4, 'QUAD', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_130.jpg', null),
        (2, 'QUEEN', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_131.jpg', null),
        (2, 'KING', 'MAINTENANCE', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_132.jpg', null);
-
