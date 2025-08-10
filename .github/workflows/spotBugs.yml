@@ -22,9 +22,7 @@ jobs:
                     cache: 'maven'
 
             -   name: Build with Maven
-                run: mvn clean verify -DskipTests
+                run: mvn clean package -DskipTests
 
-            -   name: Upload SARIF to GitHub Code Scanning
-                uses: github/codeql-action/upload-sarif@v3
-                with:
-                    sarif_file: target/spotbugs.sarif.xml
+            -   name: Run SpotBugs with SARIF output
+                run: mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs -Dspotbugs.sarifOutput=true
