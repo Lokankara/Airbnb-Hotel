@@ -1,0 +1,44 @@
+name: Java Static Code Analysis
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
+
+permissions:
+    checks: write
+
+jobs:
+    static-code-analysis:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v4
+
+            -   name: Setup Java 21
+                uses: actions/setup-java@v4
+                with:
+                    distribution: temurin
+                    java-version: 21
+                    cache: gradle
+
+            -   name: Build with Gradle
+                run: ./gradlew clean build -x test
+
+            -   name: Run static code analysis with SpotBugs
+                run: ./gradlew spotbugsMain
+
+            -   name: Upload SpotBugs report to GitHub Actions artifacts
+                uses: actions/upload-artifact@v3
+                with:
+                    name: spotbugs-report
+                    path: build/reports/spotbugs/main.xml
+
+            -   name: Upload SpotBugs report to GitHub Code Scanning
+                uses: github/codeql-action/upload-sarif@v2
+                with:
+                    sarif_file: build/reports/spotbugs/main.xml
