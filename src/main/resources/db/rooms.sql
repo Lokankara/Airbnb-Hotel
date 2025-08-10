@@ -1,24 +1,3 @@
-create table if not exists room
-(
-    room_id     SERIAL PRIMARY KEY,
-    capacity    INT          NOT NULL,
-    room_type   VARCHAR(128) NOT NULL,
-    room_status VARCHAR(128) NOT NULL,
-    path        VARCHAR(255),
-    guest_id    BIGINT,
-    FOREIGN KEY (guest_id) REFERENCES guest (guest_id),
-    constraint room_room_status_check check (room_status in ('VACANT', 'RESERVED', 'RESERVED', 'MAINTENANCE')),
-    constraint room_room_type_check check (room_type in
-                                           ('SINGLE', 'DOUBLE', 'TRIPLE',
-                                            'QUAD', 'QUEEN', 'KING', 'TWIN',
-                                            'HOLLYWOOD', 'STUDIO', 'CABANA',
-                                            'VILLA', 'PENTHOUSES', 'STANDARD',
-                                            'DELUXE', 'JOINT', 'CONNECTING',
-                                            'SUIT', 'APARTMENT', 'JUNIOR',
-                                            'BRIDAL', 'HONEYMOON',
-                                            'PRESIDENTIAL', 'ACCESSIBLE'))
-);
-
 INSERT INTO room (capacity, room_type, room_status, path, guest_id)
 VALUES (1, 'SINGLE', 'RESERVED', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_1.jpg', null),
        (2, 'DOUBLE', 'VACANT', 'https://raw.githubusercontent.com/Lokankara/Images/master/rooms/image_2.jpg', null),
