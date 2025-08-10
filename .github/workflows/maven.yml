@@ -5,6 +5,7 @@ on:
         branches:
             - master
     pull_request:
+        types: [ opened, synchronize, reopened ]
         branches:
             - master
 
@@ -40,56 +41,63 @@ jobs:
             DB_NAME: airbnb
 
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+            -   name: Checkout repository
+                uses: actions/checkout@v4
 
-            - name: Install psql client
-              run: sudo apt-get update && sudo apt-get install --yes --no-install-recommends postgresql-client
+            -   name: Install psql client
+                run: sudo apt-get update && sudo apt-get install --yes --no-install-recommends postgresql-client
 
-            - name: Wait for Postgres to be ready
-              run: |
-                  echo "Waiting for Postgres..."
-                  for i in $(seq 1 60); do
-                    pg_isready -h localhost -p 5432 -U "$SPRING_DATASOURCE_USERNAME" && break
-                    sleep 1
-                  done
-                  pg_isready -h localhost -p 5432 -U "$SPRING_DATASOURCE_USERNAME" || (echo "Postgres did not become ready in time" && exit 1)
-              env:
-                  PGPASSWORD: ${{ env.SPRING_DATASOURCE_PASSWORD }}
+            -   name: Wait for Postgres to be ready
+                run: |
+                    echo "Waiting for Postgres..."
+                    for i in $(seq 1 60); do
+                      pg_isready -h localhost -p 5432 -U "$SPRING_DATASOURCE_USERNAME" && break
+                      sleep 1
+                    done
+                    pg_isready -h localhost -p 5432 -U "$SPRING_DATASOURCE_USERNAME" || (echo "Postgres did not become ready in time" && exit 1)
+                env:
+                    PGPASSWORD: ${{ env.SPRING_DATASOURCE_PASSWORD }}
 
-            - name: Initialize DB from SQL files (robust path detection)
-              run: |
-                  set -euo pipefail
-                  echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-                  SQL_FILES=$(find "$GITHUB_WORKSPACE" -type f -path '*/src/main/resources/db/*.sql' -print | sort || true)
-                  if [ -z "$SQL_FILES" ]; then
-                    echo "No files under */src/main/resources/db; trying filename lookup"
-                    SQL_FILES=$(find "$GITHUB_WORKSPACE" -type f \( -iname 'booking.sql' -o -iname 'guests.sql' -o -iname 'rooms.sql' \) -print | sort || true)
-                  fi
-                  if [ -z "$SQL_FILES" ]; then
-                    echo "No SQL files found under src/main/resources/db nor by filenames (booking.sql|guests.sql|rooms.sql)." >&2
-                    echo "Listing top-level repo contents for debugging:" >&2
-                    ls -la "$GITHUB_WORKSPACE"
-                    exit 1
-                  fi
-                  echo "Found SQL files:"
-                  echo "$SQL_FILES" | while IFS= read -r f; do
-                    [ -n "$f" ] || continue
-                    echo "Applying $f"
-                    PGPASSWORD="$SPRING_DATASOURCE_PASSWORD" psql -h localhost -U "$SPRING_DATASOURCE_USERNAME" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f "$f"
-                  done
-              env:
-                  SPRING_DATASOURCE_USERNAME: ${{ env.SPRING_DATASOURCE_USERNAME }}
-                  SPRING_DATASOURCE_PASSWORD: ${{ env.SPRING_DATASOURCE_PASSWORD }}
-                  DB_NAME: ${{ env.DB_NAME }}
+            -   name: Initialize DB from SQL files (robust path detection)
+                run: |
+                    set -euo pipefail
+                    echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+                    SQL_FILES=$(find "$GITHUB_WORKSPACE" -type f -path '*/src/main/resources/db/*.sql' -print | sort || true)
+                    if [ -z "$SQL_FILES" ]; then
+                      echo "No files under */src/main/resources/db; trying filename lookup"
+                      SQL_FILES=$(find "$GITHUB_WORKSPACE" -type f \( -iname 'booking.sql' -o -iname 'guests.sql' -o -iname 'rooms.sql' \) -print | sort || true)
+                    fi
+                    if [ -z "$SQL_FILES" ]; then
+                      echo "No SQL files found under src/main/resources/db nor by filenames (booking.sql|guests.sql|rooms.sql)." >&2
+                      echo "Listing top-level repo contents for debugging:" >&2
+                      ls -la "$GITHUB_WORKSPACE"
+                      exit 1
+                    fi
+                    echo "Found SQL files:"
+                    echo "$SQL_FILES" | while IFS= read -r f; do
+                      [ -n "$f" ] || continue
+                      echo "Applying $f"
+                      PGPASSWORD="$SPRING_DATASOURCE_PASSWORD" psql -h localhost -U "$SPRING_DATASOURCE_USERNAME" -d "$DB_NAME" -v ON_ERROR_STOP=1 -f "$f"
+                    done
+                env:
+                    SPRING_DATASOURCE_USERNAME: ${{ env.SPRING_DATASOURCE_USERNAME }}
+                    SPRING_DATASOURCE_PASSWORD: ${{ env.SPRING_DATASOURCE_PASSWORD }}
+                    DB_NAME: ${{ env.DB_NAME }}
 
-            - name: Set up JDK 21
-              uses: actions/setup-java@v4
-              with:
-                  java-version: '21'
-                  distribution: 'temurin'
-                  cache: maven
+            -   name: Set up JDK 21
+                uses: actions/setup-java@v4
+                with:
+                    java-version: '21'
+                    distribution: 'temurin'
+                    cache: maven
 
-            - name: Test with Maven
-              run: mvn -B -e -V test
+            -   name: Test with Maven
+                run: mvn -B -e -V test
 
+            -   name: Build with Maven
+                run: mvn -B verify
+
+            -   name: SonarQube Scan
+                uses: SonarSource/sonarqube-scan-action@v4
+                env:
+                    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
